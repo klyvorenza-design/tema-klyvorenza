@@ -30,7 +30,8 @@ add_filter(
 					$n  = 2;
 					$b  = $id;
 					while ( isset( $used[ $id ] ) ) {
-						$id = $b . '-' . $n++;
+						$id = $b . '-' . $n;
+						++$n;
 					}
 					$m[2] .= ' id="' . esc_attr( $id ) . '"';
 				}

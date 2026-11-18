@@ -13,9 +13,39 @@ add_action(
 		$auth = function () {
 			return current_user_can( 'edit_posts' );
 		};
-		register_post_meta( 'post', '_klyv_main_id', array( 'single' => true, 'type' => 'integer', 'show_in_rest' => true, 'sanitize_callback' => 'absint', 'auth_callback' => $auth ) );
-		register_post_meta( 'post', '_klyv_main_alt', array( 'single' => true, 'type' => 'string', 'show_in_rest' => true, 'sanitize_callback' => 'sanitize_text_field', 'auth_callback' => $auth ) );
-		register_post_meta( 'post', '_klyv_main_caption', array( 'single' => true, 'type' => 'string', 'show_in_rest' => true, 'sanitize_callback' => 'sanitize_text_field', 'auth_callback' => $auth ) );
+		register_post_meta(
+			'post',
+			'_klyv_main_id',
+			array(
+				'single'            => true,
+				'type'              => 'integer',
+				'show_in_rest'      => true,
+				'sanitize_callback' => 'absint',
+				'auth_callback'     => $auth,
+			)
+		);
+		register_post_meta(
+			'post',
+			'_klyv_main_alt',
+			array(
+				'single'            => true,
+				'type'              => 'string',
+				'show_in_rest'      => true,
+				'sanitize_callback' => 'sanitize_text_field',
+				'auth_callback'     => $auth,
+			)
+		);
+		register_post_meta(
+			'post',
+			'_klyv_main_caption',
+			array(
+				'single'            => true,
+				'type'              => 'string',
+				'show_in_rest'      => true,
+				'sanitize_callback' => 'sanitize_text_field',
+				'auth_callback'     => $auth,
+			)
+		);
 	}
 );
 
@@ -46,15 +76,27 @@ function klyv_main_image_data( $post_id ) {
 		if ( '' === $alt ) {
 			$alt = (string) get_post_meta( $id, '_wp_attachment_image_alt', true );
 		}
-		return array( 'id' => $id, 'alt' => $alt, 'caption' => (string) get_post_meta( $post_id, '_klyv_main_caption', true ) );
+		return array(
+			'id'      => $id,
+			'alt'     => $alt,
+			'caption' => (string) get_post_meta( $post_id, '_klyv_main_caption', true ),
+		);
 	}
 	$thumb = get_post_thumbnail_id( $post_id );
 	if ( $thumb ) {
-		return array( 'id' => (int) $thumb, 'alt' => (string) get_post_meta( $thumb, '_wp_attachment_image_alt', true ), 'caption' => '' );
+		return array(
+			'id'      => (int) $thumb,
+			'alt'     => (string) get_post_meta( $thumb, '_wp_attachment_image_alt', true ),
+			'caption' => '',
+		);
 	}
 	// Artigos antigos: primeira imagem do conteúdo.
 	if ( preg_match( '/wp-image-(\d+)/', (string) get_post_field( 'post_content', $post_id ), $m ) && wp_attachment_is_image( (int) $m[1] ) ) {
-		return array( 'id' => (int) $m[1], 'alt' => (string) get_post_meta( (int) $m[1], '_wp_attachment_image_alt', true ), 'caption' => '' );
+		return array(
+			'id'      => (int) $m[1],
+			'alt'     => (string) get_post_meta( (int) $m[1], '_wp_attachment_image_alt', true ),
+			'caption' => '',
+		);
 	}
 	return null;
 }

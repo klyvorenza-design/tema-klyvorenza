@@ -18,13 +18,26 @@ function klyv_active_categories( $for_home = false ) {
 	$list = klyv_cached(
 		'active_cats',
 		function () {
-			$terms = get_terms( array( 'taxonomy' => 'category', 'hide_empty' => true ) );
+			$terms = get_terms(
+				array(
+					'taxonomy'   => 'category',
+					'hide_empty' => true,
+				)
+			);
 			if ( is_wp_error( $terms ) ) {
 				return array();
 			}
 			$latest = array();
 			foreach ( $terms as $t ) {
-				$q = get_posts( array( 'category' => $t->term_id, 'numberposts' => 1, 'fields' => 'ids', 'no_found_rows' => true, 'suppress_filters' => true ) );
+				$q                     = get_posts(
+					array(
+						'category'         => $t->term_id,
+						'numberposts'      => 1,
+						'fields'           => 'ids',
+						'no_found_rows'    => true,
+						'suppress_filters' => true,
+					)
+				);
 				$latest[ $t->term_id ] = $q ? (int) strtotime( get_post_field( 'post_date_gmt', $q[0] ) ) : 0;
 			}
 			usort(
@@ -48,9 +61,14 @@ function klyv_active_categories( $for_home = false ) {
 	}
 	$hidden = array_filter( array_map( 'trim', explode( ',', (string) klyv_opt( 'hidden_cats', '' ) ) ) );
 	$order  = array_filter( array_map( 'trim', explode( ',', (string) klyv_opt( 'cat_order', '' ) ) ) );
-	$list   = array_values( array_filter( $list, function ( $t ) use ( $hidden ) {
-		return ! in_array( $t->slug, $hidden, true );
-	} ) );
+	$list   = array_values(
+		array_filter(
+			$list,
+			function ( $t ) use ( $hidden ) {
+				return ! in_array( $t->slug, $hidden, true );
+			}
+		)
+	);
 	if ( $order ) {
 		usort(
 			$list,
@@ -111,7 +129,15 @@ function klyv_render_latest() {
 	$ids = klyv_cached(
 		'latest_ids',
 		function () {
-			$q = new WP_Query( array( 'post_type' => 'post', 'posts_per_page' => 24, 'fields' => 'ids', 'no_found_rows' => true, 'ignore_sticky_posts' => true ) );
+			$q = new WP_Query(
+				array(
+					'post_type'           => 'post',
+					'posts_per_page'      => 24,
+					'fields'              => 'ids',
+					'no_found_rows'       => true,
+					'ignore_sticky_posts' => true,
+				)
+			);
 			return $q->posts;
 		}
 	);
@@ -150,7 +176,14 @@ function klyv_render_home_sections() {
 		$gids = klyv_cached(
 			'gloss_ids',
 			function () use ( $gt ) {
-				$q = new WP_Query( array( 'post_type' => $gt, 'posts_per_page' => 6, 'fields' => 'ids', 'no_found_rows' => true ) );
+				$q = new WP_Query(
+					array(
+						'post_type'      => $gt,
+						'posts_per_page' => 6,
+						'fields'         => 'ids',
+						'no_found_rows'  => true,
+					)
+				);
 				return $q->posts;
 			}
 		);

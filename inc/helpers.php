@@ -14,38 +14,38 @@ defined( 'ABSPATH' ) || exit;
  */
 function klyv_defaults() {
 	return array(
-		'adsense_pub'         => '',
-		'ads_in_1'            => '',
-		'ads_in_2'            => '',
-		'ads_in_3'            => '',
-		'ads_side_left'       => '',
-		'ads_side_right'      => '',
-		'ads_on_in_1'         => 1,
-		'ads_on_in_2'         => 1,
-		'ads_on_in_3'         => 1,
-		'ads_on_left'         => 1,
-		'ads_on_right'        => 1,
-		'social_facebook'     => '',
-		'social_instagram'    => '',
-		'social_pinterest'    => '',
-		'social_extra'        => '',
-		'news_on'             => 1,
-		'news_delay'          => 20,
-		'news_title'          => __( 'Receba as novidades da Klyvorenza', 'klyvorenza' ),
-		'news_text'           => __( 'Dicas de moda, beleza e cuidados direto no seu e-mail. Sem spam, e você sai quando quiser.', 'klyvorenza' ),
-		'news_double_optin'   => 1,
-		'share_buttons'       => array( 'whatsapp', 'facebook', 'pinterest', 'x', 'telegram', 'email', 'copiar' ),
-		'sidebars_on'         => 1,
-		'slide_on'            => 1,
-		'slide_count'         => 4,
-		'slide_interval'      => 6,
-		'slide_autoplay'      => 1,
-		'parent_especiais'    => 'especiais',
-		'parent_datas'        => 'datas-festivas',
-		'hidden_cats'         => '',
-		'cat_order'           => '',
-		'glossary_post_type'  => '',
-		'popular_cats'        => '',
+		'adsense_pub'        => '',
+		'ads_in_1'           => '',
+		'ads_in_2'           => '',
+		'ads_in_3'           => '',
+		'ads_side_left'      => '',
+		'ads_side_right'     => '',
+		'ads_on_in_1'        => 1,
+		'ads_on_in_2'        => 1,
+		'ads_on_in_3'        => 1,
+		'ads_on_left'        => 1,
+		'ads_on_right'       => 1,
+		'social_facebook'    => '',
+		'social_instagram'   => '',
+		'social_pinterest'   => '',
+		'social_extra'       => '',
+		'news_on'            => 1,
+		'news_delay'         => 20,
+		'news_title'         => __( 'Receba as novidades da Klyvorenza', 'klyvorenza' ),
+		'news_text'          => __( 'Dicas de moda, beleza e cuidados direto no seu e-mail. Sem spam, e você sai quando quiser.', 'klyvorenza' ),
+		'news_double_optin'  => 1,
+		'share_buttons'      => array( 'whatsapp', 'facebook', 'pinterest', 'x', 'telegram', 'email', 'copiar' ),
+		'sidebars_on'        => 1,
+		'slide_on'           => 1,
+		'slide_count'        => 4,
+		'slide_interval'     => 6,
+		'slide_autoplay'     => 1,
+		'parent_especiais'   => 'especiais',
+		'parent_datas'       => 'datas-festivas',
+		'hidden_cats'        => '',
+		'cat_order'          => '',
+		'glossary_post_type' => '',
+		'popular_cats'       => '',
 	);
 }
 
@@ -230,14 +230,22 @@ function klyv_socials() {
 	foreach ( $base as $k => $label ) {
 		$url = klyv_opt( 'social_' . $k );
 		if ( $url ) {
-			$out[] = array( 'name' => $label, 'icon' => $k, 'url' => $url );
+			$out[] = array(
+				'name' => $label,
+				'icon' => $k,
+				'url'  => $url,
+			);
 		}
 	}
 	// Extras: uma por linha, "youtube|https://...".
 	foreach ( preg_split( '/\R/', (string) klyv_opt( 'social_extra', '' ) ) as $line ) {
 		$parts = array_map( 'trim', explode( '|', $line, 2 ) );
 		if ( 2 === count( $parts ) && $parts[1] ) {
-			$out[] = array( 'name' => ucfirst( $parts[0] ), 'icon' => strtolower( $parts[0] ), 'url' => $parts[1] );
+			$out[] = array(
+				'name' => ucfirst( $parts[0] ),
+				'icon' => strtolower( $parts[0] ),
+				'url'  => $parts[1],
+			);
 		}
 	}
 	return $out;
@@ -273,11 +281,15 @@ function klyv_socials_html( $class = '' ) {
 function klyv_logo_img( $kind = 'logo', $attr = array() ) {
 	$u = KLYV_URI . '/assets/logo/';
 	if ( 'simbolo' === $kind ) {
-		$w = 96;
-		$h = 96;
+		$w   = 96;
+		$h   = 96;
 		$img = sprintf(
 			'<img src="%1$ssimbolo-1x.webp" srcset="%1$ssimbolo-1x.webp 1x, %1$ssimbolo-2x.webp 2x" width="%2$d" height="%3$d" alt="%4$s" decoding="async"%5$s>',
-			esc_url( $u ), $w, $h, esc_attr( $attr['alt'] ?? '' ), isset( $attr['lazy'] ) && $attr['lazy'] ? ' loading="lazy"' : ''
+			esc_url( $u ),
+			$w,
+			$h,
+			esc_attr( $attr['alt'] ?? '' ),
+			isset( $attr['lazy'] ) && $attr['lazy'] ? ' loading="lazy"' : ''
 		);
 		return $img;
 	}

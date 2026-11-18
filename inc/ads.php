@@ -14,7 +14,8 @@ function klyv_ads_allowed() {
 		return $ok;
 	}
 	$ok = is_singular( 'post' ) && ! klyv_is_story() && (bool) klyv_opt( 'adsense_pub' );
-	return $ok = (bool) apply_filters( 'klyvorenza_ads_allowed', $ok );
+	$ok = (bool) apply_filters( 'klyvorenza_ads_allowed', $ok );
+	return $ok;
 }
 
 /**
@@ -34,7 +35,7 @@ function klyv_ad_slot( $key, $on, $kind ) {
 		return '';
 	}
 	// O script da biblioteca é carregado por nós, depois da interação.
-	$code = preg_replace( '#<script[^>]+adsbygoogle\.js[^>]*>\s*</script>#i', '', $code );
+	$code                     = preg_replace( '#<script[^>]+adsbygoogle\.js[^>]*>\s*</script>#i', '', $code );
 	$GLOBALS['klyv_ads_used'] = true;
 	return '<aside class="klyv-ad klyv-ad--' . esc_attr( $kind ) . '" aria-label="' . esc_attr__( 'Publicidade', 'klyvorenza' ) . '"><span class="klyv-ad__l">' . esc_html__( 'Publicidade', 'klyvorenza' ) . '</span><div class="klyv-ad__c">' . $code . '</div></aside>'; // phpcs:ignore WordPress.Security.EscapeOutput -- código de anúncio salvo por administrador.
 }
@@ -51,7 +52,8 @@ add_filter(
 		if ( $total < 7 ) {
 			return $content;
 		}
-		$safe = function ( $i ) use ( $parts, $total ) { // anúncio após o parágrafo $i (0-based).
+		$safe   = function ( $i ) use ( $parts, $total ) {
+			// anúncio após o parágrafo $i (0-based).
 			if ( $i < 0 || $i >= $total - 1 ) {
 				return false;
 			}
@@ -87,7 +89,7 @@ add_filter(
 				}
 			}
 			if ( null !== $pos ) {
-				$used[]       = $pos;
+				$used[]      = $pos;
 				$ins[ $pos ] = $slot;
 			}
 		}

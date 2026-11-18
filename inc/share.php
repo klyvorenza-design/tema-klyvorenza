@@ -7,7 +7,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-/** Bloco de compartilhamento. */
+/** Bloco de compartilhamento. *
+ *
+ * @param array $atts Atributos do bloco.
+ */
 function klyv_render_share( $atts = array() ) {
 	if ( ! is_singular() ) {
 		return '';
@@ -16,10 +19,10 @@ function klyv_render_share( $atts = array() ) {
 	if ( ! $on ) {
 		return '';
 	}
-	$url   = rawurlencode( get_permalink() );
-	$title = rawurlencode( wp_strip_all_tags( get_the_title() ) );
-	$img   = rawurlencode( (string) get_the_post_thumbnail_url( get_the_ID(), 'klyv-social' ) );
-	$defs  = array(
+	$url    = rawurlencode( get_permalink() );
+	$title  = rawurlencode( wp_strip_all_tags( get_the_title() ) );
+	$img    = rawurlencode( (string) get_the_post_thumbnail_url( get_the_ID(), 'klyv-social' ) );
+	$defs   = array(
 		'whatsapp'  => array( 'WhatsApp', 'https://api.whatsapp.com/send?text=' . $title . '%20' . $url ),
 		'facebook'  => array( 'Facebook', 'https://www.facebook.com/sharer/sharer.php?u=' . $url ),
 		'pinterest' => array( 'Pinterest', 'https://pinterest.com/pin/create/button/?url=' . $url . '&media=' . $img . '&description=' . $title ),

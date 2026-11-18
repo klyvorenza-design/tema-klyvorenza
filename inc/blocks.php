@@ -24,7 +24,12 @@ function klyv_block( $name, $title, $cb, $attrs = array() ) {
 			'category'        => 'theme',
 			'render_callback' => $cb,
 			'attributes'      => $attrs,
-			'supports'        => array( 'autoRegister' => true, 'html' => false, 'align' => array( 'wide', 'full' ), 'className' => true ),
+			'supports'        => array(
+				'autoRegister' => true,
+				'html'         => false,
+				'align'        => array( 'wide', 'full' ),
+				'className'    => true,
+			),
 		)
 	);
 }
@@ -37,16 +42,46 @@ add_action(
 		klyv_block( 'slide', __( 'Slide de destaques', 'klyvorenza' ), 'klyv_render_slide' );
 		klyv_block( 'home-secoes', __( 'Seções da home (categorias automáticas)', 'klyvorenza' ), 'klyv_render_home_sections' );
 		klyv_block( 'ultimos', __( 'Últimos artigos', 'klyvorenza' ), 'klyv_render_latest' );
-		klyv_block( 'stories', __( 'Cartões de Web Stories', 'klyvorenza' ), 'klyv_render_stories', array( 'count' => array( 'type' => 'number', 'default' => 8 ) ) );
+		klyv_block(
+			'stories',
+			__( 'Cartões de Web Stories', 'klyvorenza' ),
+			'klyv_render_stories',
+			array(
+				'count' => array(
+					'type'    => 'number',
+					'default' => 8,
+				),
+			)
+		);
 		klyv_block( 'glossario', __( 'Glossário A a Z', 'klyvorenza' ), 'klyv_render_glossary' );
 		klyv_block( 'categorias', __( 'Hub de categorias', 'klyvorenza' ), 'klyv_render_category_hub' );
 		klyv_block( 'imagem-principal', __( 'Imagem principal do artigo', 'klyvorenza' ), 'klyv_render_main_image' );
 		klyv_block( 'migalhas', __( 'Migalhas de pão', 'klyvorenza' ), 'klyv_render_breadcrumbs' );
-		klyv_block( 'compartilhar', __( 'Botões de compartilhamento', 'klyvorenza' ), 'klyv_render_share', array( 'sticky' => array( 'type' => 'boolean', 'default' => false ) ) );
+		klyv_block(
+			'compartilhar',
+			__( 'Botões de compartilhamento', 'klyvorenza' ),
+			'klyv_render_share',
+			array(
+				'sticky' => array(
+					'type'    => 'boolean',
+					'default' => false,
+				),
+			)
+		);
 		klyv_block( 'relacionados', __( 'Artigos relacionados', 'klyvorenza' ), 'klyv_render_related' );
 		klyv_block( 'caixa-autor', __( 'Caixa do autor', 'klyvorenza' ), 'klyv_render_author_box' );
 		klyv_block( 'newsletter', __( 'Newsletter (formulário)', 'klyvorenza' ), 'klyv_render_newsletter' );
-		klyv_block( 'barra', __( 'Barra lateral (anúncio)', 'klyvorenza' ), 'klyv_render_sidebar_ad', array( 'side' => array( 'type' => 'string', 'default' => 'left' ) ) );
+		klyv_block(
+			'barra',
+			__( 'Barra lateral (anúncio)', 'klyvorenza' ),
+			'klyv_render_sidebar_ad',
+			array(
+				'side' => array(
+					'type'    => 'string',
+					'default' => 'left',
+				),
+			)
+		);
 		klyv_block( 'categorias-chips', __( 'Filtro por categoria', 'klyvorenza' ), 'klyv_render_cat_filter' );
 		klyv_block( 'redes', __( 'Redes sociais', 'klyvorenza' ), 'klyv_render_socials_block' );
 		klyv_block( 'termo-pesquisado', __( 'Termo pesquisado e sugestões', 'klyvorenza' ), 'klyv_render_search_helper' );
@@ -81,11 +116,27 @@ function klyv_render_modified() {
  * @return string
  */
 function klyv_card( $id, $args = array() ) {
-	$args  = wp_parse_args( $args, array( 'excerpt' => true, 'size' => 'klyv-card', 'sizes' => '(max-width:600px) 92vw, (max-width:1024px) 46vw, 380px' ) );
+	$args  = wp_parse_args(
+		$args,
+		array(
+			'excerpt' => true,
+			'size'    => 'klyv-card',
+			'sizes'   => '(max-width:600px) 92vw, (max-width:1024px) 46vw, 380px',
+		)
+	);
 	$cats  = get_the_category( $id );
 	$cat   = $cats ? $cats[0] : null;
 	$thumb = has_post_thumbnail( $id )
-		? get_the_post_thumbnail( $id, $args['size'], array( 'loading' => 'lazy', 'decoding' => 'async', 'sizes' => $args['sizes'], 'alt' => '' ) )
+		? get_the_post_thumbnail(
+			$id,
+			$args['size'],
+			array(
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+				'sizes'    => $args['sizes'],
+				'alt'      => '',
+			)
+		)
 		: '<span class="klyv-card__ph" aria-hidden="true"></span>';
 	$h     = '<article class="klyv-card">';
 	$h    .= '<a class="klyv-card__img" href="' . esc_url( get_permalink( $id ) ) . '" tabindex="-1" aria-hidden="true">' . $thumb . '</a>';
@@ -161,7 +212,16 @@ function klyv_render_author_box() {
 	}
 	$bio = get_the_author_meta( 'description', $id );
 	$h   = '<aside class="klyv-author" aria-label="' . esc_attr__( 'Sobre a autora', 'klyvorenza' ) . '">';
-	$h  .= get_avatar( $id, 72, '', '', array( 'loading' => 'lazy', 'class' => 'klyv-author__av' ) );
+	$h  .= get_avatar(
+		$id,
+		72,
+		'',
+		'',
+		array(
+			'loading' => 'lazy',
+			'class'   => 'klyv-author__av',
+		)
+	);
 	$h  .= '<div><p class="klyv-author__n">' . esc_html( get_the_author_meta( 'display_name', $id ) ) . '</p>';
 	if ( $bio ) {
 		$h .= '<p class="klyv-author__b">' . esc_html( $bio ) . '</p>';
@@ -217,7 +277,16 @@ function klyv_render_category_hub() {
 	$h = '<div class="klyv-cats">';
 	foreach ( $terms as $t ) {
 		$ids = klyv_category_ids( $t->term_id, 1 );
-		$img = $ids && has_post_thumbnail( $ids[0] ) ? get_the_post_thumbnail( $ids[0], 'klyv-card', array( 'loading' => 'lazy', 'decoding' => 'async', 'alt' => '', 'sizes' => '(max-width:600px) 92vw, 300px' ) ) : '<span class="klyv-card__ph" aria-hidden="true"></span>';
+		$img = $ids && has_post_thumbnail( $ids[0] ) ? get_the_post_thumbnail(
+			$ids[0],
+			'klyv-card',
+			array(
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+				'alt'      => '',
+				'sizes'    => '(max-width:600px) 92vw, 300px',
+			)
+		) : '<span class="klyv-card__ph" aria-hidden="true"></span>';
 		/* translators: %d: número de artigos. */
 		$n  = sprintf( _n( '%d artigo', '%d artigos', (int) $t->count, 'klyvorenza' ), (int) $t->count );
 		$h .= '<a class="klyv-cat" href="' . esc_url( get_term_link( $t ) ) . '"><span class="klyv-card__img">' . $img . '</span><span class="klyv-cat__n">' . esc_html( $t->name ) . '</span><span class="klyv-cat__c">' . esc_html( $n ) . '</span></a>';
@@ -225,7 +294,10 @@ function klyv_render_category_hub() {
 	return $h . '</div>';
 }
 
-/** Cartões de Web Stories (proporção 3:4). */
+/** Cartões de Web Stories (proporção 3:4). *
+ *
+ * @param array $atts Atributos do bloco.
+ */
 function klyv_render_stories( $atts = array() ) {
 	$types = klyv_story_types();
 	if ( ! $types ) {
@@ -235,7 +307,14 @@ function klyv_render_stories( $atts = array() ) {
 	$ids = klyv_cached(
 		'stories_' . $n,
 		function () use ( $types, $n ) {
-			$q = new WP_Query( array( 'post_type' => $types, 'posts_per_page' => $n, 'fields' => 'ids', 'no_found_rows' => true ) );
+			$q = new WP_Query(
+				array(
+					'post_type'      => $types,
+					'posts_per_page' => $n,
+					'fields'         => 'ids',
+					'no_found_rows'  => true,
+				)
+			);
 			return $q->posts;
 		}
 	);
@@ -244,7 +323,16 @@ function klyv_render_stories( $atts = array() ) {
 	}
 	$h = '<div class="klyv-stories">';
 	foreach ( $ids as $id ) {
-		$img = has_post_thumbnail( $id ) ? get_the_post_thumbnail( $id, 'klyv-story', array( 'loading' => 'lazy', 'decoding' => 'async', 'alt' => '', 'sizes' => '(max-width:600px) 44vw, 240px' ) ) : '<span class="klyv-card__ph" aria-hidden="true"></span>';
+		$img = has_post_thumbnail( $id ) ? get_the_post_thumbnail(
+			$id,
+			'klyv-story',
+			array(
+				'loading'  => 'lazy',
+				'decoding' => 'async',
+				'alt'      => '',
+				'sizes'    => '(max-width:600px) 44vw, 240px',
+			)
+		) : '<span class="klyv-card__ph" aria-hidden="true"></span>';
 		$h  .= '<a class="klyv-story" href="' . esc_url( get_permalink( $id ) ) . '">' . $img . '<span class="klyv-story__t">' . esc_html( get_the_title( $id ) ) . '</span></a>';
 	}
 	return $h . '</div>';
@@ -254,19 +342,32 @@ function klyv_render_stories( $atts = array() ) {
 function klyv_render_glossary() {
 	$pt = klyv_glossary_type();
 	if ( $pt ) {
-		$posts = get_posts( array( 'post_type' => $pt, 'posts_per_page' => 500, 'orderby' => 'title', 'order' => 'ASC', 'no_found_rows' => true ) );
+		$posts = get_posts(
+			array(
+				'post_type'      => $pt,
+				'posts_per_page' => 500,
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'no_found_rows'  => true,
+			)
+		);
 	} else {
 		$page  = get_page_by_path( 'glossario' );
-		$posts = $page ? get_pages( array( 'child_of' => $page->ID, 'sort_column' => 'post_title' ) ) : array();
+		$posts = $page ? get_pages(
+			array(
+				'child_of'    => $page->ID,
+				'sort_column' => 'post_title',
+			)
+		) : array();
 	}
 	if ( ! $posts ) {
 		return '';
 	}
 	$groups = array();
 	foreach ( $posts as $p ) {
-		$t = remove_accents( get_the_title( $p ) );
-		$l = strtoupper( substr( $t, 0, 1 ) );
-		$l = ctype_alpha( $l ) ? $l : '#';
+		$t              = remove_accents( get_the_title( $p ) );
+		$l              = strtoupper( substr( $t, 0, 1 ) );
+		$l              = ctype_alpha( $l ) ? $l : '#';
 		$groups[ $l ][] = $p;
 	}
 	ksort( $groups );
@@ -330,7 +431,10 @@ function klyv_highlight( $text ) {
 	return preg_replace( '/(' . preg_quote( esc_html( $q ), '/' ) . ')/iu', '<mark>$1</mark>', $text );
 }
 
-/** Barra lateral: anúncio (se ligado) mais atalho de categorias. */
+/** Barra lateral: anúncio (se ligado) mais atalho de categorias. *
+ *
+ * @param array $atts Atributos do bloco.
+ */
 function klyv_render_sidebar_ad( $atts ) {
 	if ( ! klyv_opt( 'sidebars_on' ) ) {
 		return '';

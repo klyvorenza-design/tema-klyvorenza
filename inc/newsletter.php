@@ -19,7 +19,8 @@ function klyv_news_install() {
 	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 	$t  = klyv_news_table();
 	$cs = $wpdb->get_charset_collate();
-	dbDelta( "CREATE TABLE $t (
+	dbDelta(
+		"CREATE TABLE $t (
 		id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 		name varchar(120) NOT NULL,
 		email varchar(190) NOT NULL,
@@ -29,7 +30,8 @@ function klyv_news_install() {
 		confirmed_at datetime NULL,
 		PRIMARY KEY  (id),
 		UNIQUE KEY email (email)
-	) $cs;" );
+	) $cs;"
+	);
 	update_option( 'klyv_news_db', '1' );
 }
 add_action(
@@ -57,7 +59,10 @@ function klyv_newsletter_popup_allowed() {
 	return (bool) apply_filters( 'klyvorenza_newsletter_popup_allowed', true );
 }
 
-/** Formulário (usado na home e no pop-up). */
+/** Formulário (usado na home e no pop-up). *
+ *
+ * @param string $suffix Sufixo dos IDs dos campos.
+ */
 function klyv_news_form( $suffix = 'p' ) {
 	$privacy = get_privacy_policy_url();
 	$privacy = $privacy ? $privacy : home_url( '/politica-de-privacidade/' );
@@ -71,13 +76,15 @@ function klyv_news_form( $suffix = 'p' ) {
 		<input id="<?php echo esc_attr( $id ); ?>-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="190"></p>
 		<p class="klyv-hp" aria-hidden="true"><label>Website<input name="website" type="text" tabindex="-1" autocomplete="off"></label></p>
 		<p class="klyv-check"><label><input name="consent" type="checkbox" required>
-			<span><?php
+			<span>
+			<?php
 			printf(
 				/* translators: %s: link da política de privacidade. */
 				esc_html__( 'Concordo em receber e-mails e com a %s.', 'klyvorenza' ),
 				'<a href="' . esc_url( $privacy ) . '">' . esc_html__( 'Política de Privacidade', 'klyvorenza' ) . '</a>'
 			); // phpcs:ignore WordPress.Security.EscapeOutput
-			?></span></label></p>
+			?>
+			</span></label></p>
 		<button type="submit" class="klyv-btn"><?php esc_html_e( 'Quero receber', 'klyvorenza' ); ?></button>
 		<p class="klyv-news-msg" role="status" aria-live="polite"></p>
 	</form>
@@ -90,7 +97,13 @@ function klyv_render_newsletter() {
 	if ( ! klyv_newsletter_active() ) {
 		return '';
 	}
-	$h  = '<section class="klyv-news" aria-labelledby="klyv-news-t"><div class="klyv-news__logo">' . klyv_logo_img( 'simbolo', array( 'alt' => '', 'lazy' => true ) ) . '</div><div class="klyv-news__body">';
+	$h  = '<section class="klyv-news" aria-labelledby="klyv-news-t"><div class="klyv-news__logo">' . klyv_logo_img(
+		'simbolo',
+		array(
+			'alt'  => '',
+			'lazy' => true,
+		)
+	) . '</div><div class="klyv-news__body">';
 	$h .= '<h2 id="klyv-news-t">' . esc_html( klyv_opt( 'news_title' ) ) . '</h2><p>' . esc_html( klyv_opt( 'news_text' ) ) . '</p>' . klyv_news_form( 'home' ) . '</div></section>';
 	return $h;
 }
@@ -106,7 +119,18 @@ add_action(
 		<div class="klyv-pop" id="klyv-pop" role="dialog" aria-modal="true" aria-labelledby="klyv-pop-t" hidden>
 			<div class="klyv-pop__box">
 				<button type="button" class="klyv-btn-i klyv-pop__x" data-close aria-label="<?php esc_attr_e( 'Fechar', 'klyvorenza' ); ?>"><?php echo klyv_icon( 'close' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
-				<div class="klyv-pop__head"><?php echo klyv_logo_img( 'simbolo', array( 'alt' => '', 'lazy' => true ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?><h2 id="klyv-pop-t"><?php echo esc_html( klyv_opt( 'news_title' ) ); ?></h2></div>
+				<div class="klyv-pop__head">
+				<?php
+				echo klyv_logo_img( // phpcs:ignore WordPress.Security.EscapeOutput -- escapado na função.
+
+					'simbolo',
+					array(
+						'alt'  => '',
+						'lazy' => true,
+					)
+				); // phpcs:ignore WordPress.Security.EscapeOutput 
+				?>
+											<h2 id="klyv-pop-t"><?php echo esc_html( klyv_opt( 'news_title' ) ); ?></h2></div>
 				<p><?php echo esc_html( klyv_opt( 'news_text' ) ); ?></p>
 				<?php echo klyv_news_form( 'pop' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			</div>
@@ -157,7 +181,12 @@ function klyv_news_subscribe( $req ) {
 		return new WP_Error( 'nonce', __( 'Sessão expirada. Recarregue a página.', 'klyvorenza' ), array( 'status' => 403 ) );
 	}
 	if ( '' !== trim( (string) $req->get_param( 'website' ) ) ) { // honeypot.
-		return new WP_REST_Response( array( 'ok' => true, 'pending' => false ) ); // finge sucesso para o robô.
+		return new WP_REST_Response(
+			array(
+				'ok'      => true,
+				'pending' => false,
+			)
+		); // finge sucesso para o robô.
 	}
 	$ip  = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 	$key = 'klyv_rl_' . md5( $ip );
@@ -180,13 +209,35 @@ function klyv_news_subscribe( $req ) {
 	$st    = $dbl ? 'pending' : 'confirmed';
 	$exist = $wpdb->get_row( $wpdb->prepare( "SELECT id,status FROM $t WHERE email=%s", $email ) ); // phpcs:ignore WordPress.DB
 	if ( $exist && 'confirmed' === $exist->status ) {
-		return new WP_REST_Response( array( 'ok' => true, 'pending' => false ) );
+		return new WP_REST_Response(
+			array(
+				'ok'      => true,
+				'pending' => false,
+			)
+		);
 	}
 	if ( $exist ) {
-		$wpdb->update( $t, array( 'name' => $name, 'token' => $token ), array( 'id' => $exist->id ) ); // phpcs:ignore WordPress.DB
+		$wpdb->update(
+			$t,
+			array(
+				'name'  => $name,
+				'token' => $token,
+			),
+			array( 'id' => $exist->id )
+		); // phpcs:ignore WordPress.DB
 		$id = (int) $exist->id;
 	} elseif ( null === $pre ) {
-		$wpdb->insert( $t, array( 'name' => $name, 'email' => $email, 'status' => $st, 'token' => $token, 'created_at' => current_time( 'mysql', true ), 'confirmed_at' => $dbl ? null : current_time( 'mysql', true ) ) ); // phpcs:ignore WordPress.DB
+		$wpdb->insert(
+			$t,
+			array(
+				'name'         => $name,
+				'email'        => $email,
+				'status'       => $st,
+				'token'        => $token,
+				'created_at'   => current_time( 'mysql', true ),
+				'confirmed_at' => $dbl ? null : current_time( 'mysql', true ),
+			)
+		); // phpcs:ignore WordPress.DB
 		$id = (int) $wpdb->insert_id;
 	} else {
 		$id = 0;
@@ -201,7 +252,12 @@ function klyv_news_subscribe( $req ) {
 	} else {
 		do_action( 'klyvorenza_newsletter_subscribed', $name, $email, $id );
 	}
-	return new WP_REST_Response( array( 'ok' => true, 'pending' => $dbl ) );
+	return new WP_REST_Response(
+		array(
+			'ok'      => true,
+			'pending' => $dbl,
+		)
+	);
 }
 
 /** Confirmação por link. */
@@ -216,13 +272,24 @@ add_action(
 		$t   = klyv_news_table();
 		$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $t WHERE token=%s", $tok ) ); // phpcs:ignore WordPress.DB
 		if ( $row && 'confirmed' !== $row->status ) {
-			$wpdb->update( $t, array( 'status' => 'confirmed', 'confirmed_at' => current_time( 'mysql', true ) ), array( 'id' => $row->id ) ); // phpcs:ignore WordPress.DB
+			$wpdb->update(
+				$t,
+				array(
+					'status'       => 'confirmed',
+					'confirmed_at' => current_time( 'mysql', true ),
+				),
+				array( 'id' => $row->id )
+			); // phpcs:ignore WordPress.DB
 			do_action( 'klyvorenza_newsletter_subscribed', $row->name, $row->email, (int) $row->id );
 		}
 		wp_die(
 			esc_html( $row ? __( 'Inscrição confirmada. Obrigada!', 'klyvorenza' ) : __( 'Link inválido ou já usado.', 'klyvorenza' ) ),
 			esc_html__( 'Newsletter', 'klyvorenza' ),
-			array( 'response' => 200, 'link_url' => home_url( '/' ), 'link_text' => __( 'Voltar ao site', 'klyvorenza' ) )
+			array(
+				'response'  => 200,
+				'link_url'  => esc_url( home_url( '/' ) ),
+				'link_text' => esc_html__( 'Voltar ao site', 'klyvorenza' ),
+			)
 		);
 	}
 );

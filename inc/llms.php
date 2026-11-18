@@ -12,10 +12,10 @@ function klyv_llms_text() {
 	return klyv_cached(
 		'llms',
 		function () {
-			$o   = '# ' . get_bloginfo( 'name' ) . "\n\n";
-			$o  .= '> ' . ( get_bloginfo( 'description' ) ? get_bloginfo( 'description' ) : 'Blog brasileiro (pt-BR) de moda feminina, acessórios, maquiagem, cuidados com a pele, cabelos, unhas e perfumaria.' ) . "\n\n";
-			$o  .= "## Principais seções\n\n";
-			$o  .= '- [Início](' . home_url( '/' ) . ")\n";
+			$o  = '# ' . get_bloginfo( 'name' ) . "\n\n";
+			$o .= '> ' . ( get_bloginfo( 'description' ) ? get_bloginfo( 'description' ) : 'Blog brasileiro (pt-BR) de moda feminina, acessórios, maquiagem, cuidados com a pele, cabelos, unhas e perfumaria.' ) . "\n\n";
+			$o .= "## Principais seções\n\n";
+			$o .= '- [Início](' . home_url( '/' ) . ")\n";
 			foreach ( klyv_main_menu() as $it ) {
 				if ( home_url( '/' ) !== $it['url'] && '#' !== $it['url'] ) {
 					$o .= '- [' . $it['title'] . '](' . $it['url'] . ")\n";
@@ -29,7 +29,12 @@ function klyv_llms_text() {
 				$o .= '- [' . $t->name . '](' . get_term_link( $t ) . ') (' . (int) $t->count . " artigos)\n";
 			}
 			$o .= "\n## Artigos recentes\n\n";
-			foreach ( get_posts( array( 'numberposts' => 25, 'no_found_rows' => true ) ) as $p ) {
+			foreach ( get_posts(
+				array(
+					'numberposts'   => 25,
+					'no_found_rows' => true,
+				)
+			) as $p ) {
 				$o .= '- [' . wp_strip_all_tags( get_the_title( $p ) ) . '](' . get_permalink( $p ) . '): ' . wp_trim_words( wp_strip_all_tags( get_the_excerpt( $p ) ), 24, '…' ) . "\n";
 			}
 			$about = get_page_by_path( 'sobre' );
@@ -56,7 +61,7 @@ add_action(
 	}
 );
 
-/** robots.txt: não bloqueia rastreadores legítimos de busca e de IA. */
+/** Robots.txt: não bloqueia rastreadores legítimos de busca e de IA. */
 add_filter(
 	'robots_txt',
 	function ( $output, $public ) {

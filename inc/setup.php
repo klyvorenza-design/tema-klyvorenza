@@ -53,7 +53,16 @@ add_action(
 			return;
 		}
 		wp_enqueue_style( 'klyvorenza', KLYV_URI . '/assets/css/main.css', array(), KLYV_VERSION );
-		wp_enqueue_script( 'klyvorenza', KLYV_URI . '/assets/js/theme.js', array(), KLYV_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+		wp_enqueue_script(
+			'klyvorenza',
+			KLYV_URI . '/assets/js/theme.js',
+			array(),
+			KLYV_VERSION,
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
 		wp_localize_script(
 			'klyvorenza',
 			'klyvI18n',
@@ -64,20 +73,38 @@ add_action(
 			)
 		);
 		if ( is_front_page() && klyv_opt( 'slide_on' ) ) {
-			wp_enqueue_script( 'klyvorenza-slider', KLYV_URI . '/assets/js/slider.js', array(), KLYV_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+			wp_enqueue_script(
+				'klyvorenza-slider',
+				KLYV_URI . '/assets/js/slider.js',
+				array(),
+				KLYV_VERSION,
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => true,
+				)
+			);
 		}
 		if ( klyv_newsletter_active() ) {
-			wp_enqueue_script( 'klyvorenza-news', KLYV_URI . '/assets/js/newsletter.js', array(), KLYV_VERSION, array( 'strategy' => 'defer', 'in_footer' => true ) );
+			wp_enqueue_script(
+				'klyvorenza-news',
+				KLYV_URI . '/assets/js/newsletter.js',
+				array(),
+				KLYV_VERSION,
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => true,
+				)
+			);
 			wp_localize_script(
 				'klyvorenza-news',
 				'klyvNews',
 				array(
-					'rest'    => esc_url_raw( rest_url( 'klyvorenza/v1/newsletter' ) ),
-					'delay'   => max( 3, (int) klyv_opt( 'news_delay', 20 ) ) * 1000,
-					'popup'   => klyv_newsletter_popup_allowed(),
-					'ok'      => __( 'Quase lá! Confira seu e-mail para confirmar a inscrição.', 'klyvorenza' ),
-					'okDirect'=> __( 'Inscrição feita. Obrigada!', 'klyvorenza' ),
-					'error'   => __( 'Não foi possível enviar agora. Tente de novo em instantes.', 'klyvorenza' ),
+					'rest'     => esc_url_raw( rest_url( 'klyvorenza/v1/newsletter' ) ),
+					'delay'    => max( 3, (int) klyv_opt( 'news_delay', 20 ) ) * 1000,
+					'popup'    => klyv_newsletter_popup_allowed(),
+					'ok'       => __( 'Quase lá! Confira seu e-mail para confirmar a inscrição.', 'klyvorenza' ),
+					'okDirect' => __( 'Inscrição feita. Obrigada!', 'klyvorenza' ),
+					'error'    => __( 'Não foi possível enviar agora. Tente de novo em instantes.', 'klyvorenza' ),
 				)
 			);
 		}
@@ -132,9 +159,12 @@ add_action(
 	},
 	100
 );
-add_filter( 'tiny_mce_plugins', function ( $p ) {
-	return array_diff( $p, array( 'wpemoji' ) );
-} );
+add_filter(
+	'tiny_mce_plugins',
+	function ( $p ) {
+		return array_diff( $p, array( 'wpemoji' ) );
+	}
+);
 
 /** Classes no body: barras laterais e tema. */
 add_filter(

@@ -17,13 +17,19 @@ function klyv_find_parent( $slugs ) {
 	foreach ( array_filter( $slugs ) as $slug ) {
 		$t = get_term_by( 'slug', $slug, 'category' );
 		if ( $t && ! is_wp_error( $t ) ) {
-			return array( 'type' => 'term', 'obj' => $t );
+			return array(
+				'type' => 'term',
+				'obj'  => $t,
+			);
 		}
 	}
 	foreach ( array_filter( $slugs ) as $slug ) {
 		$p = get_page_by_path( $slug );
 		if ( $p ) {
-			return array( 'type' => 'page', 'obj' => $p );
+			return array(
+				'type' => 'page',
+				'obj'  => $p,
+			);
 		}
 	}
 	return null;
@@ -58,11 +64,23 @@ function klyv_menu_children( $parent, $skip = array() ) {
 					if ( in_array( $t->slug, $skip, true ) ) {
 						continue;
 					}
-					$out[] = array( 'title' => $t->name, 'url' => get_term_link( $t ) );
+					$out[] = array(
+						'title' => $t->name,
+						'url'   => get_term_link( $t ),
+					);
 				}
 			} else {
-				foreach ( get_pages( array( 'child_of' => $parent['obj']->ID, 'parent' => $parent['obj']->ID, 'sort_column' => 'menu_order,post_title' ) ) as $pg ) {
-					$out[] = array( 'title' => get_the_title( $pg ), 'url' => get_permalink( $pg ) );
+				foreach ( get_pages(
+					array(
+						'child_of'    => $parent['obj']->ID,
+						'parent'      => $parent['obj']->ID,
+						'sort_column' => 'menu_order,post_title',
+					)
+				) as $pg ) {
+					$out[] = array(
+						'title' => get_the_title( $pg ),
+						'url'   => get_permalink( $pg ),
+					);
 				}
 			}
 			return $out;
@@ -96,12 +114,36 @@ function klyv_main_menu() {
 	$skip = array( 'datas-comemorativas', 'datas-festivas', 'natal', 'ano-novo' );
 
 	$items = array(
-		array( 'title' => __( 'Iniciar', 'klyvorenza' ), 'url' => home_url( '/' ), 'children' => array() ),
-		array( 'title' => __( 'Blog', 'klyvorenza' ), 'url' => $blog, 'children' => array() ),
-		array( 'title' => __( 'Glossário', 'klyvorenza' ), 'url' => $gloss, 'children' => array() ),
-		array( 'title' => __( 'Web Stories', 'klyvorenza' ), 'url' => $st_url, 'children' => array() ),
-		array( 'title' => __( 'Especiais', 'klyvorenza' ), 'url' => is_wp_error( $esp_url ) ? '#' : $esp_url, 'children' => klyv_menu_children( $esp, $skip ) ),
-		array( 'title' => __( 'Datas Festivas', 'klyvorenza' ), 'url' => is_wp_error( $datas_url ) ? '#' : $datas_url, 'children' => klyv_menu_children( $datas ) ),
+		array(
+			'title'    => __( 'Iniciar', 'klyvorenza' ),
+			'url'      => home_url( '/' ),
+			'children' => array(),
+		),
+		array(
+			'title'    => __( 'Blog', 'klyvorenza' ),
+			'url'      => $blog,
+			'children' => array(),
+		),
+		array(
+			'title'    => __( 'Glossário', 'klyvorenza' ),
+			'url'      => $gloss,
+			'children' => array(),
+		),
+		array(
+			'title'    => __( 'Web Stories', 'klyvorenza' ),
+			'url'      => $st_url,
+			'children' => array(),
+		),
+		array(
+			'title'    => __( 'Especiais', 'klyvorenza' ),
+			'url'      => is_wp_error( $esp_url ) ? '#' : $esp_url,
+			'children' => klyv_menu_children( $esp, $skip ),
+		),
+		array(
+			'title'    => __( 'Datas Festivas', 'klyvorenza' ),
+			'url'      => is_wp_error( $datas_url ) ? '#' : $datas_url,
+			'children' => klyv_menu_children( $datas ),
+		),
 	);
 	return apply_filters( 'klyvorenza_main_menu', $items );
 }
@@ -146,7 +188,13 @@ function klyv_popular_cats() {
 		'popular_cats',
 		function () {
 			$slugs = array_filter( array_map( 'trim', explode( ',', (string) klyv_opt( 'popular_cats', '' ) ) ) );
-			$args  = array( 'taxonomy' => 'category', 'hide_empty' => true, 'number' => 8, 'orderby' => 'count', 'order' => 'DESC' );
+			$args  = array(
+				'taxonomy'   => 'category',
+				'hide_empty' => true,
+				'number'     => 8,
+				'orderby'    => 'count',
+				'order'      => 'DESC',
+			);
 			if ( $slugs ) {
 				$args['slug']    = $slugs;
 				$args['orderby'] = 'name';
@@ -154,7 +202,10 @@ function klyv_popular_cats() {
 			$out = array();
 			foreach ( (array) get_terms( $args ) as $t ) {
 				if ( $t instanceof WP_Term && 'uncategorized' !== $t->slug && 'sem-categoria' !== $t->slug ) {
-					$out[] = array( 'name' => $t->name, 'url' => get_term_link( $t ) );
+					$out[] = array(
+						'name' => $t->name,
+						'url'  => get_term_link( $t ),
+					);
 				}
 			}
 			return $out;
@@ -162,7 +213,10 @@ function klyv_popular_cats() {
 	);
 }
 
-/** Formulário de busca. */
+/** Formulário de busca. *
+ *
+ * @param string $id ID do campo.
+ */
 function klyv_search_form( $id = 'klyv-q' ) {
 	return '<form role="search" method="get" class="klyv-search-form" action="' . esc_url( home_url( '/' ) ) . '">'
 		. '<label class="screen-reader-text" for="' . esc_attr( $id ) . '">' . esc_html__( 'Pesquisar no site', 'klyvorenza' ) . '</label>'
@@ -182,7 +236,14 @@ function klyv_render_header() {
 	<div class="klyv-topbar"><div class="klyv-topbar__in"><?php echo klyv_gtranslate_html(); // phpcs:ignore WordPress.Security.EscapeOutput ?></div></div>
 	<div class="klyv-head">
 		<div class="klyv-head__in">
-			<a class="klyv-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>"><?php echo klyv_logo_img( 'logo', array( 'priority' => true ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a>
+			<a class="klyv-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+			<?php
+			echo klyv_logo_img( // phpcs:ignore WordPress.Security.EscapeOutput -- escapado na função.
+				'logo',
+				array( 'priority' => true )
+			); // phpcs:ignore WordPress.Security.EscapeOutput 
+			?>
+				</a>
 			<?php echo klyv_menu_html(); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			<div class="klyv-actions">
 				<button type="button" class="klyv-btn-i" id="klyv-open-search" aria-label="<?php esc_attr_e( 'Pesquisar', 'klyvorenza' ); ?>" aria-controls="klyv-search" aria-expanded="false"><?php echo klyv_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
@@ -195,7 +256,11 @@ function klyv_render_header() {
 		?>
 		<div class="klyv-drawer" id="klyv-drawer" role="dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Menu', 'klyvorenza' ); ?>" hidden>
 			<div class="klyv-drawer__bar">
-				<?php echo klyv_logo_img( 'logo' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<?php
+				echo klyv_logo_img( // phpcs:ignore WordPress.Security.EscapeOutput -- escapado na função.
+					'logo'
+				); // phpcs:ignore WordPress.Security.EscapeOutput 
+				?>
 				<button type="button" class="klyv-btn-i" data-close aria-label="<?php esc_attr_e( 'Fechar menu', 'klyvorenza' ); ?>"><?php echo klyv_icon( 'close' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
 			</div>
 			<?php echo klyv_menu_html( 'klyv-nav klyv-nav--drawer' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
@@ -220,15 +285,15 @@ function klyv_render_header() {
 /** Rodapé. */
 function klyv_render_footer() {
 	$pages = array(
-		'sobre'                  => __( 'Sobre', 'klyvorenza' ),
-		'galeria'                => __( 'Galeria', 'klyvorenza' ),
-		'contato'                => __( 'Contato', 'klyvorenza' ),
-		'links-na-bio'           => __( 'Links na Bio', 'klyvorenza' ),
-		'mapa-do-site'           => __( 'Mapa do Site', 'klyvorenza' ),
+		'sobre'                   => __( 'Sobre', 'klyvorenza' ),
+		'galeria'                 => __( 'Galeria', 'klyvorenza' ),
+		'contato'                 => __( 'Contato', 'klyvorenza' ),
+		'links-na-bio'            => __( 'Links na Bio', 'klyvorenza' ),
+		'mapa-do-site'            => __( 'Mapa do Site', 'klyvorenza' ),
 		'politica-de-privacidade' => __( 'Política de Privacidade', 'klyvorenza' ),
-		'termos-de-uso'          => __( 'Termos de Uso', 'klyvorenza' ),
+		'termos-de-uso'           => __( 'Termos de Uso', 'klyvorenza' ),
 	);
-	$li = '';
+	$li    = '';
 	foreach ( $pages as $slug => $label ) {
 		$p   = get_page_by_path( $slug );
 		$url = $p ? get_permalink( $p ) : home_url( '/' . $slug . '/' );
@@ -239,7 +304,18 @@ function klyv_render_footer() {
 	<div class="klyv-foot">
 		<div class="klyv-foot__in">
 			<div class="klyv-foot__brand">
-				<a class="klyv-foot__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php echo klyv_logo_img( 'simbolo', array( 'alt' => '', 'lazy' => true ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span></a>
+				<a class="klyv-foot__logo" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home">
+				<?php
+				echo klyv_logo_img( // phpcs:ignore WordPress.Security.EscapeOutput -- escapado na função.
+
+					'simbolo',
+					array(
+						'alt'  => '',
+						'lazy' => true,
+					)
+				); // phpcs:ignore WordPress.Security.EscapeOutput 
+				?>
+													<span><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span></a>
 				<p><?php echo esc_html( get_bloginfo( 'description' ) ? get_bloginfo( 'description' ) : __( 'Moda, beleza e cuidados para o seu dia a dia.', 'klyvorenza' ) ); ?></p>
 				<?php echo klyv_socials_html( 'klyv-social--foot' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			</div>

@@ -128,7 +128,14 @@ function klyv_extract_faq( $html ) {
 			$q = trim( wp_strip_all_tags( $x[1] ) );
 			$a = trim( wp_strip_all_tags( $x[2] ) );
 			if ( $q && $a ) {
-				$out[] = array( '@type' => 'Question', 'name' => $q, 'acceptedAnswer' => array( '@type' => 'Answer', 'text' => $a ) );
+				$out[] = array(
+					'@type'          => 'Question',
+					'name'           => $q,
+					'acceptedAnswer' => array(
+						'@type' => 'Answer',
+						'text'  => $a,
+					),
+				);
 			}
 		}
 	}
@@ -154,30 +161,45 @@ add_action(
 			'publisher'       => array( '@id' => $site . '#organization' ),
 			'potentialAction' => array(
 				'@type'       => 'SearchAction',
-				'target'      => array( '@type' => 'EntryPoint', 'urlTemplate' => $site . '?s={search_term_string}' ),
+				'target'      => array(
+					'@type'       => 'EntryPoint',
+					'urlTemplate' => $site . '?s={search_term_string}',
+				),
 				'query-input' => 'required name=search_term_string',
 			),
 		);
-		$same = array_values( array_filter( wp_list_pluck( klyv_socials(), 'url' ) ) );
+		$same    = array_values( array_filter( wp_list_pluck( klyv_socials(), 'url' ) ) );
 		$graph[] = array(
-			'@type' => 'Organization',
-			'@id'   => $site . '#organization',
-			'name'  => get_bloginfo( 'name' ),
-			'url'   => $site,
-			'logo'  => array( '@type' => 'ImageObject', 'url' => KLYV_URI . '/assets/logo/logo-site.png', 'width' => 450, 'height' => 200 ),
+			'@type'  => 'Organization',
+			'@id'    => $site . '#organization',
+			'name'   => get_bloginfo( 'name' ),
+			'url'    => $site,
+			'logo'   => array(
+				'@type'  => 'ImageObject',
+				'url'    => KLYV_URI . '/assets/logo/logo-site.png',
+				'width'  => 450,
+				'height' => 200,
+			),
 			'sameAs' => $same,
 		);
 
 		if ( ! is_front_page() ) {
 			$crumbs = array();
 			foreach ( klyv_breadcrumb_items() as $i => $it ) {
-				$c = array( '@type' => 'ListItem', 'position' => $i + 1, 'name' => wp_strip_all_tags( $it[0] ) );
+				$c = array(
+					'@type'    => 'ListItem',
+					'position' => $i + 1,
+					'name'     => wp_strip_all_tags( $it[0] ),
+				);
 				if ( $it[1] ) {
 					$c['item'] = $it[1];
 				}
 				$crumbs[] = $c;
 			}
-			$graph[] = array( '@type' => 'BreadcrumbList', 'itemListElement' => $crumbs );
+			$graph[] = array(
+				'@type'           => 'BreadcrumbList',
+				'itemListElement' => $crumbs,
+			);
 		}
 
 		if ( is_singular( 'post' ) ) {
@@ -193,13 +215,22 @@ add_action(
 				'datePublished'    => get_the_date( 'c' ),
 				'dateModified'     => get_the_modified_date( 'c' ),
 				'inLanguage'       => 'pt-BR',
-				'author'           => array( '@type' => 'Person', 'name' => get_the_author(), 'url' => get_author_posts_url( (int) get_post_field( 'post_author', $id ) ) ),
+				'author'           => array(
+					'@type' => 'Person',
+					'name'  => get_the_author(),
+					'url'   => get_author_posts_url( (int) get_post_field( 'post_author', $id ) ),
+				),
 				'publisher'        => array( '@id' => $site . '#organization' ),
 				'isPartOf'         => array( '@id' => $site . '#website' ),
 			);
 			if ( $iurl ) {
-				$meta = wp_get_attachment_metadata( $main['id'] );
-				$post['image'] = array( '@type' => 'ImageObject', 'url' => $iurl, 'width' => 1200, 'height' => 675 );
+				$meta          = wp_get_attachment_metadata( $main['id'] );
+				$post['image'] = array(
+					'@type'  => 'ImageObject',
+					'url'    => $iurl,
+					'width'  => 1200,
+					'height' => 675,
+				);
 				unset( $meta );
 			}
 			$cats = get_the_category();
@@ -209,24 +240,66 @@ add_action(
 			$graph[] = $post;
 			$faq     = klyv_extract_faq( apply_filters( 'the_content', get_post_field( 'post_content', $id ) ) );
 			if ( count( $faq ) >= 2 ) {
-				$graph[] = array( '@type' => 'FAQPage', 'mainEntity' => $faq );
+				$graph[] = array(
+					'@type'      => 'FAQPage',
+					'mainEntity' => $faq,
+				);
 			}
 		} elseif ( is_category() ) {
 			$t       = get_queried_object();
-			$graph[] = array( '@type' => 'CollectionPage', 'name' => $t->name, 'url' => get_term_link( $t ), 'description' => klyv_meta_description(), 'inLanguage' => 'pt-BR', 'isPartOf' => array( '@id' => $site . '#website' ) );
+			$graph[] = array(
+				'@type'       => 'CollectionPage',
+				'name'        => $t->name,
+				'url'         => get_term_link( $t ),
+				'description' => klyv_meta_description(),
+				'inLanguage'  => 'pt-BR',
+				'isPartOf'    => array( '@id' => $site . '#website' ),
+			);
 		} elseif ( is_page( 'glossario' ) || ( klyv_glossary_type() && is_post_type_archive( klyv_glossary_type() ) ) ) {
 			$terms = array();
 			$pt    = klyv_glossary_type();
-			$posts = $pt ? get_posts( array( 'post_type' => $pt, 'posts_per_page' => 200, 'orderby' => 'title', 'order' => 'ASC', 'no_found_rows' => true ) ) : array();
+			$posts = $pt ? get_posts(
+				array(
+					'post_type'      => $pt,
+					'posts_per_page' => 200,
+					'orderby'        => 'title',
+					'order'          => 'ASC',
+					'no_found_rows'  => true,
+				)
+			) : array();
 			foreach ( $posts as $p ) {
-				$terms[] = array( '@type' => 'DefinedTerm', 'name' => get_the_title( $p ), 'description' => wp_strip_all_tags( get_the_excerpt( $p ) ), 'url' => get_permalink( $p ), 'inDefinedTermSet' => $site . 'glossario/' );
+				$terms[] = array(
+					'@type'            => 'DefinedTerm',
+					'name'             => get_the_title( $p ),
+					'description'      => wp_strip_all_tags( get_the_excerpt( $p ) ),
+					'url'              => get_permalink( $p ),
+					'inDefinedTermSet' => $site . 'glossario/',
+				);
 			}
-			$graph[] = array( '@type' => 'DefinedTermSet', '@id' => $site . 'glossario/#set', 'name' => __( 'Glossário', 'klyvorenza' ), 'url' => $site . 'glossario/', 'hasDefinedTerm' => $terms );
+			$graph[] = array(
+				'@type'          => 'DefinedTermSet',
+				'@id'            => $site . 'glossario/#set',
+				'name'           => __( 'Glossário', 'klyvorenza' ),
+				'url'            => $site . 'glossario/',
+				'hasDefinedTerm' => $terms,
+			);
 		} elseif ( klyv_glossary_type() && is_singular( klyv_glossary_type() ) ) {
-			$graph[] = array( '@type' => 'DefinedTerm', 'name' => get_the_title(), 'description' => klyv_meta_description(), 'url' => get_permalink(), 'inDefinedTermSet' => $site . 'glossario/' );
+			$graph[] = array(
+				'@type'            => 'DefinedTerm',
+				'name'             => get_the_title(),
+				'description'      => klyv_meta_description(),
+				'url'              => get_permalink(),
+				'inDefinedTermSet' => $site . 'glossario/',
+			);
 		}
 
-		echo '<script type="application/ld+json">' . wp_json_encode( array( '@context' => 'https://schema.org', '@graph' => $graph ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput
+		echo '<script type="application/ld+json">' . wp_json_encode(
+			array(
+				'@context' => 'https://schema.org',
+				'@graph'   => $graph,
+			),
+			JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+		) . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput
 	},
 	6
 );
