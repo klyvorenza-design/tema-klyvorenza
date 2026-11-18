@@ -1,0 +1,114 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/theme.json",
+	"version": 3,
+	"settings": {
+		"appearanceTools": true,
+		"useRootPaddingAwareAlignments": true,
+		"layout": { "contentSize": "760px", "wideSize": "1240px" },
+		"color": {
+			"defaultPalette": false,
+			"defaultGradients": false,
+			"defaultDuotone": false,
+			"palette": [
+				{ "slug": "base", "name": "Fundo", "color": "#F6FBF7" },
+				{ "slug": "superficie", "name": "Superfície", "color": "#FFFFFF" },
+				{ "slug": "tinta", "name": "Texto", "color": "#10241A" },
+				{ "slug": "suave", "name": "Texto suave", "color": "#445A4D" },
+				{ "slug": "borda", "name": "Borda", "color": "#D3E9D8" },
+				{ "slug": "verde-claro", "name": "Verde claro (logo)", "color": "#B8F888" },
+				{ "slug": "verde", "name": "Verde (logo)", "color": "#78D878" },
+				{ "slug": "menta", "name": "Menta (logo)", "color": "#18B898" },
+				{ "slug": "turquesa", "name": "Turquesa (logo)", "color": "#08C8D8" },
+				{ "slug": "azul", "name": "Azul (logo)", "color": "#0878C8" },
+				{ "slug": "azul-escuro", "name": "Azul para texto", "color": "#066099" }
+			],
+			"gradients": [
+				{ "slug": "logo", "name": "Verde ao azul", "gradient": "linear-gradient(135deg,#B8F888 0%,#18B898 55%,#0878C8 100%)" },
+				{ "slug": "logo-suave", "name": "Verde ao azul suave", "gradient": "linear-gradient(135deg,rgba(184,248,136,.30) 0%,rgba(24,184,152,.16) 55%,rgba(8,120,200,.12) 100%)" }
+			]
+		},
+		"typography": {
+			"fluid": true,
+			"fontFamilies": [
+				{
+					"slug": "titulo", "name": "Playfair Display",
+					"fontFamily": "\"Playfair Display\", Georgia, \"Times New Roman\", serif",
+					"fontFace": [ { "fontFamily": "Playfair Display", "fontWeight": "700", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/playfair-display-latin-700-normal.woff2" ] } ]
+				},
+				{
+					"slug": "texto", "name": "Inter",
+					"fontFamily": "Inter, system-ui, -apple-system, \"Segoe UI\", Roboto, sans-serif",
+					"fontFace": [
+						{ "fontFamily": "Inter", "fontWeight": "400", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/inter-latin-400-normal.woff2" ] },
+						{ "fontFamily": "Inter", "fontWeight": "600", "fontStyle": "normal", "fontDisplay": "swap", "src": [ "file:./assets/fonts/inter-latin-600-normal.woff2" ] }
+					]
+				}
+			],
+			"fontSizes": [
+				{ "slug": "pequeno", "name": "Pequeno", "size": "0.875rem" },
+				{ "slug": "normal", "name": "Normal", "size": "1.0625rem" },
+				{ "slug": "medio", "name": "Médio", "size": "1.25rem", "fluid": { "min": "1.125rem", "max": "1.25rem" } },
+				{ "slug": "grande", "name": "Grande", "size": "1.75rem", "fluid": { "min": "1.45rem", "max": "1.75rem" } },
+				{ "slug": "extra", "name": "Extra", "size": "2.5rem", "fluid": { "min": "1.9rem", "max": "2.5rem" } },
+				{ "slug": "titulao", "name": "Título grande", "size": "3.25rem", "fluid": { "min": "2.15rem", "max": "3.25rem" } }
+			]
+		},
+		"spacing": {
+			"units": [ "px", "rem", "%", "vw", "svh" ],
+			"spacingSizes": [
+				{ "slug": "10", "name": "1", "size": "0.5rem" },
+				{ "slug": "20", "name": "2", "size": "0.75rem" },
+				{ "slug": "30", "name": "3", "size": "clamp(1rem,2vw,1.25rem)" },
+				{ "slug": "40", "name": "4", "size": "clamp(1.25rem,3vw,2rem)" },
+				{ "slug": "50", "name": "5", "size": "clamp(2rem,5vw,3.5rem)" },
+				{ "slug": "60", "name": "6", "size": "clamp(3rem,7vw,5rem)" }
+			]
+		},
+		"border": { "radius": true },
+		"shadow": {
+			"defaultPresets": false,
+			"presets": [
+				{ "slug": "leve", "name": "Leve", "shadow": "0 1px 2px rgba(16,36,26,.06), 0 4px 14px rgba(16,36,26,.06)" },
+				{ "slug": "media", "name": "Média", "shadow": "0 8px 28px rgba(16,36,26,.12)" }
+			]
+		}
+	},
+	"styles": {
+		"color": { "background": "var(--wp--preset--color--base)", "text": "var(--wp--preset--color--tinta)" },
+		"typography": { "fontFamily": "var(--wp--preset--font-family--texto)", "fontSize": "var(--wp--preset--font-size--normal)", "lineHeight": "1.7" },
+		"spacing": { "padding": { "left": "var(--wp--preset--spacing--30)", "right": "var(--wp--preset--spacing--30)" }, "blockGap": "1.5rem" },
+		"elements": {
+			"link": {
+				"color": { "text": "var(--wp--preset--color--azul-escuro)" },
+				":hover": { "color": { "text": "var(--wp--preset--color--tinta)" } },
+				":focus": { "typography": { "textDecoration": "underline" } }
+			},
+			"heading": { "typography": { "fontFamily": "var(--wp--preset--font-family--titulo)", "fontWeight": "700", "lineHeight": "1.2" }, "color": { "text": "var(--wp--preset--color--tinta)" } },
+			"h1": { "typography": { "fontSize": "var(--wp--preset--font-size--titulao)" } },
+			"h2": { "typography": { "fontSize": "var(--wp--preset--font-size--extra)" } },
+			"h3": { "typography": { "fontSize": "var(--wp--preset--font-size--grande)" } },
+			"h4": { "typography": { "fontSize": "var(--wp--preset--font-size--medio)" } },
+			"button": {
+				"color": { "gradient": "linear-gradient(135deg,#B8F888 0%,#18B898 100%)", "text": "#10241A" },
+				"typography": { "fontWeight": "600", "fontSize": "var(--wp--preset--font-size--normal)" },
+				"border": { "radius": "999px" },
+				"spacing": { "padding": { "top": "0.8rem", "bottom": "0.8rem", "left": "1.6rem", "right": "1.6rem" } }
+			}
+		},
+		"blocks": {
+			"core/post-title": { "typography": { "fontFamily": "var(--wp--preset--font-family--titulo)" } },
+			"core/separator": { "color": { "text": "var(--wp--preset--color--borda)" } },
+			"core/image": { "border": { "radius": "10px" } },
+			"core/quote": { "border": { "left": { "color": "var(--wp--preset--color--menta)", "width": "3px", "style": "solid" } }, "spacing": { "padding": { "left": "1.25rem" } } }
+		}
+	},
+	"templateParts": [
+		{ "name": "header", "title": "Cabeçalho", "area": "header" },
+		{ "name": "footer", "title": "Rodapé", "area": "footer" },
+		{ "name": "sidebar-esquerda", "title": "Barra lateral esquerda", "area": "uncategorized" },
+		{ "name": "sidebar-direita", "title": "Barra lateral direita", "area": "uncategorized" },
+		{ "name": "newsletter", "title": "Newsletter", "area": "uncategorized" },
+		{ "name": "compartilhar", "title": "Compartilhar", "area": "uncategorized" },
+		{ "name": "slide-destaques", "title": "Slide de destaques", "area": "uncategorized" }
+	]
+}
