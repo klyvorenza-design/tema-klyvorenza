@@ -1,0 +1,63 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"klyv-tp-header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"klyv-main klyv-single","layout":{"type":"default"}} -->
+<main id="conteudo" class="wp-block-group klyv-main klyv-single">
+<!-- wp:group {"className":"klyv-single__head","layout":{"type":"constrained"}} -->
+<div class="wp-block-group klyv-single__head">
+<!-- wp:klyvorenza/migalhas /-->
+<!-- wp:post-terms {"term":"category","className":"klyv-chip-terms"} /-->
+<!-- wp:post-title {"level":1,"className":"klyv-single__t"} /-->
+<!-- wp:group {"className":"klyv-meta","layout":{"type":"flex","flexWrap":"wrap"}} -->
+<div class="wp-block-group klyv-meta">
+<!-- wp:post-author {"showAvatar":false,"byline":"Por"} /-->
+<!-- wp:post-date {"displayType":"date"} /-->
+<!-- wp:klyvorenza/data-atualizacao /-->
+</div>
+<!-- /wp:group -->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:klyvorenza/imagem-principal {"align":"wide"} /-->
+
+<!-- wp:group {"className":"klyv-article-grid","layout":{"type":"default"}} -->
+<div class="wp-block-group klyv-article-grid">
+<!-- wp:template-part {"slug":"sidebar-esquerda","tagName":"aside","className":"klyv-side klyv-side--l"} /-->
+<!-- wp:group {"tagName":"article","className":"klyv-article","layout":{"type":"constrained"}} -->
+<article class="wp-block-group klyv-article">
+<!-- wp:template-part {"slug":"compartilhar","tagName":"div"} /-->
+<!-- wp:post-content {"className":"klyv-prose","layout":{"type":"constrained"}} /-->
+<!-- wp:template-part {"slug":"compartilhar","tagName":"div"} /-->
+<!-- wp:klyvorenza/caixa-autor /-->
+<!-- wp:comments -->
+<div class="wp-block-comments">
+<!-- wp:comments-title /-->
+<!-- wp:comment-template -->
+<!-- wp:comment-author-name /-->
+<!-- wp:comment-date /-->
+<!-- wp:comment-content /-->
+<!-- wp:comment-reply-link /-->
+<!-- /wp:comment-template -->
+<!-- wp:comments-pagination -->
+<!-- wp:comments-pagination-previous /-->
+<!-- wp:comments-pagination-numbers /-->
+<!-- wp:comments-pagination-next /-->
+<!-- /wp:comments-pagination -->
+<!-- wp:post-comments-form /-->
+</div>
+<!-- /wp:comments -->
+</article>
+<!-- /wp:group -->
+<!-- wp:template-part {"slug":"sidebar-direita","tagName":"aside","className":"klyv-side klyv-side--r"} /-->
+</div>
+<!-- /wp:group -->
+
+<!-- wp:group {"className":"klyv-after","layout":{"type":"constrained","wideSize":"1240px"}} -->
+<div class="wp-block-group klyv-after">
+<!-- wp:klyvorenza/relacionados {"align":"wide"} /-->
+<!-- wp:template-part {"slug":"newsletter","tagName":"div"} /-->
+</div>
+<!-- /wp:group -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"klyv-tp-footer"} /-->

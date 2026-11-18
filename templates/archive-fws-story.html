@@ -1,0 +1,25 @@
+<!-- wp:template-part {"slug":"header","tagName":"header","className":"klyv-tp-header"} /-->
+
+<!-- wp:group {"tagName":"main","className":"klyv-main","layout":{"type":"constrained"}} -->
+<main id="conteudo" class="wp-block-group klyv-main">
+<!-- wp:klyvorenza/migalhas /-->
+<!-- wp:heading {"level":1,"className":"klyv-archive-t"} -->
+<h1 class="wp-block-heading klyv-archive-t">Web Stories</h1>
+<!-- /wp:heading -->
+<!-- wp:query {"queryId":9,"query":{"inherit":true},"className":"klyv-qstories"} -->
+<div class="wp-block-query klyv-qstories">
+<!-- wp:post-template -->
+<!-- wp:post-featured-image {"isLink":true,"aspectRatio":"3/4","sizeSlug":"klyv-story","className":"klyv-story-img"} /-->
+<!-- wp:post-title {"level":3,"isLink":true,"className":"klyv-card__t"} /-->
+<!-- /wp:post-template -->
+<!-- wp:query-pagination {"className":"klyv-pager","layout":{"type":"flex","justifyContent":"center"}} -->
+<!-- wp:query-pagination-previous {"label":"Anterior"} /-->
+<!-- wp:query-pagination-numbers /-->
+<!-- wp:query-pagination-next {"label":"Próxima"} /-->
+<!-- /wp:query-pagination -->
+</div>
+<!-- /wp:query -->
+</main>
+<!-- /wp:group -->
+
+<!-- wp:template-part {"slug":"footer","tagName":"footer","className":"klyv-tp-footer"} /-->
