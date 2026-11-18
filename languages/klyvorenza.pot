@@ -1,0 +1,565 @@
+# Klyvorenza theme translation template.
+msgid ""
+msgstr ""
+"Project-Id-Version: Klyvorenza 1.0.0\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: inc/share.php inc/newsletter.php
+msgid "E-mail"
+msgstr ""
+
+#: inc/share.php
+msgid "Compartilhar"
+msgstr ""
+
+#: inc/share.php
+msgid "Copiar link do artigo"
+msgstr ""
+
+#: inc/share.php
+msgid "Compartilhar no %s"
+msgstr ""
+
+#: inc/home.php inc/blocks.php
+msgid "Últimos artigos"
+msgstr ""
+
+#: inc/home.php
+msgid "Ver tudo"
+msgstr ""
+
+#: inc/home.php inc/menu.php inc/seo.php
+msgid "Glossário"
+msgstr ""
+
+#: inc/home.php
+msgid "Índice A a Z"
+msgstr ""
+
+#: inc/home.php
+msgid "Abrir glossário"
+msgstr ""
+
+#: inc/home.php
+msgid "Termos de moda e beleza explicados de forma curta e clara."
+msgstr ""
+
+#: inc/home.php inc/menu.php
+msgid "Web Stories"
+msgstr ""
+
+#: inc/home.php
+msgid "Ver todos"
+msgstr ""
+
+#: inc/setup.php
+msgid "Principal do artigo (1200x675)"
+msgstr ""
+
+#: inc/setup.php
+msgid "Cartão (600x400)"
+msgstr ""
+
+#: inc/setup.php
+msgid "Compartilhamento (1200x630)"
+msgstr ""
+
+#: inc/setup.php
+msgid "Web Story (1080x1440)"
+msgstr ""
+
+#: inc/setup.php
+msgid "Link copiado"
+msgstr ""
+
+#: inc/setup.php inc/menu.php
+msgid "Ativar modo escuro"
+msgstr ""
+
+#: inc/setup.php
+msgid "Ativar modo claro"
+msgstr ""
+
+#: inc/setup.php
+msgid "Quase lá! Confira seu e-mail para confirmar a inscrição."
+msgstr ""
+
+#: inc/setup.php
+msgid "Inscrição feita. Obrigada!"
+msgstr ""
+
+#: inc/setup.php
+msgid "Não foi possível enviar agora. Tente de novo em instantes."
+msgstr ""
+
+#: inc/toc.php
+msgid "Neste artigo"
+msgstr ""
+
+#: inc/ads.php
+msgid "Publicidade"
+msgstr ""
+
+#: inc/options.php
+msgid "Copiar link"
+msgstr ""
+
+#: inc/options.php
+msgid "ID do editor (ca-pub-...)"
+msgstr ""
+
+#: inc/options.php
+msgid "Código do anúncio 1 do artigo (após o 3º parágrafo)"
+msgstr ""
+
+#: inc/options.php
+msgid "Ligar anúncio 1 do artigo"
+msgstr ""
+
+#: inc/options.php
+msgid "Código do anúncio 2 do artigo (meio do texto)"
+msgstr ""
+
+#: inc/options.php
+msgid "Ligar anúncio 2 do artigo"
+msgstr ""
+
+#: inc/options.php
+msgid "Código do anúncio 3 do artigo (antes da conclusão)"
+msgstr ""
+
+#: inc/options.php
+msgid "Ligar anúncio 3 do artigo"
+msgstr ""
+
+#: inc/options.php
+msgid "Código do anúncio da barra esquerda"
+msgstr ""
+
+#: inc/options.php
+msgid "Ligar anúncio da barra esquerda"
+msgstr ""
+
+#: inc/options.php
+msgid "Código do anúncio da barra direita"
+msgstr ""
+
+#: inc/options.php
+msgid "Ligar anúncio da barra direita"
+msgstr ""
+
+#: inc/options.php inc/blocks.php
+msgid "Redes sociais"
+msgstr ""
+
+#: inc/options.php
+msgid "Outras redes (uma por linha, formato nome|url. Ex.: youtube|https://...)"
+msgstr ""
+
+#: inc/options.php
+msgid "Ligar newsletter e pop-up"
+msgstr ""
+
+#: inc/options.php
+msgid "Segundos até abrir o pop-up"
+msgstr ""
+
+#: inc/options.php
+msgid "Título"
+msgstr ""
+
+#: inc/options.php
+msgid "Texto"
+msgstr ""
+
+#: inc/options.php
+msgid "Confirmar por e-mail (double opt-in)"
+msgstr ""
+
+#: inc/options.php
+msgid "Compartilhamento"
+msgstr ""
+
+#: inc/options.php
+msgid "Botões exibidos"
+msgstr ""
+
+#: inc/options.php
+msgid "Mostrar barras laterais no desktop (artigos)"
+msgstr ""
+
+#: inc/options.php
+msgid "Slide da home"
+msgstr ""
+
+#: inc/options.php
+msgid "Ligar slide"
+msgstr ""
+
+#: inc/options.php
+msgid "Número de slides"
+msgstr ""
+
+#: inc/options.php
+msgid "Segundos entre slides"
+msgstr ""
+
+#: inc/options.php
+msgid "Rolagem automática"
+msgstr ""
+
+#: inc/options.php
+msgid "Categorias, menus e glossário"
+msgstr ""
+
+#: inc/options.php
+msgid "Slug da categoria-mãe de \"Especiais\""
+msgstr ""
+
+#: inc/options.php
+msgid "Slug da categoria-mãe de \"Datas Festivas\""
+msgstr ""
+
+#: inc/options.php
+msgid "Categorias ocultas na home (slugs separados por vírgula)"
+msgstr ""
+
+#: inc/options.php
+msgid "Ordem das seções da home (slugs separados por vírgula; as demais vêm depois, pela data)"
+msgstr ""
+
+#: inc/options.php
+msgid "Categorias sugeridas na busca (slugs, vírgula). Vazio = mais populares"
+msgstr ""
+
+#: inc/options.php
+msgid "Tipo de conteúdo do glossário (deixe vazio para detectar)"
+msgstr ""
+
+#: inc/options.php
+msgid "Opções Klyvorenza"
+msgstr ""
+
+#: inc/options.php
+msgid "Contatos da newsletter"
+msgstr ""
+
+#: inc/options.php
+msgid "Exportar CSV"
+msgstr ""
+
+#: inc/slide.php
+msgid "Artigos em destaque"
+msgstr ""
+
+#: inc/slide.php
+msgid "%1$d de %2$d"
+msgstr ""
+
+#: inc/slide.php
+msgid "Ler artigo"
+msgstr ""
+
+#: inc/slide.php
+msgid "Slide anterior"
+msgstr ""
+
+#: inc/slide.php
+msgid "Próximo slide"
+msgstr ""
+
+#: inc/slide.php
+msgid "Ir para o slide %d"
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Nome"
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Concordo em receber e-mails e com a %s."
+msgstr ""
+
+#: inc/newsletter.php inc/menu.php
+msgid "Política de Privacidade"
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Quero receber"
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Fechar"
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Sessão expirada. Recarregue a página."
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Muitas tentativas. Tente mais tarde."
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Preencha nome, e-mail e aceite os termos."
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Confirme sua inscrição em %s"
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Inscrição confirmada. Obrigada!"
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Link inválido ou já usado."
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Newsletter"
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Voltar ao site"
+msgstr ""
+
+#: inc/newsletter.php
+msgid "Sem permissão."
+msgstr ""
+
+#: inc/menu.php
+msgid "Iniciar"
+msgstr ""
+
+#: inc/menu.php inc/blocks.php
+msgid "Blog"
+msgstr ""
+
+#: inc/menu.php
+msgid "Especiais"
+msgstr ""
+
+#: inc/menu.php
+msgid "Datas Festivas"
+msgstr ""
+
+#: inc/menu.php
+msgid "Abrir submenu de %s"
+msgstr ""
+
+#: inc/menu.php
+msgid "Menu principal"
+msgstr ""
+
+#: inc/menu.php
+msgid "Pesquisar no site"
+msgstr ""
+
+#: inc/menu.php
+msgid "O que você procura?"
+msgstr ""
+
+#: inc/menu.php
+msgid "Pesquisar"
+msgstr ""
+
+#: inc/menu.php
+msgid "Pular para o conteúdo"
+msgstr ""
+
+#: inc/menu.php
+msgid "Abrir menu"
+msgstr ""
+
+#: inc/menu.php
+msgid "Menu"
+msgstr ""
+
+#: inc/menu.php
+msgid "Fechar menu"
+msgstr ""
+
+#: inc/menu.php
+msgid "Fechar pesquisa"
+msgstr ""
+
+#: inc/menu.php
+msgid "Categorias populares"
+msgstr ""
+
+#: inc/menu.php
+msgid "Sobre"
+msgstr ""
+
+#: inc/menu.php
+msgid "Galeria"
+msgstr ""
+
+#: inc/menu.php
+msgid "Contato"
+msgstr ""
+
+#: inc/menu.php
+msgid "Links na Bio"
+msgstr ""
+
+#: inc/menu.php
+msgid "Mapa do Site"
+msgstr ""
+
+#: inc/menu.php
+msgid "Termos de Uso"
+msgstr ""
+
+#: inc/menu.php
+msgid "Moda, beleza e cuidados para o seu dia a dia."
+msgstr ""
+
+#: inc/menu.php
+msgid "Explorar"
+msgstr ""
+
+#: inc/menu.php
+msgid "Institucional"
+msgstr ""
+
+#: inc/menu.php
+msgid "© %1$s %2$s. Todos os direitos reservados."
+msgstr ""
+
+#: inc/helpers.php
+msgid "Receba as novidades da Klyvorenza"
+msgstr ""
+
+#: inc/helpers.php
+msgid "Dicas de moda, beleza e cuidados direto no seu e-mail. Sem spam, e você sai quando quiser."
+msgstr ""
+
+#: inc/helpers.php
+msgid "Klyvorenza no %s"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Cabeçalho Klyvorenza"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Rodapé Klyvorenza"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Slide de destaques"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Seções da home (categorias automáticas)"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Cartões de Web Stories"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Glossário A a Z"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Hub de categorias"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Imagem principal do artigo"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Migalhas de pão"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Botões de compartilhamento"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Artigos relacionados"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Caixa do autor"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Newsletter (formulário)"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Barra lateral (anúncio)"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Filtro por categoria"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Termo pesquisado e sugestões"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Data de atualização"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Atualizado em"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Início"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Busca"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Sobre a autora"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Ver todos os artigos"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Leia também"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Nenhuma categoria com artigos ainda."
+msgstr ""
+
+#: inc/blocks.php
+msgid "Índice de A a Z"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Resultados para %s"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Não encontramos nada com esse termo. Confira a grafia ou explore uma categoria:"
+msgstr ""
+
+#: inc/blocks.php
+msgid "Filtrar por categoria"
+msgstr ""
+
+#: inc/seo.php
+msgid "Artigos sobre %s na Klyvorenza: dicas práticas, tendências e ideias para o seu dia a dia."
+msgstr ""
+
+#: inc/seo.php
+msgid "Resultados da busca por %s na Klyvorenza."
+msgstr ""
+
