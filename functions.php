@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'KLYV_VERSION', '1.0.0' );
+define( 'KLYV_VERSION', '1.0.1' );
 define( 'KLYV_DIR', get_template_directory() );
 define( 'KLYV_URI', get_template_directory_uri() );
 
@@ -15,6 +15,7 @@ $klyv_files = array(
 	'helpers',
 	'setup',
 	'options',
+	'welcome',
 	'menu',
 	'blocks',
 	'slide',

@@ -3,7 +3,7 @@ Contributors: klyvorenza
 Requires at least: 6.5
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,6 +13,9 @@ Tema de blocos leve para blog de moda e beleza em português do Brasil.
 Menu e home automáticos por categorias, slide de destaques, modo escuro, newsletter, AdSense, compartilhamento, SEO técnico e SEO para IAs.
 
 == Changelog ==
+= 1.0.1 =
+Capa do tema, boas-vindas na ativação e ajustes.
+
 = 1.0.0 =
 Primeira versão.
 

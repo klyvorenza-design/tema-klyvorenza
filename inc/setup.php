@@ -194,6 +194,7 @@ add_action(
 			}
 		}
 		flush_rewrite_rules( false );
+		update_option( 'klyv_welcome', 1, false );
 	}
 );
 

@@ -37,6 +37,9 @@ input[type=text],input[type=email],input[type=search]{font-size:16px}
 .klyv-head__in>.klyv-nav{display:none}
 .klyv-menu,.klyv-sub,.klyv-chips,.klyv-foot__nav,.klyv-social,.klyv-share ul,.klyv-crumbs ol,.klyv-terms,.klyv-toc ol{list-style:none;margin:0;padding:0}
 
+body.admin-bar .klyv-head{top:32px}
+@media (max-width:782px){body.admin-bar .klyv-head{top:46px}}
+
 /* Gaveta mobile */
 .klyv-drawer{position:fixed;inset:0 0 0 auto;z-index:90;width:min(88vw,380px);height:100vh;height:100dvh;overflow-y:auto;overscroll-behavior:contain;background:var(--k-bg);padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) 0;box-shadow:-12px 0 40px rgba(0,0,0,.25);animation:klyv-in .22s ease-out}
 @keyframes klyv-in{from{transform:translateX(30px);opacity:0}}
@@ -169,7 +172,8 @@ mark{background:rgba(184,248,136,.55);color:inherit;padding:0 .15em;border-radiu
 .klyv-slide__dots button{width:28px;height:28px;border:0;background:none;padding:0;cursor:pointer;position:relative}
 .klyv-slide__dots button::after{content:"";position:absolute;inset:9px;border-radius:50%;background:rgba(255,255,255,.55);transition:.2s}
 .klyv-slide__dots button[aria-current=true]::after{background:var(--wp--preset--color--verde-claro);inset:8px}
-@media (min-width:768px){.klyv-slide__item{aspect-ratio:16/9}.klyv-slide__txt{width:min(62%,640px);right:auto;padding:3rem 2rem 3.4rem;background:linear-gradient(90deg,rgba(8,20,14,.88),rgba(8,20,14,.55) 70%,transparent)}.klyv-slide__nav{display:grid}.klyv-slide__dots{justify-content:flex-end;padding-right:1.5rem}}
+@media (min-width:768px){.klyv-slide__item{aspect-ratio:16/9}.klyv-slide__txt{width:min(62%,700px);right:auto;padding:3rem 2rem 3.4rem 5rem;background:linear-gradient(90deg,rgba(8,20,14,.88),rgba(8,20,14,.55) 70%,transparent)}.klyv-slide__nav{display:grid}.klyv-slide__dots{justify-content:flex-end;padding-right:1.5rem}}
+@media (min-width:1025px){.klyv-slide__item{aspect-ratio:21/9}}
 
 /* Artigo */
 .klyv-single__head{padding-top:.5rem}

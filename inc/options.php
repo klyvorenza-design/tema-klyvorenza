@@ -167,6 +167,7 @@ function klyv_render_options() {
 	}
 	$o = wp_parse_args( (array) get_option( 'klyvorenza_options', array() ), klyv_defaults() );
 	echo '<div class="wrap"><h1>' . esc_html__( 'Opções Klyvorenza', 'klyvorenza' ) . '</h1>';
+	klyv_render_welcome();
 	echo '<form method="post" action="options.php">';
 	settings_fields( 'klyvorenza' );
 	foreach ( klyv_option_fields() as $section ) {
