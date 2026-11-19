@@ -84,6 +84,18 @@ add_action(
 				)
 			);
 		}
+		if ( is_front_page() ) {
+			wp_enqueue_script(
+				'klyvorenza-carousel',
+				KLYV_URI . '/assets/js/carousel.js',
+				array(),
+				KLYV_VERSION,
+				array(
+					'strategy'  => 'defer',
+					'in_footer' => true,
+				)
+			);
+		}
 		if ( klyv_newsletter_active() ) {
 			wp_enqueue_script(
 				'klyvorenza-news',

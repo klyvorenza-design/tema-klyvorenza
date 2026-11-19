@@ -102,6 +102,7 @@
 			t.className = 'klyv-toast'; t.setAttribute( 'role', 'status' ); t.textContent = I.copied || 'Link copiado';
 			d.body.appendChild( t ); setTimeout( function () { t.remove(); }, 2200 );
 		}
+		var go = b.getAttribute( 'data-open' ); if ( go ) { window.open( go, '_blank', 'noopener' ); }
 		if ( navigator.clipboard ) { navigator.clipboard.writeText( url ).then( done ); } else { var i = d.createElement( 'input' ); i.value = url; d.body.appendChild( i ); i.select(); d.execCommand( 'copy' ); i.remove(); done(); }
 	} );
 

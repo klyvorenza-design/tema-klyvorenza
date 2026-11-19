@@ -39,17 +39,17 @@ function klyv_find_parent( $slugs ) {
  * Filhos de um item do menu (só categorias com artigos publicados, ou páginas filhas).
  *
  * @param array|null $parent Retorno de klyv_find_parent().
- * @param string[]   $skip   Slugs a ignorar.
+ * @param string[]   $only   Se informado, só estas categorias (por slug ou nome), nesta ordem.
  * @return array[] Cada item: title, url.
  */
-function klyv_menu_children( $parent, $skip = array() ) {
+function klyv_menu_children( $parent, $only = array() ) {
 	if ( ! $parent ) {
 		return array();
 	}
-	$key = 'menu_' . $parent['type'] . '_' . ( 'term' === $parent['type'] ? $parent['obj']->term_id : $parent['obj']->ID );
+	$key = 'menu_' . $parent['type'] . '_' . ( 'term' === $parent['type'] ? $parent['obj']->term_id : $parent['obj']->ID ) . implode( ',', $only );
 	return klyv_cached(
-		$key . implode( ',', $skip ),
-		function () use ( $parent, $skip ) {
+		$key,
+		function () use ( $parent, $only ) {
 			$out = array();
 			if ( 'term' === $parent['type'] ) {
 				$terms = get_terms(
@@ -60,14 +60,24 @@ function klyv_menu_children( $parent, $skip = array() ) {
 						'orderby'    => 'name',
 					)
 				);
+				$rank  = array();
 				foreach ( is_wp_error( $terms ) ? array() : $terms as $t ) {
-					if ( in_array( $t->slug, $skip, true ) ) {
-						continue;
+					$pos = false;
+					if ( $only ) {
+						$pos = array_search( $t->slug, $only, true );
+						$pos = false === $pos ? array_search( sanitize_title( $t->name ), $only, true ) : $pos;
+						if ( false === $pos ) {
+							continue;
+						}
 					}
-					$out[] = array(
+					$rank[] = (int) $pos;
+					$out[]  = array(
 						'title' => $t->name,
 						'url'   => get_term_link( $t ),
 					);
+				}
+				if ( $only ) {
+					array_multisort( $rank, SORT_ASC, $out );
 				}
 			} else {
 				foreach ( get_pages(
@@ -107,11 +117,10 @@ function klyv_main_menu() {
 	$esp   = klyv_find_parent( array( klyv_opt( 'parent_especiais' ), 'especiais' ) );
 	$datas = klyv_find_parent( array( klyv_opt( 'parent_datas' ), 'datas-festivas', 'datas-comemorativas' ) );
 
-	$esp_url   = $esp ? ( 'term' === $esp['type'] ? get_term_link( $esp['obj'] ) : get_permalink( $esp['obj'] ) ) : home_url( '/categorias/' );
-	$datas_url = $datas ? ( 'term' === $datas['type'] ? get_term_link( $datas['obj'] ) : get_permalink( $datas['obj'] ) ) : home_url( '/categorias/' );
+	$esp_url   = $esp ? ( 'term' === $esp['type'] ? get_term_link( $esp['obj'] ) : get_permalink( $esp['obj'] ) ) : '';
+	$datas_url = $datas ? ( 'term' === $datas['type'] ? get_term_link( $datas['obj'] ) : get_permalink( $datas['obj'] ) ) : '';
 
-	// Datas comemorativas dentro de Especiais não duplicam o item "Datas Festivas".
-	$skip = array( 'datas-comemorativas', 'datas-festivas', 'natal', 'ano-novo' );
+	$wl = klyv_menu_whitelist();
 
 	$items = array(
 		array(
@@ -136,37 +145,52 @@ function klyv_main_menu() {
 		),
 		array(
 			'title'    => __( 'Especiais', 'klyvorenza' ),
-			'url'      => is_wp_error( $esp_url ) ? '#' : $esp_url,
-			'children' => klyv_menu_children( $esp, $skip ),
+			'url'      => is_wp_error( $esp_url ) ? '' : $esp_url,
+			'children' => klyv_menu_children( $esp, $wl['especiais'] ),
 		),
 		array(
 			'title'    => __( 'Datas Festivas', 'klyvorenza' ),
-			'url'      => is_wp_error( $datas_url ) ? '#' : $datas_url,
-			'children' => klyv_menu_children( $datas ),
+			'url'      => is_wp_error( $datas_url ) ? '' : $datas_url,
+			'children' => klyv_menu_children( $datas, $wl['datas'] ),
 		),
 	);
 	return apply_filters( 'klyvorenza_main_menu', $items );
 }
 
 /**
- * Menu como HTML (usado no cabeçalho e no rodapé).
+ * Menu como HTML (cabeçalho, gaveta e rodapé). Usa o menu do WordPress (local "principal");
+ * sem menu atribuído, usa o menu automático.
  *
- * @param string $class Classe.
- * @param bool   $subs  Inclui submenus interativos.
+ * @param string $class  Classe do <nav>.
+ * @param bool   $subs   Inclui submenus interativos.
+ * @param string $prefix Prefixo dos IDs dos submenus.
  * @return string
  */
-function klyv_menu_html( $class = 'klyv-nav', $subs = true ) {
+function klyv_menu_html( $class = 'klyv-nav', $subs = true, $prefix = 'klyv-sub-' ) {
+	$wp_menu = klyv_wp_menu_html( $class, $subs, $prefix );
+	if ( $wp_menu ) {
+		return $wp_menu;
+	}
 	global $wp;
 	$cur  = home_url( isset( $wp->request ) ? $wp->request : '' );
 	$html = '<ul class="klyv-menu" role="list">';
 	foreach ( klyv_main_menu() as $i => $it ) {
 		$kids   = $subs ? $it['children'] : array();
-		$is_cur = untrailingslashit( $cur ) === untrailingslashit( $it['url'] );
-		$html  .= '<li class="klyv-menu__item' . ( $kids ? ' has-sub' : '' ) . '">';
-		$html  .= '<a href="' . esc_url( $it['url'] ) . '"' . ( $is_cur ? ' aria-current="page"' : '' ) . '>' . esc_html( $it['title'] ) . '</a>';
+		$nolink = '' === $it['url'];
+		$is_cur = ! $nolink && untrailingslashit( $cur ) === untrailingslashit( $it['url'] );
+		$id     = $prefix . $i;
+		/* translators: %s: item do menu. */
+		$lbl   = sprintf( __( 'Abrir submenu de %s', 'klyvorenza' ), $it['title'] );
+		$html .= '<li class="klyv-menu__item' . ( $kids ? ' has-sub' : '' ) . '">';
+		if ( $kids && $nolink ) {
+			$html .= '<button type="button" class="klyv-sub-toggle klyv-sub-toggle--label" aria-expanded="false" aria-controls="' . esc_attr( $id ) . '" aria-label="' . esc_attr( $lbl ) . '"><span>' . esc_html( $it['title'] ) . '</span>' . klyv_icon( 'chevron' ) . '</button>';
+		} else {
+			$html .= '<a href="' . esc_url( $nolink ? home_url( '/' ) : $it['url'] ) . '"' . ( $is_cur ? ' aria-current="page"' : '' ) . '>' . esc_html( $it['title'] ) . '</a>';
+			if ( $kids ) {
+				$html .= '<button type="button" class="klyv-sub-toggle" aria-expanded="false" aria-controls="' . esc_attr( $id ) . '" aria-label="' . esc_attr( $lbl ) . '">' . klyv_icon( 'chevron' ) . '</button>';
+			}
+		}
 		if ( $kids ) {
-			$id    = 'klyv-sub-' . $i;
-			$html .= '<button type="button" class="klyv-sub-toggle" aria-expanded="false" aria-controls="' . esc_attr( $id ) . '" aria-label="' . esc_attr( sprintf( /* translators: %s: item do menu */ __( 'Abrir submenu de %s', 'klyvorenza' ), $it['title'] ) ) . '">' . klyv_icon( 'chevron' ) . '</button>';
 			$html .= '<ul class="klyv-sub" id="' . esc_attr( $id ) . '" role="list">';
 			foreach ( $kids as $k ) {
 				$html .= '<li><a href="' . esc_url( $k['url'] ) . '">' . esc_html( $k['title'] ) . '</a></li>';
@@ -224,9 +248,15 @@ function klyv_search_form( $id = 'klyv-q' ) {
 		. '<button type="submit">' . esc_html__( 'Pesquisar', 'klyvorenza' ) . '</button></form>';
 }
 
-/** Cabeçalho completo. */
-function klyv_render_header() {
-	$pop = '';
+/**
+ * Cabeçalho completo.
+ *
+ * @param array $atts Atributos do bloco (variant: center).
+ * @return string
+ */
+function klyv_render_header( $atts = array() ) {
+	$center = ! empty( $atts['variant'] ) && 'center' === $atts['variant'];
+	$pop    = '';
 	foreach ( klyv_popular_cats() as $c ) {
 		$pop .= '<li><a href="' . esc_url( $c['url'] ) . '">' . esc_html( $c['name'] ) . '</a></li>';
 	}
@@ -234,16 +264,32 @@ function klyv_render_header() {
 	?>
 	<a class="klyv-skip screen-reader-text" href="#conteudo"><?php esc_html_e( 'Pular para o conteúdo', 'klyvorenza' ); ?></a>
 	<div class="klyv-topbar"><div class="klyv-topbar__in"><?php echo klyv_gtranslate_html(); // phpcs:ignore WordPress.Security.EscapeOutput ?></div></div>
-	<div class="klyv-head">
+	<div class="klyv-head<?php echo $center ? ' klyv-head--center' : ''; ?>">
 		<div class="klyv-head__in">
-			<a class="klyv-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
-			<?php
-			echo klyv_logo_img( // phpcs:ignore WordPress.Security.EscapeOutput -- escapado na função.
-				'logo',
-				array( 'priority' => true )
-			); // phpcs:ignore WordPress.Security.EscapeOutput 
-			?>
+			<?php if ( $center ) : ?>
+				<a class="klyv-brand klyv-brand--center" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+					<?php
+					echo klyv_logo_img( // phpcs:ignore WordPress.Security.EscapeOutput -- escapado na função.
+						'simbolo',
+						array(
+							'alt'      => '',
+							'priority' => true,
+							'size'     => 72,
+						)
+					); // phpcs:ignore WordPress.Security.EscapeOutput 
+					?>
+					<span class="klyv-brand__word"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
 				</a>
+			<?php else : ?>
+			<a class="klyv-brand" href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home" aria-label="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+				<?php
+				echo klyv_logo_img( // phpcs:ignore WordPress.Security.EscapeOutput -- escapado na função.
+					'logo',
+					array( 'priority' => true )
+				); // phpcs:ignore WordPress.Security.EscapeOutput 
+				?>
+				</a>
+			<?php endif; ?>
 			<?php echo klyv_menu_html(); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			<div class="klyv-actions">
 				<button type="button" class="klyv-btn-i" id="klyv-open-search" aria-label="<?php esc_attr_e( 'Pesquisar', 'klyvorenza' ); ?>" aria-controls="klyv-search" aria-expanded="false"><?php echo klyv_icon( 'search' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
@@ -263,7 +309,7 @@ function klyv_render_header() {
 				?>
 				<button type="button" class="klyv-btn-i" data-close aria-label="<?php esc_attr_e( 'Fechar menu', 'klyvorenza' ); ?>"><?php echo klyv_icon( 'close' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
 			</div>
-			<?php echo klyv_menu_html( 'klyv-nav klyv-nav--drawer' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+			<?php echo klyv_menu_html( 'klyv-nav klyv-nav--drawer', true, 'klyv-dsub-' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			<div class="klyv-drawer__extra"><?php echo klyv_search_form( 'klyv-q-m' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
 		</div>
 		<div class="klyv-drawer-back" data-close hidden></div>
@@ -330,8 +376,11 @@ function klyv_render_footer() {
 		</div>
 		<p class="klyv-foot__copy">
 			<?php
-			/* translators: 1: ano, 2: nome do site. */
-			echo esc_html( sprintf( __( '© %1$s %2$s. Todos os direitos reservados.', 'klyvorenza' ), gmdate( 'Y' ), get_bloginfo( 'name' ) ) );
+			$klyv_from            = (int) apply_filters( 'klyvorenza_since_year', 2025 );
+			$klyv_now             = (int) gmdate( 'Y' );
+						$klyv_sep = ' <span class="klyv-sep" aria-hidden="true"></span> ';
+			$klyv_yrs             = $klyv_now > $klyv_from ? $klyv_from . $klyv_sep . $klyv_now : (string) $klyv_now;
+			echo esc_html__( 'Todos os Direitos Reservados', 'klyvorenza' ) . $klyv_sep . '<a href="' . esc_url( home_url( '/' ) ) . '" rel="home">' . esc_html( get_bloginfo( 'name' ) ) . '</a><sup>&reg;</sup>' . $klyv_sep . '&copy; ' . $klyv_yrs; // phpcs:ignore WordPress.Security.EscapeOutput
 			?>
 		</p>
 	</div>

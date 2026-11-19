@@ -2,16 +2,17 @@
 
 Tema rápido e leve para o blog https://klyvorenza.com/ (moda feminina, acessórios, maquiagem, pele, cabelos, unhas e perfumaria). Requer WordPress 6.5 ou superior e PHP 7.4 ou superior.
 
-## Instalação
+## Instalação e atualização
 
-1. Baixe `klyvorenza.zip` (ou gere com `bin/empacotar.sh`).
+1. Baixe `dist/klyvorenza.zip` (ou gere com `bin/empacotar.sh`).
 2. Aparência > Temas > Adicionar > Enviar tema > ativar.
-3. Na ativação, se a página `/blog/` existir e nenhuma "Página de posts" estiver definida, o tema a define sozinho. Nada é apagado. Confira em Configurações > Leitura.
-4. Aparência > Opções Klyvorenza: preencha redes sociais e, se quiser, AdSense e newsletter.
+3. **Atualizar:** envie o zip novo do mesmo jeito. O WordPress detecta o tema já instalado (mesma pasta `klyvorenza`) e mostra o botão **Substituir atual pelo enviado**, sem desinstalar o antigo. Suas opções, menus e conteúdo são mantidos.
+4. Na ativação, se a página `/blog/` existir e nenhuma "Página de posts" estiver definida, o tema a define sozinho. Nada é apagado. Confira em Configurações > Leitura.
+5. Aparência > Opções Klyvorenza: preencha redes sociais e, se quiser, AdSense e newsletter.
 
 ## O que é automático
 
-- **Menu:** Iniciar, Blog, Glossário, Web Stories, Especiais e Datas Festivas. Os submenus vêm das **categorias filhas** de `especiais` e `datas-festivas` (slugs mudam no painel) e só mostram categorias com artigo publicado. Se forem páginas, usa as páginas filhas.
+- **Menu:** vem do WordPress. Edite em Aparência > Menus (local "Menu principal"). Ao ativar ou atualizar, o tema cria o menu padrão (Iniciar, Blog, Glossário, Web Stories, Especiais e Datas Festivas, com os submenus) se ainda não houver um. Item sem link (como "Especiais" sem categoria-mãe) abre só o submenu. Sem menu atribuído, o tema usa um menu automático com as mesmas categorias.
 - **Home:** slide com os 4 artigos mais recentes, últimos artigos e uma seção para cada categoria com artigos, mais Glossário e Web Stories. Nenhum artigo aparece duas vezes. Categoria nova entra sozinha com o primeiro artigo. A seção só aparece com 2 ou mais artigos ainda não exibidos (filtro `klyvorenza_home_min_posts`).
 - **`/categorias/`:** crie uma página com o slug `categorias`. O mesmo vale para `glossario`.
 - **Artigo:** sumário, migalhas, autor, data de atualização, relacionados, FAQPage em JSON-LD para títulos em forma de pergunta.

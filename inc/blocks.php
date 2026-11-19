@@ -37,7 +37,17 @@ function klyv_block( $name, $title, $cb, $attrs = array() ) {
 add_action(
 	'init',
 	function () {
-		klyv_block( 'cabecalho', __( 'Cabeçalho Klyvorenza', 'klyvorenza' ), 'klyv_render_header' );
+		klyv_block(
+			'cabecalho',
+			__( 'Cabeçalho Klyvorenza', 'klyvorenza' ),
+			'klyv_render_header',
+			array(
+				'variant' => array(
+					'type'    => 'string',
+					'default' => '',
+				),
+			)
+		);
 		klyv_block( 'rodape', __( 'Rodapé Klyvorenza', 'klyvorenza' ), 'klyv_render_footer' );
 		klyv_block( 'slide', __( 'Slide de destaques', 'klyvorenza' ), 'klyv_render_slide' );
 		klyv_block( 'home-secoes', __( 'Seções da home (categorias automáticas)', 'klyvorenza' ), 'klyv_render_home_sections' );
@@ -268,30 +278,114 @@ function klyv_render_related() {
 	return $h . '</div></section>';
 }
 
-/** Hub de categorias: todas com artigos, mais recentes primeiro. */
+/**
+ * Grupos da página de categorias: título e nomes na ordem pedida.
+ *
+ * @return array[]
+ */
+function klyv_category_groups() {
+	return array(
+		array(
+			'title' => __( 'Moda Feminina', 'klyvorenza' ),
+			'note'  => __( 'Confira as categorias abaixo.', 'klyvorenza' ),
+			'names' => array(
+				'Roupas'             => array( 'roupas' ),
+				'Vestidos'           => array( 'vestidos' ),
+				'Blusas'             => array( 'blusas' ),
+				'Saias'              => array( 'saias' ),
+				'Plus Size'          => array( 'plus-size' ),
+				'Casacos e Jaquetas' => array( 'casacos-e-jaquetas', 'casacos-e-jaqueta', 'casacos-e-jaquetas-2' ),
+				'Maiôs'              => array( 'maios' ),
+				'Biquínis'           => array( 'biquinis' ),
+				'Calças'             => array( 'calcas' ),
+				'Shorts'             => array( 'shorts', 'shorts-e-macacao' ),
+				'Macacão'            => array( 'macacao', 'shorts-e-macacao' ),
+			),
+		),
+		array(
+			'title' => __( 'Cuidados Femininos', 'klyvorenza' ),
+			'note'  => __( 'Confira as categorias abaixo.', 'klyvorenza' ),
+			'names' => array(
+				'Beleza & Cuidados'   => array( 'beleza-cuidados', 'beleza-e-cuidados', 'beleza' ),
+				'Cuidados com a Pele' => array( 'cuidados-com-a-pele' ),
+				'Maquiagem'           => array( 'maquiagem' ),
+				'Cabelos'             => array( 'cabelos', 'cabelo' ),
+				'Unhas'               => array( 'unhas' ),
+			),
+		),
+	);
+}
+
+/**
+ * Cartão de uma categoria.
+ *
+ * @param WP_Term $t Categoria.
+ * @return string
+ */
+function klyv_category_card( $t ) {
+	$ids = klyv_category_ids( $t->term_id, 1 );
+	$img = $ids && has_post_thumbnail( $ids[0] ) ? get_the_post_thumbnail(
+		$ids[0],
+		'klyv-card',
+		array(
+			'loading'  => 'lazy',
+			'decoding' => 'async',
+			'alt'      => '',
+			'sizes'    => '(max-width:600px) 92vw, 300px',
+		)
+	) : '<span class="klyv-card__ph" aria-hidden="true"></span>';
+	/* translators: %d: número de artigos. */
+	$n = sprintf( _n( '%d artigo', '%d artigos', (int) $t->count, 'klyvorenza' ), (int) $t->count );
+	return '<a class="klyv-cat" href="' . esc_url( get_term_link( $t ) ) . '"><span class="klyv-card__img">' . $img . '</span><span class="klyv-cat__n">' . esc_html( $t->name ) . '</span><span class="klyv-cat__c">' . esc_html( $n ) . '</span></a>';
+}
+
+/** Página de categorias: Moda Feminina, Cuidados Femininos e, se houver, as demais. */
 function klyv_render_category_hub() {
-	$terms = klyv_active_categories();
-	if ( ! $terms ) {
-		return '<p>' . esc_html__( 'Nenhuma categoria com artigos ainda.', 'klyvorenza' ) . '</p>';
+	$all   = klyv_active_categories(); // Só categorias com artigos.
+	$by_id = array();
+	foreach ( $all as $t ) {
+		$by_id[ $t->term_id ] = $t;
 	}
-	$h = '<div class="klyv-cats">';
-	foreach ( $terms as $t ) {
-		$ids = klyv_category_ids( $t->term_id, 1 );
-		$img = $ids && has_post_thumbnail( $ids[0] ) ? get_the_post_thumbnail(
-			$ids[0],
-			'klyv-card',
-			array(
-				'loading'  => 'lazy',
-				'decoding' => 'async',
-				'alt'      => '',
-				'sizes'    => '(max-width:600px) 92vw, 300px',
-			)
-		) : '<span class="klyv-card__ph" aria-hidden="true"></span>';
-		/* translators: %d: número de artigos. */
-		$n  = sprintf( _n( '%d artigo', '%d artigos', (int) $t->count, 'klyvorenza' ), (int) $t->count );
-		$h .= '<a class="klyv-cat" href="' . esc_url( get_term_link( $t ) ) . '"><span class="klyv-card__img">' . $img . '</span><span class="klyv-cat__n">' . esc_html( $t->name ) . '</span><span class="klyv-cat__c">' . esc_html( $n ) . '</span></a>';
+	$shown = array();
+	$html  = '';
+	foreach ( klyv_category_groups() as $g ) {
+		$cards = '';
+		foreach ( $g['names'] as $name => $slugs ) {
+			$found = null;
+			foreach ( $all as $t ) {
+				if ( in_array( $t->slug, $slugs, true ) || sanitize_title( $t->name ) === sanitize_title( $name ) ) {
+					$found = $t;
+					break;
+				}
+			}
+			if ( $found && ! isset( $shown[ $found->term_id ] ) ) {
+				$shown[ $found->term_id ] = true;
+				$cards                   .= klyv_category_card( $found );
+			}
+		}
+		if ( $cards ) {
+			$html .= '<section class="klyv-cats-sec"><h2>' . esc_html( $g['title'] ) . '</h2><p class="klyv-cats-sec__n">' . esc_html( $g['note'] ) . '</p><div class="klyv-cats">' . $cards . '</div></section>';
+		}
 	}
-	return $h . '</div>';
+	// Demais categorias (novas), fora de Especiais e Datas Festivas.
+	$skip = array();
+	foreach ( array( 'especiais', 'datas-festivas', 'datas-comemorativas' ) as $slug ) {
+		$p = get_term_by( 'slug', $slug, 'category' );
+		if ( $p ) {
+			$skip[ $p->term_id ] = true;
+		}
+	}
+	$extra = '';
+	foreach ( $all as $t ) {
+		if ( isset( $shown[ $t->term_id ] ) || isset( $skip[ $t->term_id ] ) || isset( $skip[ $t->parent ] ) ) {
+			continue;
+		}
+		$extra .= klyv_category_card( $t );
+	}
+	if ( $extra ) {
+		$html .= '<section class="klyv-cats-sec"><h2>' . esc_html__( 'Mais categorias', 'klyvorenza' ) . '</h2><div class="klyv-cats">' . $extra . '</div></section>';
+	}
+	return $html ? $html : '<p>' . esc_html__( 'Nenhuma categoria com artigos ainda.', 'klyvorenza' ) . '</p>';
 }
 
 /** Cartões de Web Stories (proporção 3:4). *
@@ -338,37 +432,81 @@ function klyv_render_stories( $atts = array() ) {
 	return $h . '</div>';
 }
 
-/** Glossário A a Z com marcação DefinedTermSet. */
-function klyv_render_glossary() {
+/**
+ * Termos do glossário (tipo de conteúdo próprio ou páginas filhas de /glossario/).
+ *
+ * @param string $order  title|date.
+ * @param int    $limit  Máximo.
+ * @return WP_Post[]
+ */
+function klyv_glossary_posts( $order = 'title', $limit = 500 ) {
 	$pt = klyv_glossary_type();
 	if ( $pt ) {
-		$posts = get_posts(
+		return get_posts(
 			array(
 				'post_type'      => $pt,
-				'posts_per_page' => 500,
-				'orderby'        => 'title',
-				'order'          => 'ASC',
+				'posts_per_page' => $limit,
+				'orderby'        => $order,
+				'order'          => 'title' === $order ? 'ASC' : 'DESC',
 				'no_found_rows'  => true,
 			)
 		);
-	} else {
-		$page  = get_page_by_path( 'glossario' );
-		$posts = $page ? get_pages(
-			array(
-				'child_of'    => $page->ID,
-				'sort_column' => 'post_title',
-			)
-		) : array();
 	}
+	$page = get_page_by_path( 'glossario' );
+	if ( ! $page ) {
+		return array();
+	}
+	return get_pages(
+		array(
+			'child_of'    => $page->ID,
+			'sort_column' => 'title' === $order ? 'post_title' : 'post_date',
+			'sort_order'  => 'title' === $order ? 'ASC' : 'DESC',
+		)
+	);
+}
+
+/**
+ * Letra inicial de um termo (sem acento, A a Z, ou #).
+ *
+ * @param WP_Post $p Termo.
+ * @return string
+ */
+function klyv_term_letter( $p ) {
+	$l = strtoupper( substr( remove_accents( get_the_title( $p ) ), 0, 1 ) );
+	return ctype_alpha( $l ) ? $l : '#';
+}
+
+/**
+ * Um termo por letra (o mais recente de cada), em ordem A a Z. Sem repetir letras.
+ *
+ * @return WP_Post[] Indexado pela letra.
+ */
+function klyv_glossary_one_per_letter() {
+	return klyv_cached(
+		'gloss_letters',
+		function () {
+			$out = array();
+			foreach ( klyv_glossary_posts( 'date', 500 ) as $p ) { // Do mais novo para o mais antigo.
+				$l = klyv_term_letter( $p );
+				if ( ! isset( $out[ $l ] ) ) {
+					$out[ $l ] = $p;
+				}
+			}
+			ksort( $out );
+			return $out;
+		}
+	);
+}
+
+/** Glossário A a Z com marcação DefinedTermSet. */
+function klyv_render_glossary() {
+	$posts = klyv_glossary_posts( 'title', 500 );
 	if ( ! $posts ) {
 		return '';
 	}
 	$groups = array();
 	foreach ( $posts as $p ) {
-		$t              = remove_accents( get_the_title( $p ) );
-		$l              = strtoupper( substr( $t, 0, 1 ) );
-		$l              = ctype_alpha( $l ) ? $l : '#';
-		$groups[ $l ][] = $p;
+		$groups[ klyv_term_letter( $p ) ][] = $p;
 	}
 	ksort( $groups );
 	$h = '<nav class="klyv-az" aria-label="' . esc_attr__( 'Índice de A a Z', 'klyvorenza' ) . '">';

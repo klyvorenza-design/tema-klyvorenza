@@ -141,7 +141,7 @@ function klyv_render_latest() {
 			return $q->posts;
 		}
 	);
-	$ids = klyv_take_unshown( $ids, 6 );
+	$ids = klyv_take_unshown( $ids, 8 );
 	if ( ! $ids ) {
 		return '';
 	}
@@ -154,10 +154,10 @@ function klyv_render_latest() {
 
 /** Seções por categoria, depois Glossário e Web Stories. */
 function klyv_render_home_sections() {
-	$min  = (int) apply_filters( 'klyvorenza_home_min_posts', 2 );
+	$min  = (int) apply_filters( 'klyvorenza_home_min_posts', 1 );
 	$html = '';
 	foreach ( klyv_active_categories( true ) as $t ) {
-		$ids = klyv_take_if_enough( klyv_category_ids( $t->term_id, 16 ), 3, $min );
+		$ids = klyv_take_if_enough( klyv_category_ids( $t->term_id, 24 ), 4, $min );
 		if ( ! $ids ) {
 			continue;
 		}
@@ -169,31 +169,16 @@ function klyv_render_home_sections() {
 		$html .= '</div></section>';
 	}
 
-	// Glossário.
-	$gt = klyv_glossary_type();
+	// Glossário: carrossel com um termo de cada letra, sem repetir.
 	$gp = get_page_by_path( 'glossario' );
-	if ( $gt ) {
-		$gids = klyv_cached(
-			'gloss_ids',
-			function () use ( $gt ) {
-				$q = new WP_Query(
-					array(
-						'post_type'      => $gt,
-						'posts_per_page' => 6,
-						'fields'         => 'ids',
-						'no_found_rows'  => true,
-					)
-				);
-				return $q->posts;
-			}
-		);
-		if ( $gids ) {
-			$html .= '<section class="klyv-sec" aria-labelledby="klyv-s-gl"><header class="klyv-sec__h"><h2 id="klyv-s-gl">' . esc_html__( 'Glossário', 'klyvorenza' ) . '</h2>' . ( $gp ? '<a class="klyv-more" href="' . esc_url( get_permalink( $gp ) ) . '">' . esc_html__( 'Índice A a Z', 'klyvorenza' ) . '</a>' : '' ) . '</header><ul class="klyv-terms" role="list">';
-			foreach ( $gids as $gid ) {
-				$html .= '<li><a href="' . esc_url( get_permalink( $gid ) ) . '"><strong>' . esc_html( get_the_title( $gid ) ) . '</strong><span>' . esc_html( wp_trim_words( get_the_excerpt( $gid ), 14, '…' ) ) . '</span></a></li>';
-			}
-			$html .= '</ul></section>';
+	$gl = klyv_glossary_one_per_letter();
+	if ( $gl ) {
+		$html .= '<section class="klyv-sec" aria-labelledby="klyv-s-gl"><header class="klyv-sec__h"><h2 id="klyv-s-gl">' . esc_html__( 'Glossário', 'klyvorenza' ) . '</h2>' . ( $gp ? '<a class="klyv-more" href="' . esc_url( get_permalink( $gp ) ) . '">' . esc_html__( 'Índice A a Z', 'klyvorenza' ) . '</a>' : '' ) . '</header>';
+		$html .= '<div class="klyv-car" role="region" aria-roledescription="carousel" aria-label="' . esc_attr__( 'Glossário', 'klyvorenza' ) . '"><ul class="klyv-car__track" tabindex="0" role="list">';
+		foreach ( $gl as $letter => $p ) {
+			$html .= '<li class="klyv-gcard"><span class="klyv-gcard__l" aria-hidden="true">' . esc_html( $letter ) . '</span><a class="klyv-gcard__t" href="' . esc_url( get_permalink( $p ) ) . '">' . esc_html( get_the_title( $p ) ) . '</a><p>' . esc_html( wp_trim_words( get_the_excerpt( $p ), 18, '…' ) ) . '</p></li>';
 		}
+		$html .= '</ul><button type="button" class="klyv-car__nav klyv-car__prev" aria-label="' . esc_attr__( 'Anterior', 'klyvorenza' ) . '">' . klyv_icon( 'left' ) . '</button><button type="button" class="klyv-car__nav klyv-car__next" aria-label="' . esc_attr__( 'Próximo', 'klyvorenza' ) . '">' . klyv_icon( 'right' ) . '</button></div></section>';
 	} elseif ( $gp ) {
 		$html .= '<section class="klyv-sec" aria-labelledby="klyv-s-gl"><header class="klyv-sec__h"><h2 id="klyv-s-gl">' . esc_html__( 'Glossário', 'klyvorenza' ) . '</h2><a class="klyv-more" href="' . esc_url( get_permalink( $gp ) ) . '">' . esc_html__( 'Abrir glossário', 'klyvorenza' ) . '</a></header><p>' . esc_html__( 'Termos de moda e beleza explicados de forma curta e clara.', 'klyvorenza' ) . '</p></section>';
 	}

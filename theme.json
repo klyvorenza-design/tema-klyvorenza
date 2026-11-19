@@ -104,6 +104,7 @@
 	},
 	"templateParts": [
 		{ "name": "header", "title": "Cabeçalho", "area": "header" },
+		{ "name": "header-centrado", "title": "Cabeçalho centralizado", "area": "header" },
 		{ "name": "footer", "title": "Rodapé", "area": "footer" },
 		{ "name": "sidebar-esquerda", "title": "Barra lateral esquerda", "area": "uncategorized" },
 		{ "name": "sidebar-direita", "title": "Barra lateral direita", "area": "uncategorized" },

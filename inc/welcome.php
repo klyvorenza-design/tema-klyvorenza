@@ -72,6 +72,21 @@ add_action(
 	}
 );
 
+/** Cria o menu padrão a pedido (só se ainda não houver um menu no local principal). */
+add_action(
+	'admin_post_klyv_setup_menu',
+	function () {
+		if ( ! current_user_can( 'edit_theme_options' ) ) {
+			wp_die( esc_html__( 'Sem permissão.', 'klyvorenza' ), '', array( 'response' => 403 ) );
+		}
+		check_admin_referer( 'klyv_setup_menu' );
+		klyv_create_default_menu();
+		klyv_bump_cache();
+		wp_safe_redirect( admin_url( 'themes.php?page=klyvorenza&pronto=1' ) );
+		exit;
+	}
+);
+
 /** Caixa de boas-vindas no topo da página de opções. */
 function klyv_render_welcome() {
 	// phpcs:disable WordPress.Security.NonceVerification
@@ -92,6 +107,27 @@ function klyv_render_welcome() {
 	if ( $miss ) {
 		echo '<a class="button button-primary" href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=klyv_setup_pages' ), 'klyv_setup_pages' ) ) . '">' . esc_html__( 'Criar as páginas que faltam', 'klyvorenza' ) . '</a> ';
 	}
+	echo '<a class="button" href="' . esc_url( admin_url( 'nav-menus.php' ) ) . '">' . esc_html__( 'Editar o menu principal', 'klyvorenza' ) . '</a> ';
+	if ( ! has_nav_menu( 'principal' ) ) {
+		echo '<a class="button" href="' . esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=klyv_setup_menu' ), 'klyv_setup_menu' ) ) . '">' . esc_html__( 'Criar o menu principal', 'klyvorenza' ) . '</a> ';
+	}
 	echo '<a class="button" href="' . esc_url( home_url( '/' ) ) . '" target="_blank" rel="noopener">' . esc_html__( 'Ver o site', 'klyvorenza' ) . '</a> ';
 	echo '<a class="button" href="' . esc_url( admin_url( 'site-editor.php' ) ) . '">' . esc_html__( 'Abrir o editor do site', 'klyvorenza' ) . '</a></p></div>';
 }
+
+/** Migração única (1.0.2): inclui o TikTok nos botões de compartilhamento já salvos. */
+add_action(
+	'admin_init',
+	function () {
+		if ( get_option( 'klyv_mig_102' ) ) {
+			return;
+		}
+		update_option( 'klyv_mig_102', 1, false );
+		$o = get_option( 'klyvorenza_options' );
+		if ( is_array( $o ) && isset( $o['share_buttons'] ) && is_array( $o['share_buttons'] ) && ! in_array( 'tiktok', $o['share_buttons'], true ) ) {
+			$pos = array_search( 'telegram', $o['share_buttons'], true );
+			array_splice( $o['share_buttons'], false === $pos ? count( $o['share_buttons'] ) : $pos + 1, 0, 'tiktok' );
+			update_option( 'klyvorenza_options', $o );
+		}
+	}
+);

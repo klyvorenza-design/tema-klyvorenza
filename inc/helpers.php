@@ -28,13 +28,14 @@ function klyv_defaults() {
 		'social_facebook'    => '',
 		'social_instagram'   => '',
 		'social_pinterest'   => '',
+		'social_tiktok'      => '',
 		'social_extra'       => '',
 		'news_on'            => 1,
 		'news_delay'         => 20,
 		'news_title'         => __( 'Receba as novidades da Klyvorenza', 'klyvorenza' ),
 		'news_text'          => __( 'Dicas de moda, beleza e cuidados direto no seu e-mail. Sem spam, e você sai quando quiser.', 'klyvorenza' ),
 		'news_double_optin'  => 1,
-		'share_buttons'      => array( 'whatsapp', 'facebook', 'pinterest', 'x', 'telegram', 'email', 'copiar' ),
+		'share_buttons'      => array( 'whatsapp', 'facebook', 'pinterest', 'x', 'telegram', 'tiktok', 'email', 'copiar' ),
 		'sidebars_on'        => 1,
 		'slide_on'           => 1,
 		'slide_count'        => 4,
@@ -199,7 +200,7 @@ function klyv_icon( $name ) {
 		'left'      => '<path d="m15 6-6 6 6 6"/>',
 		'right'     => '<path d="m9 6 6 6-6 6"/>',
 		'link'      => '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
-		'mail'      => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+		'email'     => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
 		'whatsapp'  => '<path d="M3 21l1.6-4.7A8.5 8.5 0 1 1 8 19.5z"/><path d="M9 9c0 3 3 6 6 6l1-1.5-2-1-1 .7c-1-.4-1.8-1.200-2.200-2.200l.7-1-1-2z"/>',
 		'facebook'  => '<path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8z"/>',
 		'pinterest' => '<circle cx="12" cy="12" r="9"/><path d="M10.500 20.500 12 13m-1.500-3.500c1-2 4.500-1.500 4.500 1 0 2-1.500 3.500-3 3.500"/>',
@@ -226,6 +227,7 @@ function klyv_socials() {
 		'facebook'  => 'Facebook',
 		'instagram' => 'Instagram',
 		'pinterest' => 'Pinterest',
+		'tiktok'    => 'TikTok',
 	);
 	foreach ( $base as $k => $label ) {
 		$url = klyv_opt( 'social_' . $k );
@@ -281,15 +283,15 @@ function klyv_socials_html( $class = '' ) {
 function klyv_logo_img( $kind = 'logo', $attr = array() ) {
 	$u = KLYV_URI . '/assets/logo/';
 	if ( 'simbolo' === $kind ) {
-		$w   = 96;
-		$h   = 96;
+		$w   = ! empty( $attr['size'] ) ? (int) $attr['size'] : 96;
+		$h   = $w;
 		$img = sprintf(
 			'<img src="%1$ssimbolo-1x.webp" srcset="%1$ssimbolo-1x.webp 1x, %1$ssimbolo-2x.webp 2x" width="%2$d" height="%3$d" alt="%4$s" decoding="async"%5$s>',
 			esc_url( $u ),
 			$w,
 			$h,
 			esc_attr( $attr['alt'] ?? '' ),
-			isset( $attr['lazy'] ) && $attr['lazy'] ? ' loading="lazy"' : ''
+			! empty( $attr['priority'] ) ? ' fetchpriority="high"' : ( ! empty( $attr['lazy'] ) ? ' loading="lazy"' : '' )
 		);
 		return $img;
 	}

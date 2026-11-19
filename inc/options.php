@@ -21,6 +21,7 @@ function klyv_option_fields() {
 		'telegram'  => 'Telegram',
 		'email'     => 'E-mail',
 		'linkedin'  => 'LinkedIn',
+		'tiktok'    => 'TikTok',
 		'copiar'    => __( 'Copiar link', 'klyvorenza' ),
 	);
 	return array(
@@ -46,6 +47,7 @@ function klyv_option_fields() {
 				'social_facebook'  => array( 'url', 'Facebook' ),
 				'social_instagram' => array( 'url', 'Instagram' ),
 				'social_pinterest' => array( 'url', 'Pinterest' ),
+				'social_tiktok'    => array( 'url', 'TikTok' ),
 				'social_extra'     => array( 'textarea', __( 'Outras redes (uma por linha, formato nome|url. Ex.: youtube|https://...)', 'klyvorenza' ) ),
 			),
 		),

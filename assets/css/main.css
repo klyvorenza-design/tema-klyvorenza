@@ -35,8 +35,7 @@ input[type=text],input[type=email],input[type=search]{font-size:16px}
 .i-sun{display:none}.i-moon{display:block}
 :root[data-theme=dark] .i-sun{display:block}:root[data-theme=dark] .i-moon{display:none}
 .klyv-head__in>.klyv-nav{display:none}
-.klyv-menu,.klyv-sub,.klyv-chips,.klyv-foot__nav,.klyv-social,.klyv-share ul,.klyv-crumbs ol,.klyv-terms,.klyv-toc ol{list-style:none;margin:0;padding:0}
-
+.klyv-menu,.klyv-sub,.klyv-chips,.klyv-foot__nav,.klyv-social,.klyv-share ul,.klyv-crumbs ol,.klyv-terms{list-style:none;margin:0;padding:0}
 body.admin-bar .klyv-head{top:32px}
 @media (max-width:782px){body.admin-bar .klyv-head{top:46px}}
 
@@ -129,7 +128,7 @@ body.klyv-lock{overflow:hidden}
 .klyv-card__x{margin:0;font-size:.95rem;color:var(--k-mu);line-height:1.55}
 .klyv-qgrid .wp-block-post-template>li{margin:0}
 .klyv-pager{margin-top:2.5rem;gap:.4rem;flex-wrap:wrap}
-.klyv-pager a,.klyv-pager .page-numbers{display:inline-grid;place-items:center;min-width:44px;min-height:44px;padding:0 .8rem;border:1px solid var(--k-bd);border-radius:999px;color:var(--k-tx);text-decoration:none;background:var(--k-sf)}
+.klyv-pager a,.klyv-pager .page-numbers{display:inline-flex;align-items:center;justify-content:center;text-align:center;line-height:1;min-width:44px;min-height:44px;padding:0 1.1rem;border:1px solid var(--k-bd);border-radius:999px;color:var(--k-tx);text-decoration:none;background:var(--k-sf)}
 .klyv-pager .current{background:var(--k-grad);color:#10241A;border-color:transparent;font-weight:600}
 @media (min-width:1025px){.klyv-blog-feature .klyv-qgrid .wp-block-post-template>li:first-child{grid-column:span 2}.klyv-blog-feature .klyv-qgrid .wp-block-post-template>li:first-child .klyv-card__t{font-size:1.7rem}}
 .klyv-terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16rem),1fr));gap:.75rem}
@@ -200,11 +199,6 @@ mark{background:rgba(184,248,136,.55);color:inherit;padding:0 .15em;border-radiu
 .klyv-prose li+li{margin-top:.4rem}
 .resumo-rapido,.klyv-panel{padding:1.1rem 1.3rem;border:1px solid var(--k-bd);border-left:4px solid var(--wp--preset--color--menta);border-radius:12px;background:var(--k-soft),var(--k-sf);background-color:var(--k-sf)}
 .resumo-rapido p{margin:0}.resumo-rapido__t{margin-bottom:.3rem!important;text-transform:uppercase;font-size:.78rem;letter-spacing:.06em}
-.klyv-toc{padding:1.1rem 1.3rem;border:1px solid var(--k-bd);border-radius:12px;background:var(--k-sf)}
-.klyv-toc__t{margin:0 0 .5rem;font-family:var(--wp--preset--font-family--titulo);font-weight:700;font-size:1.15rem}
-.klyv-toc ol{counter-reset:t;display:grid;gap:.3rem}
-.klyv-toc li{counter-increment:t}.klyv-toc li.l3{padding-left:1.2rem;font-size:.95rem}
-.klyv-toc a{text-decoration:none}.klyv-toc a:hover{text-decoration:underline}
 .klyv-share{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;margin:1.25rem 0}
 .klyv-share__l{font-size:.85rem;font-weight:600;color:var(--k-mu)}
 .klyv-share ul{display:flex;gap:6px;flex-wrap:wrap}
@@ -257,7 +251,63 @@ mark{background:rgba(184,248,136,.55);color:inherit;padding:0 .15em;border-radiu
 .klyv-foot__h{font-size:1rem;margin:0 0 .8rem;text-transform:uppercase;letter-spacing:.06em}
 .klyv-foot__nav .klyv-menu{display:grid}.klyv-foot__nav li,.klyv-foot__nav .klyv-menu__item{margin:0}
 .klyv-foot__nav a{display:block;padding:.4rem 0;color:var(--k-tx);text-decoration:none}.klyv-foot__nav a:hover{color:var(--k-ln);text-decoration:underline}
-.klyv-foot__copy{max-width:1240px;margin:2rem auto 0;padding-top:1.2rem;border-top:1px solid var(--k-bd);font-size:.85rem;color:var(--k-mu)}
+.klyv-foot__copy{max-width:1240px;margin:2rem auto 0;padding-top:1.2rem;border-top:1px solid var(--k-bd);font-size:.9rem;color:var(--k-mu);text-align:center}.klyv-foot__copy a{color:var(--k-tx);font-weight:600;text-decoration:none}.klyv-foot__copy a:hover{text-decoration:underline}.klyv-foot__copy sup{font-size:.6em;line-height:0;vertical-align:super}
 .klyv-404{padding:3rem 0;text-align:center}.klyv-404 .klyv-chips{justify-content:center}
 .klyv-toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));translate:-50% 0;z-index:120;padding:.7rem 1.1rem;border-radius:999px;background:#10241A;color:#fff;font-size:.9rem}
 @media print{.klyv-head,.klyv-topbar,.klyv-foot,.klyv-share,.klyv-ad,.klyv-pop,.klyv-side{display:none!important}}
+
+/* v1.0.2: rodapé sempre no fim da tela, sem faixa branca embaixo */
+html{background:var(--k-bg)}
+.wp-site-blocks{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:stretch}
+.wp-site-blocks>.klyv-main{flex:1 0 auto;width:100%}
+.klyv-tp-footer{margin-top:auto;width:100%}
+.wp-site-blocks>.klyv-tp-footer{margin-block-start:2rem}
+
+/* Home: 4 por linha no desktop, como estava no celular */
+@media (min-width:1025px){.klyv-sec .klyv-grid,.klyv-related .klyv-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (min-width:601px) and (max-width:1024px){.klyv-sec .klyv-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Carrossel do glossário */
+.klyv-car{position:relative}
+.klyv-car__track{display:flex;gap:1rem;list-style:none;margin:0;padding:4px 2px 12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.klyv-car__track::-webkit-scrollbar{display:none}
+.klyv-gcard{flex:0 0 min(78%,18rem);scroll-snap-align:start;position:relative;padding:1.1rem 1.2rem 1.2rem;background:var(--k-sf);border:1px solid var(--k-bd);border-radius:var(--k-r);box-shadow:var(--k-sh)}
+.klyv-gcard__l{display:grid;place-items:center;width:44px;height:44px;margin-bottom:.6rem;border-radius:50%;background:var(--k-grad);color:#10241A;font-family:var(--wp--preset--font-family--titulo);font-weight:700;font-size:1.3rem}
+.klyv-gcard__t{display:block;font-weight:600;font-size:1.1rem;color:var(--k-tx);text-decoration:none}
+.klyv-gcard__t:hover{text-decoration:underline}
+.klyv-gcard p{margin:.4rem 0 0;font-size:.92rem;color:var(--k-mu)}
+.klyv-car__nav{position:absolute;top:50%;translate:0 -60%;display:none;place-items:center;width:44px;height:44px;border:1px solid var(--k-bd);border-radius:50%;background:var(--k-sf);color:var(--k-tx);box-shadow:var(--k-sh);cursor:pointer;z-index:2}
+.klyv-car__nav[disabled]{opacity:.35;cursor:default}
+.klyv-car__prev{left:6px}.klyv-car__next{right:6px}
+@media (min-width:768px){.klyv-car__nav{display:grid}.klyv-gcard{flex-basis:calc((100% - 3rem)/4)}}
+
+/* Cabeçalho centralizado (Glossário e Web Stories) */
+.klyv-head--center{position:relative}
+.klyv-head--center .klyv-head__in{height:auto;min-height:0;flex-wrap:wrap;justify-content:center;padding-top:16px;padding-bottom:14px;position:relative}
+.klyv-brand--center{display:flex;flex-direction:column;align-items:center;gap:4px;text-decoration:none;text-align:center;line-height:1}
+.klyv-brand--center img{width:72px;height:72px;border-radius:50%;background:#F6FBF7;padding:2px}
+.klyv-brand__word{font-family:var(--wp--preset--font-family--titulo);font-weight:700;font-size:1.9rem;line-height:1.1;color:var(--k-tx)}
+:root[data-theme=dark] .klyv-brand__word{color:#fff}
+.klyv-head--center .klyv-actions{position:absolute;top:8px;right:max(8px,env(safe-area-inset-right));margin:0}
+@media (min-width:1025px){
+	.klyv-head--center .klyv-head__in>.klyv-nav{flex:0 0 100%;margin:6px 0 0;display:block}
+	.klyv-head--center .klyv-menu{justify-content:center}
+	.klyv-head--center .klyv-actions{top:14px}
+}
+@media (max-width:1024px){.klyv-head--center .klyv-head__in>.klyv-nav{display:none}}
+
+/* Item de menu sem link (abre só o submenu) */
+.klyv-sub-toggle--label{position:static!important;width:auto!important;height:auto!important;margin:0!important;padding:10px 12px;display:flex;align-items:center;gap:6px;font-weight:600;font-size:.95rem;color:var(--k-tx);border-radius:8px;white-space:nowrap}
+.klyv-sub-toggle--label:hover{background:var(--k-soft)}
+.klyv-nav--drawer .klyv-sub-toggle--label{width:100%!important;justify-content:space-between;padding:14px 4px 14px 0;font-size:1rem}
+
+/* Autor, data e atualização na mesma linha */
+.klyv-meta{align-items:center;column-gap:1.4rem!important;row-gap:.2rem}
+.klyv-meta>*{margin:0}
+.klyv-meta .wp-block-post-author__name{font-weight:600;color:var(--k-tx)}
+
+/* Páginas de categorias */
+.klyv-cats-sec{margin:2.5rem 0}
+.klyv-cats-sec h2{margin:0;font-size:var(--wp--preset--font-size--extra)}
+.klyv-cats-sec__n{margin:.3rem 0 0;color:var(--k-mu)}
+.klyv-sep::before{content:"-";margin:0 .15em}
