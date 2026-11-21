@@ -1,4 +1,4 @@
-# Hub de conteúdo Klyvorenza: instruções
+# Hub de conteúdo Klyvorenza: instruções (v1.1)
 
 Arquivos desta pasta (nada do tema foi alterado; esta pasta não é carregada pelo WordPress):
 
@@ -16,6 +16,12 @@ Evite shortcode e editor clássico: o WordPress pode inserir `<p>` e `<br>` dent
 Se o hub e o bloco global estiverem na mesma página, só um pop-up abre (trava `window.__kvzPopupInit`).
 
 Depois de colar: limpe o cache do LiteSpeed. Se a otimização de JS do LiteSpeed combinar ou adiar os scripts e algo quebrar, exclua `kvz-script` e `kvz-pop-script` da combinação/adiamento.
+
+## Novidades da v1.1
+
+- **Menu com 7 itens:** Especial, Moda Feminina, Cuidados Femininos, Web Stories, Datas Festivas, **Glossário** (rola até a seção que já existe) e **Inscreva-se**.
+- **Inscreva-se:** um clique abre a newsletter na hora, em qualquer ponto da página, e abre de novo a cada clique. Ele ignora as regras do pop-up automático (fechado hoje, inscrito há menos de 1 ano) e, se fechado, não grava "fechado hoje". Sem JavaScript, o link leva ao formulário do fim da página (`#newsletter`). Isso vale para o bloco do hub; o bloco global sozinho não tem o botão.
+- **Celular:** a newsletter fica centralizada na tela (antes era uma folha colada na base). O hub ocupa a largura inteira da tela, mesmo dentro de containers com padding do tema, e os cards ficam de borda a borda. Se o seu tema/Elementor cortar o conteúdo que passa do container (`overflow: hidden`), me avise para ajustar.
 
 ## 2. Variáveis que você pode configurar
 

@@ -1,5 +1,5 @@
 <!-- ============================================================
-  KLYVORENZA · POP-UP DE NEWSLETTER (GLOBAL) v1.0
+  KLYVORENZA · POP-UP DE NEWSLETTER (GLOBAL) v1.1
   Cole em um local que carregue em TODAS as páginas (rodapé do site).
   Use os MESMOS valores de CONFIG do bloco do hub. Veja INSTRUCOES.md.
   ============================================================ -->
@@ -51,15 +51,15 @@
 :is(#kvz-hub,#kvz-pop) .kvz-status.is-ok{color:var(--kvz-ok)}
 @keyframes kvz-spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion:reduce){:is(#kvz-hub,#kvz-pop) .kvz-btn{transition:none}:is(#kvz-hub,#kvz-pop) .kvz-form[data-state="loading"] .kvz-btn__spin{animation-duration:2s}}
-/* ===== Pop-up flutuante (sem overlay: a página continua rolando) ===== */
+/* ===== Pop-up flutuante (sem overlay: a página continua rolando). Celular: centralizado na tela ===== */
 #kvz-pop{position:fixed;right:16px;bottom:16px;z-index:100000;width:min(400px,calc(100vw - 32px));max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;padding:22px 22px 20px;background:var(--kvz-card);color:var(--kvz-text);font:inherit;font-size:16px;line-height:1.5;border:2px solid transparent;border-radius:24px;background:linear-gradient(var(--kvz-card),var(--kvz-card)) padding-box,var(--kvz-grad) border-box;box-shadow:0 18px 50px rgba(0,0,0,.28)}
 #kvz-pop:focus{outline:none}
 #kvz-pop .kvz-pop__close{position:absolute;top:6px;right:6px;display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;margin:0;border:0;border-radius:50%;background:transparent;color:var(--kvz-text);cursor:pointer}
 #kvz-pop .kvz-pop__close:hover{background:var(--kvz-skel)}
 #kvz-pop .kvz-pop__close svg{width:20px;height:20px;display:block}
 @media (prefers-reduced-motion:no-preference){#kvz-pop{animation:kvz-pop-in .35s cubic-bezier(.2,.8,.2,1)}}
-@keyframes kvz-pop-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-@media (max-width:600px){#kvz-pop{left:0;right:0;bottom:0;width:100%;max-height:88vh;max-height:88dvh;border-radius:24px 24px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px))}}
+@keyframes kvz-pop-in{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+@media (max-width:600px){#kvz-pop{inset:0;margin:auto;width:calc(100% - 24px);height:fit-content;max-height:calc(100vh - 24px);max-height:calc(100dvh - 24px);border-radius:24px;padding:20px 18px 18px}}
 @media (max-width:359px){#kvz-pop{padding-left:14px;padding-right:14px}}
 </style>
 <script id="kvz-pop-script">
@@ -205,8 +205,9 @@ function wireForm(form, onSuccess) {
 function initPopup() {
   if (window.__kvzPopupInit) { return; } /* evita iniciar duas vezes se os dois blocos estiverem no site */
   window.__kvzPopupInit = true;
-  if (!mayShowPopup()) { return; }
-  var pop = null, prevFocus = null, timer = null;
+  var pop = null, prevFocus = null, timer = null, forced = false;
+  /* Abre o pop-up quando a pessoa clica em "Inscreva-se" (ignora as regras de dia/ano e não grava "fechado") */
+  window.__kvzOpenPopup = function () { open(true); };
   function focusables() { return Array.prototype.filter.call(pop.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]):not([tabindex="-1"])'), function (n) { return n.offsetParent !== null; }); }
   function onKey(e) {
     if (!pop) { return; }
@@ -223,12 +224,13 @@ function initPopup() {
     doc.removeEventListener('keydown', onKey, true);
     clearTimeout(timer);
     pop.parentNode && pop.parentNode.removeChild(pop); pop = null;
-    if (!isSubscribed()) { markDismissed(); } /* fechou sem se inscrever: some pelo resto do dia (todas as páginas) */
+    if (!forced && !isSubscribed()) { markDismissed(); } /* fechou sem se inscrever: some pelo resto do dia (todas as páginas) */
     if (prevFocus && doc.contains(prevFocus) && prevFocus.focus) { try { prevFocus.focus({ preventScroll: true }); } catch (e) {} }
   }
-  function open() {
-    if (pop || !mayShowPopup() || doc.getElementById('kvz-pop')) { return; }
-    prevFocus = doc.activeElement;
+  function open(force) {
+    if (pop) { try { pop.focus({ preventScroll: true }); } catch (e) {} return; }
+    if ((!force && !mayShowPopup()) || doc.getElementById('kvz-pop')) { return; }
+    forced = !!force; prevFocus = doc.activeElement;
     pop = el('div'); pop.id = 'kvz-pop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-modal', 'true'); pop.setAttribute('aria-label', 'Assine a newsletter da Klyvorenza'); pop.tabIndex = -1;
     var x = el('button', 'kvz-pop__close'); x.type = 'button'; x.setAttribute('aria-label', 'Fechar newsletter');
     x.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
@@ -240,7 +242,7 @@ function initPopup() {
     doc.addEventListener('keydown', onKey, true);
     try { pop.focus({ preventScroll: true }); } catch (e) { pop.focus(); }
   }
-  function start() { timer = setTimeout(open, CONFIG.POPUP_DELAY_MS); }
+  function start() { if (mayShowPopup()) { timer = setTimeout(open, CONFIG.POPUP_DELAY_MS); } }
   if (doc.readyState === 'complete') { start(); } else { window.addEventListener('load', start, { once: true }); }
 }
 onReady(function () { watchTheme(); initPopup(); });
