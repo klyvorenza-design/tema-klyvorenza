@@ -1,0 +1,248 @@
+<!-- ============================================================
+  KLYVORENZA · POP-UP DE NEWSLETTER (GLOBAL) v1.0
+  Cole em um local que carregue em TODAS as páginas (rodapé do site).
+  Use os MESMOS valores de CONFIG do bloco do hub. Veja INSTRUCOES.md.
+  ============================================================ -->
+<style id="kvz-pop-style">
+/* ===== Variáveis (modo claro) — valem para o hub e para o pop-up ===== */
+:is(#kvz-hub,#kvz-pop){--kvz-bg:#F4FBF6;--kvz-card:#FFFFFF;--kvz-text:#10201A;--kvz-muted:#4A6355;--kvz-border:#D5E8DA;--kvz-shadow:0 1px 2px rgba(16,32,26,.06),0 6px 18px rgba(16,32,26,.07);--kvz-grad:linear-gradient(90deg,#A8E063 0%,#4CB86B 28%,#1DB8A6 56%,#2BD9F0 80%,#1C7ED6 100%);--kvz-grad-deep:linear-gradient(100deg,#1F7A45 0%,#0B7F74 55%,#1760B8 100%);--kvz-grad-soft:linear-gradient(135deg,rgba(168,224,99,.35),rgba(29,184,166,.28) 55%,rgba(28,126,214,.28));--kvz-on-grad:#FFFFFF;--kvz-accent:#0B7F74;--kvz-ring:#1760B8;--kvz-input-bg:#FFFFFF;--kvz-input-border:#6F8A7A;--kvz-err:#B3261E;--kvz-ok:#17663A;--kvz-skel:#E3F0E7;--kvz-img-filter:none}
+/* ===== Modo escuro: classe do tema (definida pelo JS em data-kvz-theme) ===== */
+:is(#kvz-hub,#kvz-pop)[data-kvz-theme="dark"]{color-scheme:dark;--kvz-bg:#0B120E;--kvz-card:#131D17;--kvz-text:#E6F2EA;--kvz-muted:#A9BDB0;--kvz-border:#25382C;--kvz-shadow:0 1px 2px rgba(0,0,0,.5),0 8px 22px rgba(0,0,0,.4);--kvz-grad-deep:linear-gradient(100deg,#A8E063 0%,#1DB8A6 55%,#4FA3F0 100%);--kvz-grad-soft:linear-gradient(135deg,rgba(168,224,99,.16),rgba(29,184,166,.14) 55%,rgba(79,163,240,.16));--kvz-on-grad:#06120C;--kvz-accent:#5DE0CF;--kvz-ring:#2BD9F0;--kvz-input-bg:#0E1712;--kvz-input-border:#7C9786;--kvz-err:#FFB4AB;--kvz-ok:#8FE0A8;--kvz-skel:#1A2A21;--kvz-img-filter:brightness(.92)}
+/* ===== Modo escuro: preferência do sistema (só quando o JS ainda não decidiu) ===== */
+@media (prefers-color-scheme:dark){:is(#kvz-hub,#kvz-pop):not([data-kvz-theme]){color-scheme:dark;--kvz-bg:#0B120E;--kvz-card:#131D17;--kvz-text:#E6F2EA;--kvz-muted:#A9BDB0;--kvz-border:#25382C;--kvz-shadow:0 1px 2px rgba(0,0,0,.5),0 8px 22px rgba(0,0,0,.4);--kvz-grad-deep:linear-gradient(100deg,#A8E063 0%,#1DB8A6 55%,#4FA3F0 100%);--kvz-grad-soft:linear-gradient(135deg,rgba(168,224,99,.16),rgba(29,184,166,.14) 55%,rgba(79,163,240,.16));--kvz-on-grad:#06120C;--kvz-accent:#5DE0CF;--kvz-ring:#2BD9F0;--kvz-input-bg:#0E1712;--kvz-input-border:#7C9786;--kvz-err:#FFB4AB;--kvz-ok:#8FE0A8;--kvz-skel:#1A2A21;--kvz-img-filter:brightness(.92)}}
+/* ===== Base isolada (vence o CSS do Ashe Pro/Elementor pela especificidade do ID) ===== */
+:is(#kvz-hub,#kvz-pop),:is(#kvz-hub,#kvz-pop) *,:is(#kvz-hub,#kvz-pop) *::before,:is(#kvz-hub,#kvz-pop) *::after{box-sizing:border-box}
+:is(#kvz-hub,#kvz-pop) :is(h2,h3,p,ul,li,figure,form,label){margin:0;padding:0;letter-spacing:normal;text-transform:none;text-align:left;border:0;border-radius:0;box-shadow:none;background:none;text-decoration:none}
+:is(#kvz-hub,#kvz-pop) :is(ul,li){list-style:none}
+:is(#kvz-hub,#kvz-pop) li::before,:is(#kvz-hub,#kvz-pop) li::after{content:none}
+:is(#kvz-hub,#kvz-pop) a{text-decoration:none;box-shadow:none;border:0;background:none}
+:is(#kvz-hub,#kvz-pop) img{max-width:100%;border:0;box-shadow:none;filter:var(--kvz-img-filter)}
+:is(#kvz-hub,#kvz-pop) button{font-family:inherit;text-transform:none;letter-spacing:normal}
+:is(#kvz-hub,#kvz-pop) :is(a,button,input,summary):focus-visible{outline:3px solid var(--kvz-ring);outline-offset:2px}
+:is(#kvz-hub,#kvz-pop) .kvz-sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+/* ===== Newsletter: marca + formulário (usado no fim da página e no pop-up) ===== */
+:is(#kvz-hub,#kvz-pop) .kvz-brand{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;margin:0 0 6px}
+:is(#kvz-hub,#kvz-pop) .kvz-brand__logo{display:block;width:72px;height:72px;border-radius:50%;object-fit:cover;background:#0A0A0A;margin:0}
+:is(#kvz-hub,#kvz-pop) .kvz-brand__name{font-size:1.6rem;font-weight:800;line-height:1.1;letter-spacing:.02em;margin:0;color:var(--kvz-text);background:var(--kvz-grad-deep);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){:is(#kvz-hub,#kvz-pop) .kvz-brand__name{color:var(--kvz-accent);-webkit-text-fill-color:currentColor}}
+:is(#kvz-hub,#kvz-pop) .kvz-lead{text-align:center;color:var(--kvz-muted);font-size:.98rem;margin:0 0 16px}
+:is(#kvz-hub,#kvz-pop) .kvz-form{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;background:none;border:0}
+:is(#kvz-hub,#kvz-pop) .kvz-field{display:flex;flex-direction:column;gap:6px}
+:is(#kvz-hub,#kvz-pop) .kvz-field label{font-weight:600;font-size:.92rem;color:var(--kvz-text);margin:0}
+:is(#kvz-hub,#kvz-pop) .kvz-field input:not([type="checkbox"]){display:block;width:100%;min-height:48px;padding:10px 14px;font:inherit;font-size:1rem;color:var(--kvz-text);background:var(--kvz-input-bg);border:2px solid var(--kvz-input-border);border-radius:14px;box-shadow:none;margin:0;-webkit-appearance:none;appearance:none}
+:is(#kvz-hub,#kvz-pop) .kvz-field input:not([type="checkbox"]):focus{border-color:var(--kvz-ring);outline:3px solid var(--kvz-ring);outline-offset:1px}
+:is(#kvz-hub,#kvz-pop) .kvz-field input:not([type="checkbox"])[aria-invalid="true"]{border-color:var(--kvz-err)}
+:is(#kvz-hub,#kvz-pop) .kvz-err{color:var(--kvz-err);font-size:.88rem;font-weight:600;margin:0}
+:is(#kvz-hub,#kvz-pop) .kvz-err[hidden]{display:none}
+:is(#kvz-hub,#kvz-pop) .kvz-check{display:flex;align-items:flex-start;gap:10px;min-height:44px}
+:is(#kvz-hub,#kvz-pop) .kvz-check input{flex:0 0 auto;width:24px;height:24px;min-height:0;margin:10px 0 0;padding:0;accent-color:#0B7F74;cursor:pointer;-webkit-appearance:checkbox;appearance:auto}
+:is(#kvz-hub,#kvz-pop) .kvz-check label{font-size:.88rem;line-height:1.45;color:var(--kvz-text);padding:10px 0;cursor:pointer;margin:0;font-weight:400}
+:is(#kvz-hub,#kvz-pop) .kvz-check a{color:var(--kvz-accent);text-decoration:underline;text-underline-offset:2px;font-weight:600}
+:is(#kvz-hub,#kvz-pop) .kvz-hp{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}
+:is(#kvz-hub,#kvz-pop) .kvz-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;padding:12px 22px;border:0;border-radius:999px;background:var(--kvz-grad-deep);color:var(--kvz-on-grad);font-size:1rem;font-weight:700;line-height:1.2;cursor:pointer;box-shadow:0 6px 16px rgba(11,127,116,.25);transition:filter .2s,transform .2s,box-shadow .2s}
+:is(#kvz-hub,#kvz-pop) .kvz-btn:hover{filter:brightness(1.08);color:var(--kvz-on-grad)}
+:is(#kvz-hub,#kvz-pop) .kvz-btn:active{transform:translateY(1px)}
+:is(#kvz-hub,#kvz-pop) .kvz-btn[disabled]{cursor:progress;opacity:.85;filter:none}
+:is(#kvz-hub,#kvz-pop) .kvz-btn__spin{display:none;width:18px;height:18px;border-radius:50%;border:3px solid currentColor;border-right-color:transparent}
+:is(#kvz-hub,#kvz-pop) .kvz-form[data-state="loading"] .kvz-btn__spin{display:inline-block;animation:kvz-spin .8s linear infinite}
+:is(#kvz-hub,#kvz-pop) .kvz-form[data-state="success"] .kvz-btn{filter:none;background:var(--kvz-ok);color:var(--kvz-card)}
+:is(#kvz-hub,#kvz-pop) .kvz-status{min-height:1.4em;margin:0;text-align:center;font-size:.92rem;font-weight:600}
+:is(#kvz-hub,#kvz-pop) .kvz-status.is-error{color:var(--kvz-err)}
+:is(#kvz-hub,#kvz-pop) .kvz-status.is-ok{color:var(--kvz-ok)}
+@keyframes kvz-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){:is(#kvz-hub,#kvz-pop) .kvz-btn{transition:none}:is(#kvz-hub,#kvz-pop) .kvz-form[data-state="loading"] .kvz-btn__spin{animation-duration:2s}}
+/* ===== Pop-up flutuante (sem overlay: a página continua rolando) ===== */
+#kvz-pop{position:fixed;right:16px;bottom:16px;z-index:100000;width:min(400px,calc(100vw - 32px));max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;padding:22px 22px 20px;background:var(--kvz-card);color:var(--kvz-text);font:inherit;font-size:16px;line-height:1.5;border:2px solid transparent;border-radius:24px;background:linear-gradient(var(--kvz-card),var(--kvz-card)) padding-box,var(--kvz-grad) border-box;box-shadow:0 18px 50px rgba(0,0,0,.28)}
+#kvz-pop:focus{outline:none}
+#kvz-pop .kvz-pop__close{position:absolute;top:6px;right:6px;display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;margin:0;border:0;border-radius:50%;background:transparent;color:var(--kvz-text);cursor:pointer}
+#kvz-pop .kvz-pop__close:hover{background:var(--kvz-skel)}
+#kvz-pop .kvz-pop__close svg{width:20px;height:20px;display:block}
+@media (prefers-reduced-motion:no-preference){#kvz-pop{animation:kvz-pop-in .35s cubic-bezier(.2,.8,.2,1)}}
+@keyframes kvz-pop-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (max-width:600px){#kvz-pop{left:0;right:0;bottom:0;width:100%;max-height:88vh;max-height:88dvh;border-radius:24px 24px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:359px){#kvz-pop{padding-left:14px;padding-right:14px}}
+</style>
+<script id="kvz-pop-script">
+(function () {
+'use strict';
+/* =====================================================================
+   CONFIGURAÇÃO — mexa só aqui (os mesmos valores devem estar nos dois blocos:
+   página do hub e pop-up global)
+   ===================================================================== */
+var CONFIG = {
+  /* Logo da marca (newsletter e pop-up). Já está na biblioteca de mídia do site.
+     Para trocar: envie a imagem em Mídia > Adicionar e cole a URL do arquivo aqui. */
+  LOGO_URL: 'https://klyvorenza.com/wp-content/uploads/2026/11/Logo-Klyvorenza-1.png',
+  BRAND_NAME: 'klyvorenza',
+  PRIVACY_URL: 'https://klyvorenza.com/politica-de-privacidade/',
+  /* ENVIO DA NEWSLETTER — uma única variável.
+     Cole aqui a URL/action do seu serviço (Brevo, Mailchimp, MailerLite, plugin do WordPress etc.).
+     Os dados vão por POST (application/x-www-form-urlencoded) com os campos abaixo.
+     Se o seu serviço usa outros nomes de campo (ex.: Mailchimp usa FNAME e EMAIL), troque em NEWSLETTER_FIELDS.
+     Campos fixos do serviço (ex.: lista, token) vão em NEWSLETTER_EXTRA.
+     Serviços que não liberam CORS (Mailchimp, formulários HTML simples): use NEWSLETTER_NO_CORS: true
+     (o envio acontece, mas o navegador não consegue ler a resposta; o site assume sucesso). */
+  NEWSLETTER_ENDPOINT: '',
+  NEWSLETTER_FIELDS: { name: 'name', email: 'email' },
+  NEWSLETTER_EXTRA: {},
+  NEWSLETTER_NO_CORS: false,
+  /* MODO ESCURO — Ashe Pro: classe no <body> e chave do localStorage do botão de lua do tema.
+     (Confirmado no site: body.ashe-dark-mode e localStorage.asheDarkMode = 'on' | 'off'.)
+     Se o tema mudar, troque só estas duas linhas. */
+  DARK_BODY_CLASS: 'ashe-dark-mode',
+  DARK_STORAGE_KEY: 'asheDarkMode',
+  FOLLOW_OS_DARK: true, /* true = sem escolha no botão do tema, segue prefers-color-scheme */
+  /* POP-UP */
+  POPUP_DELAY_MS: 3000,
+  STORAGE_KEY_DISMISSED: 'kvz_news_dismissed',   /* guarda a data local (AAAA-MM-DD) em que foi fechado */
+  STORAGE_KEY_SUBSCRIBED: 'kvz_news_subscribed', /* guarda o timestamp até quando não deve aparecer (1 ano) */
+  SUBSCRIBED_DAYS: 365
+};
+var doc = document;
+function el(tag, cls, text) { var e = doc.createElement(tag); if (cls) { e.className = cls; } if (text != null) { e.textContent = text; } return e; }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function onReady(fn) { if (doc.readyState === 'loading') { doc.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
+function reduced() { return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+/* ---------- Tema claro/escuro ---------- */
+function isDark() {
+  if (doc.body && doc.body.classList.contains(CONFIG.DARK_BODY_CLASS)) { return true; }
+  var pref = null;
+  try { pref = localStorage.getItem(CONFIG.DARK_STORAGE_KEY); } catch (e) {}
+  if (pref === 'off') { return false; }
+  if (pref === 'on') { return true; }
+  return !!(CONFIG.FOLLOW_OS_DARK && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+}
+function paintTheme() {
+  var t = isDark() ? 'dark' : 'light';
+  Array.prototype.forEach.call(doc.querySelectorAll('#kvz-hub, #kvz-pop'), function (n) { if (n.getAttribute('data-kvz-theme') !== t) { n.setAttribute('data-kvz-theme', t); } });
+}
+function watchTheme() {
+  paintTheme();
+  if (window.MutationObserver && doc.body) { new MutationObserver(paintTheme).observe(doc.body, { attributes: true, attributeFilter: ['class'] }); }
+  if (window.matchMedia) {
+    var mq = matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) { mq.addEventListener('change', paintTheme); } else if (mq.addListener) { mq.addListener(paintTheme); }
+  }
+  window.addEventListener('storage', function (e) { if (e.key === CONFIG.DARK_STORAGE_KEY) { paintTheme(); } });
+}
+/* ---------- Armazenamento: localStorage, com cookie como alternativa ---------- */
+var LS = (function () { try { var k = '__kvz_t'; localStorage.setItem(k, '1'); localStorage.removeItem(k); return true; } catch (e) { return false; } })();
+function cookieGet(k) { var m = doc.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : null; }
+function cookieSet(k, v, days) { doc.cookie = k + '=' + encodeURIComponent(v) + '; max-age=' + Math.round(days * 86400) + '; path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); }
+function store(k, v, days) { if (LS) { try { localStorage.setItem(k, v); return; } catch (e) {} } cookieSet(k, v, days); }
+function read(k) { var v = null; if (LS) { try { v = localStorage.getItem(k); } catch (e) {} } return v !== null ? v : cookieGet(k); }
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); } /* data LOCAL */
+function isSubscribed() { var t = parseInt(read(CONFIG.STORAGE_KEY_SUBSCRIBED), 10); return !!t && t > Date.now(); }
+function markSubscribed() { store(CONFIG.STORAGE_KEY_SUBSCRIBED, String(Date.now() + CONFIG.SUBSCRIBED_DAYS * 864e5), CONFIG.SUBSCRIBED_DAYS); }
+function markDismissed() { store(CONFIG.STORAGE_KEY_DISMISSED, today(), 2); }
+function mayShowPopup() { return !isSubscribed() && read(CONFIG.STORAGE_KEY_DISMISSED) !== today(); }
+/* ---------- Newsletter: markup + validação + envio ---------- */
+function newsletterMarkup(p, eager) {
+  return '<div class="kvz-brand"><img class="kvz-brand__logo" src="' + esc(CONFIG.LOGO_URL) + '" alt="Logo da Klyvorenza" width="72" height="72" decoding="async" ' + (eager ? 'fetchpriority="high"' : 'loading="lazy"') + '><p class="kvz-brand__name">' + esc(CONFIG.BRAND_NAME) + '</p></div>' +
+    '<p class="kvz-lead">Receba dicas de moda e beleza no seu e-mail.</p>' +
+    '<form class="kvz-form" novalidate method="post" data-state="idle">' +
+    '<div class="kvz-field"><label for="' + p + '-nome">Nome <span aria-hidden="true">*</span></label><input id="' + p + '-nome" data-f="name" type="text" required minlength="2" maxlength="80" autocomplete="given-name" aria-describedby="' + p + '-nome-e"><p class="kvz-err" id="' + p + '-nome-e" hidden></p></div>' +
+    '<div class="kvz-field"><label for="' + p + '-email">E-mail <span aria-hidden="true">*</span></label><input id="' + p + '-email" data-f="email" type="email" required maxlength="120" autocomplete="email" inputmode="email" aria-describedby="' + p + '-email-e"><p class="kvz-err" id="' + p + '-email-e" hidden></p></div>' +
+    '<div class="kvz-hp" aria-hidden="true"><label>Não preencha este campo<input data-f="hp" type="text" tabindex="-1" autocomplete="off"></label></div>' +
+    '<div class="kvz-field"><div class="kvz-check"><input id="' + p + '-ok" data-f="consent" type="checkbox" required aria-describedby="' + p + '-ok-e"><label for="' + p + '-ok">Concordo em receber e-mails da Klyvorenza e aceito a <a href="' + esc(CONFIG.PRIVACY_URL) + '" target="_blank" rel="noopener">Política de Privacidade</a> (LGPD). <span aria-hidden="true">*</span></label></div><p class="kvz-err" id="' + p + '-ok-e" hidden></p></div>' +
+    '<button type="submit" class="kvz-btn"><span class="kvz-btn__label">Quero receber</span><span class="kvz-btn__spin" aria-hidden="true"></span></button>' +
+    '<p class="kvz-status" role="status" aria-live="polite"></p></form>';
+}
+function sendNewsletter(name, email) {
+  var ep = CONFIG.NEWSLETTER_ENDPOINT;
+  if (!ep) { return Promise.reject(new Error('NOT_CONFIGURED')); }
+  var body = new URLSearchParams();
+  body.set(CONFIG.NEWSLETTER_FIELDS.name, name);
+  body.set(CONFIG.NEWSLETTER_FIELDS.email, email);
+  Object.keys(CONFIG.NEWSLETTER_EXTRA).forEach(function (k) { body.set(k, CONFIG.NEWSLETTER_EXTRA[k]); });
+  var opts = { method: 'POST', body: body, credentials: 'omit' };
+  if (CONFIG.NEWSLETTER_NO_CORS) { opts.mode = 'no-cors'; }
+  return fetch(ep, opts).then(function (r) { if (!CONFIG.NEWSLETTER_NO_CORS && !r.ok) { throw new Error('HTTP ' + r.status); } return true; });
+}
+/* Liga a validação e o envio ao <form>. onSuccess roda depois de um envio bem-sucedido. */
+function wireForm(form, onSuccess) {
+  var f = {}, err = {}, btn = form.querySelector('.kvz-btn'), label = form.querySelector('.kvz-btn__label'), status = form.querySelector('.kvz-status');
+  ['name', 'email', 'consent', 'hp'].forEach(function (k) { f[k] = form.querySelector('[data-f="' + k + '"]'); });
+  ['name', 'email', 'consent'].forEach(function (k) { err[k] = doc.getElementById(f[k].getAttribute('aria-describedby')); });
+  function message(k) {
+    var v = (f[k].value || '').trim();
+    if (k === 'name') { return !v ? 'Informe seu nome.' : (v.length < 2 ? 'O nome precisa ter pelo menos 2 letras.' : ''); }
+    if (k === 'email') { return !v ? 'Informe seu e-mail.' : ((f[k].validity.typeMismatch || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) ? 'Digite um e-mail válido, por exemplo: nome@exemplo.com.' : ''); }
+    return f[k].checked ? '' : 'Para continuar, aceite receber e-mails e a Política de Privacidade.';
+  }
+  function check(k) { var m = message(k); f[k].setAttribute('aria-invalid', m ? 'true' : 'false'); err[k].textContent = m; err[k].hidden = !m; return m; }
+  function setStatus(text, kind) { status.textContent = text; status.className = 'kvz-status' + (kind ? ' is-' + kind : ''); }
+  function setState(s, text) {
+    form.setAttribute('data-state', s); btn.disabled = (s === 'loading' || s === 'success'); btn.setAttribute('aria-busy', s === 'loading' ? 'true' : 'false');
+    label.textContent = ({ idle: 'Quero receber', loading: 'Enviando…', success: 'Inscrição realizada', error: 'Tentar novamente' })[s];
+  }
+  ['name', 'email'].forEach(function (k) {
+    f[k].addEventListener('blur', function () { if (f[k].value) { check(k); } });
+    f[k].addEventListener('input', function () { if (f[k].getAttribute('aria-invalid') === 'true') { check(k); } });
+  });
+  f.consent.addEventListener('change', function () { check('consent'); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (form.getAttribute('data-state') === 'loading') { return; }
+    var bad = ['name', 'email', 'consent'].filter(check);
+    if (bad.length) { setStatus('Revise os campos destacados.', 'error'); f[bad[0]].focus(); return; }
+    if (f.hp.value) { setState('success'); setStatus('Inscrição realizada! Obrigada por se juntar à Klyvorenza.', 'ok'); return; } /* robô */
+    setState('loading'); setStatus('Enviando seus dados…', '');
+    sendNewsletter(f.name.value.trim(), f.email.value.trim()).then(function () {
+      markSubscribed(); form.reset(); setState('success'); setStatus('Inscrição realizada! Obrigada por se juntar à Klyvorenza.', 'ok');
+      if (onSuccess) { onSuccess(); }
+    }).catch(function (er) {
+      setState('error');
+      if (er && er.message === 'NOT_CONFIGURED') { if (window.console) { console.warn('[Klyvorenza hub] Defina CONFIG.NEWSLETTER_ENDPOINT para ativar a newsletter.'); } setStatus('A newsletter ainda não está ativa neste site. Tente novamente em breve.', 'error'); }
+      else { setStatus('Não foi possível enviar agora. Confira sua conexão e tente de novo.', 'error'); }
+    });
+  });
+}
+/* =====================================================================
+   POP-UP FLUTUANTE (3 s após carregar; regras de exibição via localStorage/cookie)
+   ===================================================================== */
+function initPopup() {
+  if (window.__kvzPopupInit) { return; } /* evita iniciar duas vezes se os dois blocos estiverem no site */
+  window.__kvzPopupInit = true;
+  if (!mayShowPopup()) { return; }
+  var pop = null, prevFocus = null, timer = null;
+  function focusables() { return Array.prototype.filter.call(pop.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]):not([tabindex="-1"])'), function (n) { return n.offsetParent !== null; }); }
+  function onKey(e) {
+    if (!pop) { return; }
+    if (e.key === 'Escape' || e.key === 'Esc') { e.preventDefault(); close(); return; }
+    if (e.key !== 'Tab') { return; }
+    var list = focusables(); if (!list.length) { return; }
+    var first = list[0], last = list[list.length - 1], a = doc.activeElement;
+    if (!pop.contains(a)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && (a === first || a === pop)) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+  }
+  function close() {
+    if (!pop) { return; }
+    doc.removeEventListener('keydown', onKey, true);
+    clearTimeout(timer);
+    pop.parentNode && pop.parentNode.removeChild(pop); pop = null;
+    if (!isSubscribed()) { markDismissed(); } /* fechou sem se inscrever: some pelo resto do dia (todas as páginas) */
+    if (prevFocus && doc.contains(prevFocus) && prevFocus.focus) { try { prevFocus.focus({ preventScroll: true }); } catch (e) {} }
+  }
+  function open() {
+    if (pop || !mayShowPopup() || doc.getElementById('kvz-pop')) { return; }
+    prevFocus = doc.activeElement;
+    pop = el('div'); pop.id = 'kvz-pop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-modal', 'true'); pop.setAttribute('aria-label', 'Assine a newsletter da Klyvorenza'); pop.tabIndex = -1;
+    var x = el('button', 'kvz-pop__close'); x.type = 'button'; x.setAttribute('aria-label', 'Fechar newsletter');
+    x.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    x.addEventListener('click', close);
+    var box = el('div'); box.innerHTML = newsletterMarkup('kvz-pop-f', true);
+    pop.appendChild(x); pop.appendChild(box);
+    doc.body.appendChild(pop); paintTheme();
+    wireForm(pop.querySelector('form'), function () { timer = setTimeout(close, 2600); }); /* inscreveu: fecha e só volta em 1 ano */
+    doc.addEventListener('keydown', onKey, true);
+    try { pop.focus({ preventScroll: true }); } catch (e) { pop.focus(); }
+  }
+  function start() { timer = setTimeout(open, CONFIG.POPUP_DELAY_MS); }
+  if (doc.readyState === 'complete') { start(); } else { window.addEventListener('load', start, { once: true }); }
+}
+onReady(function () { watchTheme(); initPopup(); });
+})();
+</script>

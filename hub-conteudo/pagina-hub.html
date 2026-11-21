@@ -1,0 +1,742 @@
+<!-- ============================================================
+  KLYVORENZA · HUB DE CONTEÚDO v1.0
+  Cole TUDO isto num bloco "HTML personalizado" (ou widget HTML do Elementor).
+  Configuração: início do código JavaScript (objetos CONFIG e HUB). Veja INSTRUCOES.md.
+  ============================================================ -->
+<style id="kvz-style">
+/* ===== Variáveis (modo claro) — valem para o hub e para o pop-up ===== */
+:is(#kvz-hub,#kvz-pop){--kvz-bg:#F4FBF6;--kvz-card:#FFFFFF;--kvz-text:#10201A;--kvz-muted:#4A6355;--kvz-border:#D5E8DA;--kvz-shadow:0 1px 2px rgba(16,32,26,.06),0 6px 18px rgba(16,32,26,.07);--kvz-grad:linear-gradient(90deg,#A8E063 0%,#4CB86B 28%,#1DB8A6 56%,#2BD9F0 80%,#1C7ED6 100%);--kvz-grad-deep:linear-gradient(100deg,#1F7A45 0%,#0B7F74 55%,#1760B8 100%);--kvz-grad-soft:linear-gradient(135deg,rgba(168,224,99,.35),rgba(29,184,166,.28) 55%,rgba(28,126,214,.28));--kvz-on-grad:#FFFFFF;--kvz-accent:#0B7F74;--kvz-ring:#1760B8;--kvz-input-bg:#FFFFFF;--kvz-input-border:#6F8A7A;--kvz-err:#B3261E;--kvz-ok:#17663A;--kvz-skel:#E3F0E7;--kvz-img-filter:none}
+/* ===== Modo escuro: classe do tema (definida pelo JS em data-kvz-theme) ===== */
+:is(#kvz-hub,#kvz-pop)[data-kvz-theme="dark"]{color-scheme:dark;--kvz-bg:#0B120E;--kvz-card:#131D17;--kvz-text:#E6F2EA;--kvz-muted:#A9BDB0;--kvz-border:#25382C;--kvz-shadow:0 1px 2px rgba(0,0,0,.5),0 8px 22px rgba(0,0,0,.4);--kvz-grad-deep:linear-gradient(100deg,#A8E063 0%,#1DB8A6 55%,#4FA3F0 100%);--kvz-grad-soft:linear-gradient(135deg,rgba(168,224,99,.16),rgba(29,184,166,.14) 55%,rgba(79,163,240,.16));--kvz-on-grad:#06120C;--kvz-accent:#5DE0CF;--kvz-ring:#2BD9F0;--kvz-input-bg:#0E1712;--kvz-input-border:#7C9786;--kvz-err:#FFB4AB;--kvz-ok:#8FE0A8;--kvz-skel:#1A2A21;--kvz-img-filter:brightness(.92)}
+/* ===== Modo escuro: preferência do sistema (só quando o JS ainda não decidiu) ===== */
+@media (prefers-color-scheme:dark){:is(#kvz-hub,#kvz-pop):not([data-kvz-theme]){color-scheme:dark;--kvz-bg:#0B120E;--kvz-card:#131D17;--kvz-text:#E6F2EA;--kvz-muted:#A9BDB0;--kvz-border:#25382C;--kvz-shadow:0 1px 2px rgba(0,0,0,.5),0 8px 22px rgba(0,0,0,.4);--kvz-grad-deep:linear-gradient(100deg,#A8E063 0%,#1DB8A6 55%,#4FA3F0 100%);--kvz-grad-soft:linear-gradient(135deg,rgba(168,224,99,.16),rgba(29,184,166,.14) 55%,rgba(79,163,240,.16));--kvz-on-grad:#06120C;--kvz-accent:#5DE0CF;--kvz-ring:#2BD9F0;--kvz-input-bg:#0E1712;--kvz-input-border:#7C9786;--kvz-err:#FFB4AB;--kvz-ok:#8FE0A8;--kvz-skel:#1A2A21;--kvz-img-filter:brightness(.92)}}
+/* ===== Base isolada (vence o CSS do Ashe Pro/Elementor pela especificidade do ID) ===== */
+:is(#kvz-hub,#kvz-pop),:is(#kvz-hub,#kvz-pop) *,:is(#kvz-hub,#kvz-pop) *::before,:is(#kvz-hub,#kvz-pop) *::after{box-sizing:border-box}
+:is(#kvz-hub,#kvz-pop) :is(h2,h3,p,ul,li,figure,form,label){margin:0;padding:0;letter-spacing:normal;text-transform:none;text-align:left;border:0;border-radius:0;box-shadow:none;background:none;text-decoration:none}
+:is(#kvz-hub,#kvz-pop) :is(ul,li){list-style:none}
+:is(#kvz-hub,#kvz-pop) li::before,:is(#kvz-hub,#kvz-pop) li::after{content:none}
+:is(#kvz-hub,#kvz-pop) a{text-decoration:none;box-shadow:none;border:0;background:none}
+:is(#kvz-hub,#kvz-pop) img{max-width:100%;border:0;box-shadow:none;filter:var(--kvz-img-filter)}
+:is(#kvz-hub,#kvz-pop) button{font-family:inherit;text-transform:none;letter-spacing:normal}
+:is(#kvz-hub,#kvz-pop) :is(a,button,input,summary):focus-visible{outline:3px solid var(--kvz-ring);outline-offset:2px}
+:is(#kvz-hub,#kvz-pop) .kvz-sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+/* ===== Newsletter: marca + formulário (usado no fim da página e no pop-up) ===== */
+:is(#kvz-hub,#kvz-pop) .kvz-brand{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;margin:0 0 6px}
+:is(#kvz-hub,#kvz-pop) .kvz-brand__logo{display:block;width:72px;height:72px;border-radius:50%;object-fit:cover;background:#0A0A0A;margin:0}
+:is(#kvz-hub,#kvz-pop) .kvz-brand__name{font-size:1.6rem;font-weight:800;line-height:1.1;letter-spacing:.02em;margin:0;color:var(--kvz-text);background:var(--kvz-grad-deep);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){:is(#kvz-hub,#kvz-pop) .kvz-brand__name{color:var(--kvz-accent);-webkit-text-fill-color:currentColor}}
+:is(#kvz-hub,#kvz-pop) .kvz-lead{text-align:center;color:var(--kvz-muted);font-size:.98rem;margin:0 0 16px}
+:is(#kvz-hub,#kvz-pop) .kvz-form{display:flex;flex-direction:column;gap:14px;margin:0;padding:0;background:none;border:0}
+:is(#kvz-hub,#kvz-pop) .kvz-field{display:flex;flex-direction:column;gap:6px}
+:is(#kvz-hub,#kvz-pop) .kvz-field label{font-weight:600;font-size:.92rem;color:var(--kvz-text);margin:0}
+:is(#kvz-hub,#kvz-pop) .kvz-field input:not([type="checkbox"]){display:block;width:100%;min-height:48px;padding:10px 14px;font:inherit;font-size:1rem;color:var(--kvz-text);background:var(--kvz-input-bg);border:2px solid var(--kvz-input-border);border-radius:14px;box-shadow:none;margin:0;-webkit-appearance:none;appearance:none}
+:is(#kvz-hub,#kvz-pop) .kvz-field input:not([type="checkbox"]):focus{border-color:var(--kvz-ring);outline:3px solid var(--kvz-ring);outline-offset:1px}
+:is(#kvz-hub,#kvz-pop) .kvz-field input:not([type="checkbox"])[aria-invalid="true"]{border-color:var(--kvz-err)}
+:is(#kvz-hub,#kvz-pop) .kvz-err{color:var(--kvz-err);font-size:.88rem;font-weight:600;margin:0}
+:is(#kvz-hub,#kvz-pop) .kvz-err[hidden]{display:none}
+:is(#kvz-hub,#kvz-pop) .kvz-check{display:flex;align-items:flex-start;gap:10px;min-height:44px}
+:is(#kvz-hub,#kvz-pop) .kvz-check input{flex:0 0 auto;width:24px;height:24px;min-height:0;margin:10px 0 0;padding:0;accent-color:#0B7F74;cursor:pointer;-webkit-appearance:checkbox;appearance:auto}
+:is(#kvz-hub,#kvz-pop) .kvz-check label{font-size:.88rem;line-height:1.45;color:var(--kvz-text);padding:10px 0;cursor:pointer;margin:0;font-weight:400}
+:is(#kvz-hub,#kvz-pop) .kvz-check a{color:var(--kvz-accent);text-decoration:underline;text-underline-offset:2px;font-weight:600}
+:is(#kvz-hub,#kvz-pop) .kvz-hp{position:absolute!important;left:-9999px;width:1px;height:1px;overflow:hidden}
+:is(#kvz-hub,#kvz-pop) .kvz-btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:50px;padding:12px 22px;border:0;border-radius:999px;background:var(--kvz-grad-deep);color:var(--kvz-on-grad);font-size:1rem;font-weight:700;line-height:1.2;cursor:pointer;box-shadow:0 6px 16px rgba(11,127,116,.25);transition:filter .2s,transform .2s,box-shadow .2s}
+:is(#kvz-hub,#kvz-pop) .kvz-btn:hover{filter:brightness(1.08);color:var(--kvz-on-grad)}
+:is(#kvz-hub,#kvz-pop) .kvz-btn:active{transform:translateY(1px)}
+:is(#kvz-hub,#kvz-pop) .kvz-btn[disabled]{cursor:progress;opacity:.85;filter:none}
+:is(#kvz-hub,#kvz-pop) .kvz-btn__spin{display:none;width:18px;height:18px;border-radius:50%;border:3px solid currentColor;border-right-color:transparent}
+:is(#kvz-hub,#kvz-pop) .kvz-form[data-state="loading"] .kvz-btn__spin{display:inline-block;animation:kvz-spin .8s linear infinite}
+:is(#kvz-hub,#kvz-pop) .kvz-form[data-state="success"] .kvz-btn{filter:none;background:var(--kvz-ok);color:var(--kvz-card)}
+:is(#kvz-hub,#kvz-pop) .kvz-status{min-height:1.4em;margin:0;text-align:center;font-size:.92rem;font-weight:600}
+:is(#kvz-hub,#kvz-pop) .kvz-status.is-error{color:var(--kvz-err)}
+:is(#kvz-hub,#kvz-pop) .kvz-status.is-ok{color:var(--kvz-ok)}
+@keyframes kvz-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){:is(#kvz-hub,#kvz-pop) .kvz-btn{transition:none}:is(#kvz-hub,#kvz-pop) .kvz-form[data-state="loading"] .kvz-btn__spin{animation-duration:2s}}
+/* ===== Wrapper do hub ===== */
+#kvz-hub{position:relative;display:block;width:100%;max-width:1240px;margin:0 auto;padding:16px 16px 48px;background:var(--kvz-bg);color:var(--kvz-text);font-family:inherit;font-size:16px;line-height:1.5;border-radius:28px;overflow-x:clip;-webkit-text-size-adjust:100%}
+@media (max-width:600px){#kvz-hub{border-radius:0;padding-left:12px;padding-right:12px}}
+#kvz-hub a{color:inherit}
+/* ===== Menu de âncoras (fixo ao rolar via JS; sticky como alternativa sem JS) ===== */
+#kvz-hub .kvz-navwrap{height:64px;margin:0 0 24px;position:relative;z-index:60}
+#kvz-hub .kvz-nav{height:64px;display:flex;align-items:center;padding:0 8px;background:var(--kvz-card);border:1px solid var(--kvz-border);border-radius:999px;box-shadow:var(--kvz-shadow);z-index:90}
+#kvz-hub:not(.kvz-js) .kvz-nav{position:sticky;top:0}
+#kvz-hub .kvz-nav.is-stuck{position:fixed;box-shadow:0 10px 28px rgba(0,0,0,.18)}
+#kvz-hub.kvz-nofixed .kvz-nav.is-stuck{position:sticky;left:auto!important;width:auto!important}
+#kvz-hub .kvz-nav__list{display:flex;gap:6px;width:100%;margin:0;padding:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+#kvz-hub .kvz-nav__list::-webkit-scrollbar{display:none}
+#kvz-hub .kvz-nav__list>li:first-child{margin-left:auto}
+#kvz-hub .kvz-nav__list>li:last-child{margin-right:auto}
+#kvz-hub .kvz-nav__list>li{flex:0 0 auto}
+#kvz-hub .kvz-nav__link{display:flex;align-items:center;min-height:44px;padding:0 18px;border-radius:999px;font-size:.95rem;font-weight:600;line-height:1;white-space:nowrap;color:var(--kvz-text);transition:background-color .2s,color .2s}
+#kvz-hub .kvz-nav__link:hover{background:var(--kvz-grad-soft);color:var(--kvz-text)}
+#kvz-hub .kvz-nav__link[aria-current]{background:var(--kvz-grad-deep);color:var(--kvz-on-grad)}
+@media (max-width:480px){#kvz-hub .kvz-nav__link{padding:0 14px;font-size:.9rem}}
+/* ===== Seções ===== */
+#kvz-hub .kvz-sec{margin:0 0 56px;scroll-margin-top:var(--kvz-mt,140px)}
+#kvz-hub .kvz-sec[hidden]{display:none}
+#kvz-hub .kvz-sec__head{margin:0 0 22px}
+#kvz-hub .kvz-sec__title{display:inline-block;margin:0;padding:0 0 2px;font-family:inherit;font-size:clamp(1.55rem,1.15rem + 1.6vw,2.15rem);font-weight:800;line-height:1.15;letter-spacing:-.01em;text-transform:none;color:var(--kvz-accent);background:var(--kvz-grad-deep);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+@supports not ((-webkit-background-clip:text) or (background-clip:text)){#kvz-hub .kvz-sec__title{-webkit-text-fill-color:currentColor}}
+#kvz-hub .kvz-sec__bar{display:block;width:72px;height:4px;margin-top:10px;border-radius:4px;background:var(--kvz-grad)}
+#kvz-hub .kvz-more{display:inline-flex;align-items:center;min-height:44px;margin-top:6px;font-weight:700;color:var(--kvz-accent);text-decoration:underline;text-underline-offset:3px}
+/* ===== Grade de categorias: 4 (desktop) / 3 (tablet) / 2 (celular) / 1 (<360px) ===== */
+#kvz-hub .kvz-grid{display:grid;grid-template-columns:repeat(var(--kvz-cols,2),minmax(0,1fr));gap:14px;margin:0;padding:0;min-height:150px;align-items:stretch}
+@media (max-width:359px){#kvz-hub .kvz-grid{--kvz-cols:1}}
+@media (min-width:768px){#kvz-hub .kvz-grid{--kvz-cols:3;gap:18px}}
+@media (min-width:1024px){#kvz-hub .kvz-grid{--kvz-cols:4;gap:20px}}
+#kvz-hub .kvz-card{display:flex;flex-direction:column;height:100%;overflow:hidden;color:var(--kvz-text);background:var(--kvz-card);border:1px solid var(--kvz-border);border-radius:18px;box-shadow:var(--kvz-shadow);transition:border-color .25s,box-shadow .25s,transform .25s}
+#kvz-hub .kvz-card:hover{color:var(--kvz-text);border-color:#1DB8A6}
+#kvz-hub .kvz-card__media{position:relative;aspect-ratio:3/2;overflow:hidden;background:var(--kvz-grad-soft)}
+#kvz-hub .kvz-card__img{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:none;object-fit:cover;transform:scale(1);transform-origin:50% 50%;will-change:transform}
+#kvz-hub .kvz-card__body{display:flex;flex-direction:column;gap:3px;padding:12px 14px 14px}
+#kvz-hub .kvz-card__title{margin:0;font-family:inherit;font-size:1rem;font-weight:700;line-height:1.25;color:var(--kvz-text);overflow-wrap:anywhere}
+#kvz-hub .kvz-card__count{font-size:.85rem;line-height:1.3;color:var(--kvz-muted)}
+/* Zoom suave ao passar o mouse / focar (desligado com prefers-reduced-motion) */
+@media (prefers-reduced-motion:no-preference){
+#kvz-hub .kvz-card__img,#kvz-hub .kvz-story__img,#kvz-hub .kvz-letter__img{transition:transform .6s cubic-bezier(.2,.7,.2,1)}
+#kvz-hub .kvz-card:hover .kvz-card__img,#kvz-hub .kvz-card:focus-visible .kvz-card__img,#kvz-hub .kvz-story:hover .kvz-story__img,#kvz-hub .kvz-story:focus-visible .kvz-story__img,#kvz-hub .kvz-letter:hover .kvz-letter__img,#kvz-hub .kvz-letter:focus-visible .kvz-letter__img{transform:scale(1.07)}
+#kvz-hub .kvz-card:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(11,127,116,.18)}
+}
+/* ===== Carregando / erro ===== */
+#kvz-hub .kvz-skel{aspect-ratio:3/2.7;border-radius:18px;background:var(--kvz-skel)}
+@media (prefers-reduced-motion:no-preference){#kvz-hub .kvz-skel{animation:kvz-pulse 1.4s ease-in-out infinite}}
+@keyframes kvz-pulse{50%{opacity:.55}}
+#kvz-hub .kvz-msg{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:16px 18px;color:var(--kvz-text);background:var(--kvz-card);border:1px dashed var(--kvz-input-border);border-radius:16px;font-size:.95rem}
+#kvz-hub .kvz-msg button{min-height:44px;padding:0 20px;border:0;border-radius:999px;background:var(--kvz-grad-deep);color:var(--kvz-on-grad);font-weight:700;cursor:pointer}
+#kvz-hub noscript .kvz-static{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+#kvz-hub noscript .kvz-static a{display:block;padding:12px 14px;font-weight:600;color:var(--kvz-text);background:var(--kvz-card);border:1px solid var(--kvz-border);border-radius:12px}
+/* ===== Carrosséis (Web Stories e Glossário) ===== */
+#kvz-hub .kvz-car{position:relative;--n:2.3;--g:12px}
+#kvz-hub .kvz-car--letters{--n:2.5}
+@media (min-width:640px){#kvz-hub .kvz-car{--n:3.3;--g:16px}#kvz-hub .kvz-car--letters{--n:4.4}}
+@media (min-width:1024px){#kvz-hub .kvz-car{--n:5;--g:18px}#kvz-hub .kvz-car--letters{--n:6.5}}
+#kvz-hub .kvz-car__track{display:flex;gap:var(--g);margin:0;padding:4px 2px 14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;touch-action:pan-x pan-y}
+#kvz-hub .kvz-car__track::-webkit-scrollbar{display:none}
+#kvz-hub .kvz-car__slide{flex:0 0 calc((100% - var(--g)*(var(--n) - 1))/var(--n));min-width:0;scroll-snap-align:start}
+#kvz-hub .kvz-car__btn{position:absolute;top:calc(50% - 22px);z-index:5;display:none;align-items:center;justify-content:center;width:44px;height:44px;padding:0;border:1px solid var(--kvz-border);border-radius:50%;background:var(--kvz-card);color:var(--kvz-text);box-shadow:var(--kvz-shadow);cursor:pointer}
+#kvz-hub .kvz-car__btn svg{width:22px;height:22px;display:block}
+#kvz-hub .kvz-car__btn--prev{left:-10px}
+#kvz-hub .kvz-car__btn--next{right:-10px}
+#kvz-hub .kvz-car__btn:hover{background:var(--kvz-grad-deep);color:var(--kvz-on-grad);border-color:transparent}
+#kvz-hub .kvz-car__btn[disabled]{opacity:0;pointer-events:none}
+@media (hover:hover) and (pointer:fine){#kvz-hub .kvz-car__btn{display:flex}}
+#kvz-hub .kvz-car.is-fit .kvz-car__btn{display:none}
+/* Slide de story (proporção vertical 2:3) */
+#kvz-hub .kvz-story{position:relative;display:block;aspect-ratio:2/3;overflow:hidden;color:#fff;background:var(--kvz-grad-soft);border-radius:18px;box-shadow:var(--kvz-shadow)}
+#kvz-hub .kvz-story:hover{color:#fff}
+#kvz-hub .kvz-story__img,#kvz-hub .kvz-letter__img{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:none;object-fit:cover;transform-origin:50% 50%}
+#kvz-hub .kvz-story__shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.82) 0%,rgba(0,0,0,.45) 38%,rgba(0,0,0,0) 68%)}
+#kvz-hub .kvz-story__tag{position:absolute;top:10px;left:10px;padding:4px 10px;border-radius:999px;background:rgba(10,10,10,.78);color:#fff;font-size:.75rem;font-weight:700;letter-spacing:.02em}
+#kvz-hub .kvz-story__title{position:absolute;left:12px;right:12px;bottom:12px;margin:0;font-family:inherit;font-size:.98rem;font-weight:700;line-height:1.25;color:#fff;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+/* Slide de letra do glossário (quadrado) */
+#kvz-hub .kvz-letter{position:relative;display:block;aspect-ratio:1/1;overflow:hidden;color:#fff;background:var(--kvz-grad-deep);border-radius:18px;box-shadow:var(--kvz-shadow)}
+#kvz-hub .kvz-letter:hover{color:#fff}
+#kvz-hub .kvz-letter__shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.78) 0%,rgba(0,0,0,0) 62%)}
+#kvz-hub .kvz-letter__char{position:absolute;left:12px;bottom:34px;margin:0;font-family:inherit;font-size:2.6rem;font-weight:800;line-height:1;color:#fff;text-shadow:0 2px 10px rgba(0,0,0,.5)}
+#kvz-hub .kvz-letter__count{position:absolute;left:12px;bottom:12px;font-size:.8rem;font-weight:600;line-height:1.2;color:#fff}
+#kvz-hub .kvz-letter.is-plain .kvz-letter__char{bottom:auto;top:50%;left:0;right:0;text-align:center;transform:translateY(-62%);font-size:3.4rem;color:var(--kvz-on-grad);text-shadow:none}
+#kvz-hub .kvz-letter.is-plain .kvz-letter__count{color:var(--kvz-on-grad)}
+#kvz-hub .kvz-letter.is-plain .kvz-letter__shade{display:none}
+/* ===== Newsletter do fim da página ===== */
+#kvz-hub .kvz-news{max-width:560px;margin:0 auto;padding:28px 24px 24px;border:2px solid transparent;border-radius:28px;background:linear-gradient(var(--kvz-card),var(--kvz-card)) padding-box,var(--kvz-grad) border-box;box-shadow:var(--kvz-shadow)}
+@media (max-width:359px){#kvz-hub .kvz-news{padding:22px 14px 18px}}
+/* ===== Esqueletos dos carrosséis e estado sem JavaScript ===== */
+#kvz-hub .kvz-nav__list{position:relative}
+#kvz-hub .kvz-skelrow{display:flex;gap:12px;overflow:hidden}
+#kvz-hub .kvz-skelrow>.kvz-skel{flex:0 0 42%;aspect-ratio:2/3}
+#kvz-hub [data-kvz-gloss].kvz-skelrow>.kvz-skel{flex-basis:38%;aspect-ratio:1/1}
+@media (min-width:640px){#kvz-hub .kvz-skelrow>.kvz-skel{flex-basis:29%}#kvz-hub [data-kvz-gloss].kvz-skelrow>.kvz-skel{flex-basis:22%}}
+@media (min-width:1024px){#kvz-hub .kvz-skelrow>.kvz-skel{flex-basis:19%}#kvz-hub [data-kvz-gloss].kvz-skelrow>.kvz-skel{flex-basis:15%}}
+#kvz-hub .kvz-news{min-height:420px}
+#kvz-hub:not(.kvz-js) :is(.kvz-grid,[data-kvz-stories],[data-kvz-gloss]){display:none}
+#kvz-hub:not(.kvz-js) .kvz-news{min-height:0}
+/* ===== Pop-up flutuante (sem overlay: a página continua rolando) ===== */
+#kvz-pop{position:fixed;right:16px;bottom:16px;z-index:100000;width:min(400px,calc(100vw - 32px));max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;padding:22px 22px 20px;background:var(--kvz-card);color:var(--kvz-text);font:inherit;font-size:16px;line-height:1.5;border:2px solid transparent;border-radius:24px;background:linear-gradient(var(--kvz-card),var(--kvz-card)) padding-box,var(--kvz-grad) border-box;box-shadow:0 18px 50px rgba(0,0,0,.28)}
+#kvz-pop:focus{outline:none}
+#kvz-pop .kvz-pop__close{position:absolute;top:6px;right:6px;display:flex;align-items:center;justify-content:center;width:44px;height:44px;padding:0;margin:0;border:0;border-radius:50%;background:transparent;color:var(--kvz-text);cursor:pointer}
+#kvz-pop .kvz-pop__close:hover{background:var(--kvz-skel)}
+#kvz-pop .kvz-pop__close svg{width:20px;height:20px;display:block}
+@media (prefers-reduced-motion:no-preference){#kvz-pop{animation:kvz-pop-in .35s cubic-bezier(.2,.8,.2,1)}}
+@keyframes kvz-pop-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media (max-width:600px){#kvz-pop{left:0;right:0;bottom:0;width:100%;max-height:88vh;max-height:88dvh;border-radius:24px 24px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px))}}
+@media (max-width:359px){#kvz-pop{padding-left:14px;padding-right:14px}}
+</style>
+<div id="kvz-hub" data-kvz-version="1.0">
+<div class="kvz-navwrap"><nav class="kvz-nav" aria-label="Seções do hub: Especial, Moda Feminina, Cuidados Femininos, Web Stories e Datas Festivas"><ul class="kvz-nav__list"><li><a class="kvz-nav__link" href="#especial" data-spy="especial">Especial</a></li><li><a class="kvz-nav__link" href="#moda-feminina" data-spy="moda-feminina">Moda Feminina</a></li><li><a class="kvz-nav__link" href="#cuidados-femininos" data-spy="cuidados-femininos">Cuidados Femininos</a></li><li><a class="kvz-nav__link" href="#web-stories" data-spy="web-stories">Web Stories</a></li><li><a class="kvz-nav__link" href="#datas-festivas" data-spy="datas-festivas">Datas Festivas</a></li></ul></nav></div>
+<section id="especial" class="kvz-sec" aria-labelledby="kvz-t-especial"><header class="kvz-sec__head"><h2 class="kvz-sec__title" id="kvz-t-especial">Especial</h2><span class="kvz-sec__bar" aria-hidden="true"></span></header><ul class="kvz-grid" data-kvz-cats="especial" aria-busy="true"></ul><noscript><nav class="kvz-static" aria-label="Categorias de Especial"><a href="https://klyvorenza.com/perfumes-e-fragrancias-guia-de-aromas/">Perfumes e Fragrâncias</a><a href="https://klyvorenza.com/moda-gestante-conforto-e-estilo/">Moda Gestante</a><a href="https://klyvorenza.com/praias-do-brasil-destinos-e-looks-de-verao/">Praias do Brasil</a><a href="https://klyvorenza.com/historia-da-moda-origens-e-evolucao-do-estilo/">História da Moda</a><a href="https://klyvorenza.com/moda-por-estado-estilo-e-cultura-do-brasil/">Moda por Estado</a></nav></noscript></section>
+<section id="moda-feminina" class="kvz-sec" aria-labelledby="kvz-t-moda-feminina"><header class="kvz-sec__head"><h2 class="kvz-sec__title" id="kvz-t-moda-feminina">Moda Feminina</h2><span class="kvz-sec__bar" aria-hidden="true"></span></header><ul class="kvz-grid" data-kvz-cats="moda-feminina" aria-busy="true"></ul><noscript><nav class="kvz-static" aria-label="Categorias de Moda Feminina"><a href="https://klyvorenza.com/roupas-femininas-tendencias-looks/">Roupas</a><a href="https://klyvorenza.com/vestido-moda-feminina-elegancia-estilo/">Vestidos</a><a href="https://klyvorenza.com/blusas-moda-feminina-tendencias-estilo/">Blusas</a><a href="https://klyvorenza.com/saias-moda-feminina-estilo-tendencias/">Saias</a><a href="https://klyvorenza.com/plus-size-moda-estilo-beleza-e-curvas/">Plus Size</a><a href="https://klyvorenza.com/casacos-e-jaqueta-moda-inverno-estilo/">Casacos e Jaquetas</a><a href="https://klyvorenza.com/maios-moda-praia-elegancia-conforto-verao/">Maiôs</a><a href="https://klyvorenza.com/biquinis-moda-praia-verao-estilos/">Biquínis</a><a href="https://klyvorenza.com/calcas-moda-tendencias-estilo-e-conforto/">Calças</a><a href="https://klyvorenza.com/shorts-moda-verao-conforto-estilo/">Shorts</a><a href="https://klyvorenza.com/macacao-tendencias-estilo-feminino/">Macacão</a></nav></noscript></section>
+<section id="cuidados-femininos" class="kvz-sec" aria-labelledby="kvz-t-cuidados-femininos"><header class="kvz-sec__head"><h2 class="kvz-sec__title" id="kvz-t-cuidados-femininos">Cuidados Femininos</h2><span class="kvz-sec__bar" aria-hidden="true"></span></header><ul class="kvz-grid" data-kvz-cats="cuidados-femininos" aria-busy="true"></ul><noscript><nav class="kvz-static" aria-label="Categorias de Cuidados Femininos"><a href="https://klyvorenza.com/beleza-cuidados-essencia-natural/">Beleza &amp; Cuidados</a><a href="https://klyvorenza.com/pele-perfeita-skincare-bem-estar/">Cuidados com a Pele</a><a href="https://klyvorenza.com/maquiagem-perfeita-tendencias-dicas/">Maquiagem</a><a href="https://klyvorenza.com/cabelo-deslumbrante-cuidados-tendencias/">Cabelos</a><a href="https://klyvorenza.com/unhas-impecaveis-cuidados-cores/">Unhas</a></nav></noscript></section>
+<section id="web-stories" class="kvz-sec" aria-labelledby="kvz-t-web-stories"><header class="kvz-sec__head"><h2 class="kvz-sec__title" id="kvz-t-web-stories">Web Stories</h2><span class="kvz-sec__bar" aria-hidden="true"></span></header><div data-kvz-stories aria-busy="true"></div><a class="kvz-more" href="https://klyvorenza.com/fws-story/">Ver todas as Web Stories da Klyvorenza</a><noscript><nav class="kvz-static" aria-label="Web Stories"><a href="https://klyvorenza.com/fws-story/">Todas as Web Stories</a><a href="https://klyvorenza.com/fws-story/roraima-e-a-moda-indigena-ideias-para-seu-look/">Roraima e a moda indígena: ideias para seu look</a></nav></noscript></section>
+<section id="datas-festivas" class="kvz-sec" aria-labelledby="kvz-t-datas-festivas"><header class="kvz-sec__head"><h2 class="kvz-sec__title" id="kvz-t-datas-festivas">Datas Festivas</h2><span class="kvz-sec__bar" aria-hidden="true"></span></header><ul class="kvz-grid" data-kvz-cats="datas-festivas" aria-busy="true"></ul><noscript><nav class="kvz-static" aria-label="Categorias de Datas Festivas"><a href="https://klyvorenza.com/natal-ideias-de-looks-para-a-ceia-e-a-festa/">Natal</a><a href="https://klyvorenza.com/ano-novo-looks-e-tendencias-para-a-virada/">Ano Novo</a></nav></noscript></section>
+<section id="glossario" class="kvz-sec" aria-labelledby="kvz-t-glossario"><header class="kvz-sec__head"><h2 class="kvz-sec__title" id="kvz-t-glossario">Glossário</h2><span class="kvz-sec__bar" aria-hidden="true"></span></header><div data-kvz-gloss aria-busy="true"></div><noscript><nav class="kvz-static" aria-label="Glossário de A a Z"><a href="https://klyvorenza.com/glossario-categoria/a/">Glossário de moda: letra A</a><a href="https://klyvorenza.com/glossario-categoria/b/">Glossário de moda: letra B</a><a href="https://klyvorenza.com/glossario-categoria/c/">Glossário de moda: letra C</a><a href="https://klyvorenza.com/glossario-categoria/d/">Glossário de moda: letra D</a><a href="https://klyvorenza.com/glossario-categoria/e/">Glossário de moda: letra E</a><a href="https://klyvorenza.com/glossario-categoria/f/">Glossário de moda: letra F</a><a href="https://klyvorenza.com/glossario-categoria/g/">Glossário de moda: letra G</a><a href="https://klyvorenza.com/glossario-categoria/h/">Glossário de moda: letra H</a><a href="https://klyvorenza.com/glossario-categoria/i/">Glossário de moda: letra I</a><a href="https://klyvorenza.com/glossario-categoria/j/">Glossário de moda: letra J</a><a href="https://klyvorenza.com/glossario-categoria/k/">Glossário de moda: letra K</a><a href="https://klyvorenza.com/glossario-categoria/l/">Glossário de moda: letra L</a><a href="https://klyvorenza.com/glossario-categoria/m/">Glossário de moda: letra M</a><a href="https://klyvorenza.com/glossario-categoria/n/">Glossário de moda: letra N</a><a href="https://klyvorenza.com/glossario-categoria/o/">Glossário de moda: letra O</a><a href="https://klyvorenza.com/glossario-categoria/p/">Glossário de moda: letra P</a><a href="https://klyvorenza.com/glossario-categoria/q/">Glossário de moda: letra Q</a><a href="https://klyvorenza.com/glossario-categoria/r/">Glossário de moda: letra R</a><a href="https://klyvorenza.com/glossario-categoria/s/">Glossário de moda: letra S</a><a href="https://klyvorenza.com/glossario-categoria/t/">Glossário de moda: letra T</a><a href="https://klyvorenza.com/glossario-categoria/u/">Glossário de moda: letra U</a><a href="https://klyvorenza.com/glossario-categoria/v/">Glossário de moda: letra V</a><a href="https://klyvorenza.com/glossario-categoria/w/">Glossário de moda: letra W</a><a href="https://klyvorenza.com/glossario-categoria/x/">Glossário de moda: letra X</a><a href="https://klyvorenza.com/glossario-categoria/y/">Glossário de moda: letra Y</a><a href="https://klyvorenza.com/glossario-categoria/z/">Glossário de moda: letra Z</a></nav></noscript></section>
+<section id="newsletter" class="kvz-sec" aria-labelledby="kvz-t-news" style="margin-bottom:0"><h2 class="kvz-sr" id="kvz-t-news">Newsletter da Klyvorenza</h2><div class="kvz-news" data-kvz-news><noscript><p class="kvz-lead">Ative o JavaScript para assinar a newsletter da Klyvorenza.</p></noscript></div></section>
+</div>
+<script id="kvz-script">
+(function () {
+'use strict';
+/* =====================================================================
+   CONFIGURAÇÃO — mexa só aqui (os mesmos valores devem estar nos dois blocos:
+   página do hub e pop-up global)
+   ===================================================================== */
+var CONFIG = {
+  /* Logo da marca (newsletter e pop-up). Já está na biblioteca de mídia do site.
+     Para trocar: envie a imagem em Mídia > Adicionar e cole a URL do arquivo aqui. */
+  LOGO_URL: 'https://klyvorenza.com/wp-content/uploads/2026/11/Logo-Klyvorenza-1.png',
+  BRAND_NAME: 'klyvorenza',
+  PRIVACY_URL: 'https://klyvorenza.com/politica-de-privacidade/',
+  /* ENVIO DA NEWSLETTER — uma única variável.
+     Cole aqui a URL/action do seu serviço (Brevo, Mailchimp, MailerLite, plugin do WordPress etc.).
+     Os dados vão por POST (application/x-www-form-urlencoded) com os campos abaixo.
+     Se o seu serviço usa outros nomes de campo (ex.: Mailchimp usa FNAME e EMAIL), troque em NEWSLETTER_FIELDS.
+     Campos fixos do serviço (ex.: lista, token) vão em NEWSLETTER_EXTRA.
+     Serviços que não liberam CORS (Mailchimp, formulários HTML simples): use NEWSLETTER_NO_CORS: true
+     (o envio acontece, mas o navegador não consegue ler a resposta; o site assume sucesso). */
+  NEWSLETTER_ENDPOINT: '',
+  NEWSLETTER_FIELDS: { name: 'name', email: 'email' },
+  NEWSLETTER_EXTRA: {},
+  NEWSLETTER_NO_CORS: false,
+  /* MODO ESCURO — Ashe Pro: classe no <body> e chave do localStorage do botão de lua do tema.
+     (Confirmado no site: body.ashe-dark-mode e localStorage.asheDarkMode = 'on' | 'off'.)
+     Se o tema mudar, troque só estas duas linhas. */
+  DARK_BODY_CLASS: 'ashe-dark-mode',
+  DARK_STORAGE_KEY: 'asheDarkMode',
+  FOLLOW_OS_DARK: true, /* true = sem escolha no botão do tema, segue prefers-color-scheme */
+  /* POP-UP */
+  POPUP_DELAY_MS: 3000,
+  STORAGE_KEY_DISMISSED: 'kvz_news_dismissed',   /* guarda a data local (AAAA-MM-DD) em que foi fechado */
+  STORAGE_KEY_SUBSCRIBED: 'kvz_news_subscribed', /* guarda o timestamp até quando não deve aparecer (1 ano) */
+  SUBSCRIBED_DAYS: 365
+};
+var doc = document;
+function el(tag, cls, text) { var e = doc.createElement(tag); if (cls) { e.className = cls; } if (text != null) { e.textContent = text; } return e; }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+function onReady(fn) { if (doc.readyState === 'loading') { doc.addEventListener('DOMContentLoaded', fn); } else { fn(); } }
+function reduced() { return !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches); }
+/* ---------- Tema claro/escuro ---------- */
+function isDark() {
+  if (doc.body && doc.body.classList.contains(CONFIG.DARK_BODY_CLASS)) { return true; }
+  var pref = null;
+  try { pref = localStorage.getItem(CONFIG.DARK_STORAGE_KEY); } catch (e) {}
+  if (pref === 'off') { return false; }
+  if (pref === 'on') { return true; }
+  return !!(CONFIG.FOLLOW_OS_DARK && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+}
+function paintTheme() {
+  var t = isDark() ? 'dark' : 'light';
+  Array.prototype.forEach.call(doc.querySelectorAll('#kvz-hub, #kvz-pop'), function (n) { if (n.getAttribute('data-kvz-theme') !== t) { n.setAttribute('data-kvz-theme', t); } });
+}
+function watchTheme() {
+  paintTheme();
+  if (window.MutationObserver && doc.body) { new MutationObserver(paintTheme).observe(doc.body, { attributes: true, attributeFilter: ['class'] }); }
+  if (window.matchMedia) {
+    var mq = matchMedia('(prefers-color-scheme: dark)');
+    if (mq.addEventListener) { mq.addEventListener('change', paintTheme); } else if (mq.addListener) { mq.addListener(paintTheme); }
+  }
+  window.addEventListener('storage', function (e) { if (e.key === CONFIG.DARK_STORAGE_KEY) { paintTheme(); } });
+}
+/* ---------- Armazenamento: localStorage, com cookie como alternativa ---------- */
+var LS = (function () { try { var k = '__kvz_t'; localStorage.setItem(k, '1'); localStorage.removeItem(k); return true; } catch (e) { return false; } })();
+function cookieGet(k) { var m = doc.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : null; }
+function cookieSet(k, v, days) { doc.cookie = k + '=' + encodeURIComponent(v) + '; max-age=' + Math.round(days * 86400) + '; path=/; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); }
+function store(k, v, days) { if (LS) { try { localStorage.setItem(k, v); return; } catch (e) {} } cookieSet(k, v, days); }
+function read(k) { var v = null; if (LS) { try { v = localStorage.getItem(k); } catch (e) {} } return v !== null ? v : cookieGet(k); }
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function today() { var d = new Date(); return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); } /* data LOCAL */
+function isSubscribed() { var t = parseInt(read(CONFIG.STORAGE_KEY_SUBSCRIBED), 10); return !!t && t > Date.now(); }
+function markSubscribed() { store(CONFIG.STORAGE_KEY_SUBSCRIBED, String(Date.now() + CONFIG.SUBSCRIBED_DAYS * 864e5), CONFIG.SUBSCRIBED_DAYS); }
+function markDismissed() { store(CONFIG.STORAGE_KEY_DISMISSED, today(), 2); }
+function mayShowPopup() { return !isSubscribed() && read(CONFIG.STORAGE_KEY_DISMISSED) !== today(); }
+/* ---------- Newsletter: markup + validação + envio ---------- */
+function newsletterMarkup(p, eager) {
+  return '<div class="kvz-brand"><img class="kvz-brand__logo" src="' + esc(CONFIG.LOGO_URL) + '" alt="Logo da Klyvorenza" width="72" height="72" decoding="async" ' + (eager ? 'fetchpriority="high"' : 'loading="lazy"') + '><p class="kvz-brand__name">' + esc(CONFIG.BRAND_NAME) + '</p></div>' +
+    '<p class="kvz-lead">Receba dicas de moda e beleza no seu e-mail.</p>' +
+    '<form class="kvz-form" novalidate method="post" data-state="idle">' +
+    '<div class="kvz-field"><label for="' + p + '-nome">Nome <span aria-hidden="true">*</span></label><input id="' + p + '-nome" data-f="name" type="text" required minlength="2" maxlength="80" autocomplete="given-name" aria-describedby="' + p + '-nome-e"><p class="kvz-err" id="' + p + '-nome-e" hidden></p></div>' +
+    '<div class="kvz-field"><label for="' + p + '-email">E-mail <span aria-hidden="true">*</span></label><input id="' + p + '-email" data-f="email" type="email" required maxlength="120" autocomplete="email" inputmode="email" aria-describedby="' + p + '-email-e"><p class="kvz-err" id="' + p + '-email-e" hidden></p></div>' +
+    '<div class="kvz-hp" aria-hidden="true"><label>Não preencha este campo<input data-f="hp" type="text" tabindex="-1" autocomplete="off"></label></div>' +
+    '<div class="kvz-field"><div class="kvz-check"><input id="' + p + '-ok" data-f="consent" type="checkbox" required aria-describedby="' + p + '-ok-e"><label for="' + p + '-ok">Concordo em receber e-mails da Klyvorenza e aceito a <a href="' + esc(CONFIG.PRIVACY_URL) + '" target="_blank" rel="noopener">Política de Privacidade</a> (LGPD). <span aria-hidden="true">*</span></label></div><p class="kvz-err" id="' + p + '-ok-e" hidden></p></div>' +
+    '<button type="submit" class="kvz-btn"><span class="kvz-btn__label">Quero receber</span><span class="kvz-btn__spin" aria-hidden="true"></span></button>' +
+    '<p class="kvz-status" role="status" aria-live="polite"></p></form>';
+}
+function sendNewsletter(name, email) {
+  var ep = CONFIG.NEWSLETTER_ENDPOINT;
+  if (!ep) { return Promise.reject(new Error('NOT_CONFIGURED')); }
+  var body = new URLSearchParams();
+  body.set(CONFIG.NEWSLETTER_FIELDS.name, name);
+  body.set(CONFIG.NEWSLETTER_FIELDS.email, email);
+  Object.keys(CONFIG.NEWSLETTER_EXTRA).forEach(function (k) { body.set(k, CONFIG.NEWSLETTER_EXTRA[k]); });
+  var opts = { method: 'POST', body: body, credentials: 'omit' };
+  if (CONFIG.NEWSLETTER_NO_CORS) { opts.mode = 'no-cors'; }
+  return fetch(ep, opts).then(function (r) { if (!CONFIG.NEWSLETTER_NO_CORS && !r.ok) { throw new Error('HTTP ' + r.status); } return true; });
+}
+/* Liga a validação e o envio ao <form>. onSuccess roda depois de um envio bem-sucedido. */
+function wireForm(form, onSuccess) {
+  var f = {}, err = {}, btn = form.querySelector('.kvz-btn'), label = form.querySelector('.kvz-btn__label'), status = form.querySelector('.kvz-status');
+  ['name', 'email', 'consent', 'hp'].forEach(function (k) { f[k] = form.querySelector('[data-f="' + k + '"]'); });
+  ['name', 'email', 'consent'].forEach(function (k) { err[k] = doc.getElementById(f[k].getAttribute('aria-describedby')); });
+  function message(k) {
+    var v = (f[k].value || '').trim();
+    if (k === 'name') { return !v ? 'Informe seu nome.' : (v.length < 2 ? 'O nome precisa ter pelo menos 2 letras.' : ''); }
+    if (k === 'email') { return !v ? 'Informe seu e-mail.' : ((f[k].validity.typeMismatch || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) ? 'Digite um e-mail válido, por exemplo: nome@exemplo.com.' : ''); }
+    return f[k].checked ? '' : 'Para continuar, aceite receber e-mails e a Política de Privacidade.';
+  }
+  function check(k) { var m = message(k); f[k].setAttribute('aria-invalid', m ? 'true' : 'false'); err[k].textContent = m; err[k].hidden = !m; return m; }
+  function setStatus(text, kind) { status.textContent = text; status.className = 'kvz-status' + (kind ? ' is-' + kind : ''); }
+  function setState(s, text) {
+    form.setAttribute('data-state', s); btn.disabled = (s === 'loading' || s === 'success'); btn.setAttribute('aria-busy', s === 'loading' ? 'true' : 'false');
+    label.textContent = ({ idle: 'Quero receber', loading: 'Enviando…', success: 'Inscrição realizada', error: 'Tentar novamente' })[s];
+  }
+  ['name', 'email'].forEach(function (k) {
+    f[k].addEventListener('blur', function () { if (f[k].value) { check(k); } });
+    f[k].addEventListener('input', function () { if (f[k].getAttribute('aria-invalid') === 'true') { check(k); } });
+  });
+  f.consent.addEventListener('change', function () { check('consent'); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (form.getAttribute('data-state') === 'loading') { return; }
+    var bad = ['name', 'email', 'consent'].filter(check);
+    if (bad.length) { setStatus('Revise os campos destacados.', 'error'); f[bad[0]].focus(); return; }
+    if (f.hp.value) { setState('success'); setStatus('Inscrição realizada! Obrigada por se juntar à Klyvorenza.', 'ok'); return; } /* robô */
+    setState('loading'); setStatus('Enviando seus dados…', '');
+    sendNewsletter(f.name.value.trim(), f.email.value.trim()).then(function () {
+      markSubscribed(); form.reset(); setState('success'); setStatus('Inscrição realizada! Obrigada por se juntar à Klyvorenza.', 'ok');
+      if (onSuccess) { onSuccess(); }
+    }).catch(function (er) {
+      setState('error');
+      if (er && er.message === 'NOT_CONFIGURED') { if (window.console) { console.warn('[Klyvorenza hub] Defina CONFIG.NEWSLETTER_ENDPOINT para ativar a newsletter.'); } setStatus('A newsletter ainda não está ativa neste site. Tente novamente em breve.', 'error'); }
+      else { setStatus('Não foi possível enviar agora. Confira sua conexão e tente de novo.', 'error'); }
+    });
+  });
+}
+/* =====================================================================
+   POP-UP FLUTUANTE (3 s após carregar; regras de exibição via localStorage/cookie)
+   ===================================================================== */
+function initPopup() {
+  if (window.__kvzPopupInit) { return; } /* evita iniciar duas vezes se os dois blocos estiverem no site */
+  window.__kvzPopupInit = true;
+  if (!mayShowPopup()) { return; }
+  var pop = null, prevFocus = null, timer = null;
+  function focusables() { return Array.prototype.filter.call(pop.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]):not([tabindex="-1"])'), function (n) { return n.offsetParent !== null; }); }
+  function onKey(e) {
+    if (!pop) { return; }
+    if (e.key === 'Escape' || e.key === 'Esc') { e.preventDefault(); close(); return; }
+    if (e.key !== 'Tab') { return; }
+    var list = focusables(); if (!list.length) { return; }
+    var first = list[0], last = list[list.length - 1], a = doc.activeElement;
+    if (!pop.contains(a)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && (a === first || a === pop)) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+  }
+  function close() {
+    if (!pop) { return; }
+    doc.removeEventListener('keydown', onKey, true);
+    clearTimeout(timer);
+    pop.parentNode && pop.parentNode.removeChild(pop); pop = null;
+    if (!isSubscribed()) { markDismissed(); } /* fechou sem se inscrever: some pelo resto do dia (todas as páginas) */
+    if (prevFocus && doc.contains(prevFocus) && prevFocus.focus) { try { prevFocus.focus({ preventScroll: true }); } catch (e) {} }
+  }
+  function open() {
+    if (pop || !mayShowPopup() || doc.getElementById('kvz-pop')) { return; }
+    prevFocus = doc.activeElement;
+    pop = el('div'); pop.id = 'kvz-pop'; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-modal', 'true'); pop.setAttribute('aria-label', 'Assine a newsletter da Klyvorenza'); pop.tabIndex = -1;
+    var x = el('button', 'kvz-pop__close'); x.type = 'button'; x.setAttribute('aria-label', 'Fechar newsletter');
+    x.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+    x.addEventListener('click', close);
+    var box = el('div'); box.innerHTML = newsletterMarkup('kvz-pop-f', true);
+    pop.appendChild(x); pop.appendChild(box);
+    doc.body.appendChild(pop); paintTheme();
+    wireForm(pop.querySelector('form'), function () { timer = setTimeout(close, 2600); }); /* inscreveu: fecha e só volta em 1 ano */
+    doc.addEventListener('keydown', onKey, true);
+    try { pop.focus({ preventScroll: true }); } catch (e) { pop.focus(); }
+  }
+  function start() { timer = setTimeout(open, CONFIG.POPUP_DELAY_MS); }
+  if (doc.readyState === 'complete') { start(); } else { window.addEventListener('load', start, { once: true }); }
+}
+/* =====================================================================
+   CONFIGURAÇÃO DO HUB
+   ===================================================================== */
+var HUB = {
+  SITE: location.origin,                 /* o hub roda no próprio site; troque só se o domínio for outro */
+  REST_ROOT: '/wp-json/wp/v2/',          /* se os permalinks forem "Simples", use '/?rest_route=/wp/v2/' */
+  CACHE_MINUTES: 30,                     /* cache em sessionStorage (0 desliga) */
+  MAX_POST_PAGES: 10,                    /* até 1000 artigos lidos para escolher as imagens */
+  EXCLUDE_SLUGS: ['uncategorized', 'sem-categoria'],
+  /* Fixos do tema que cobrem o topo da tela (para o menu do hub ficar logo abaixo e para o deslocamento das âncoras) */
+  FIXED_HEADER_SELECTORS: ['#wpadminbar', '#main-nav'],
+  STORIES_ARCHIVE: '/fws-story/',        /* arquivo das Web Stories (plugin Fast Web Stories) */
+  STORIES_REST_BASE: '',                 /* '' = ler o HTML do arquivo (o CPT não está exposto na REST). Se um dia expuser, ex.: 'fws_story' */
+  STORIES_MAX_PAGES: 5,
+  GLOSSARY_REST_BASE: 'fastgloss',       /* tipo de conteúdo dos termos */
+  GLOSSARY_TAX: 'fastgloss_category',    /* taxonomia das letras (A–Z) */
+  GLOSSARY_PAGE: '/glossario-categoria/',/* páginas das letras: /glossario-categoria/a/ */
+  /* MAPA SEÇÃO → CATEGORIAS (slug). A ordem da lista é a ordem dos cards.
+     • "parents": se existir uma categoria-pai com um destes slugs, TODAS as filhas dela entram na seção sozinhas
+       (e a categoria-pai em si não vira card).
+     • "slugs": categorias soltas (hoje todas são de nível 0). Categoria nova solta: acrescente o slug aqui
+       OU crie-a como filha de uma categoria-pai listada em "parents". */
+  SECTIONS: [
+    { id: 'especial', parents: ['especial', 'especiais'], slugs: [
+      'perfumes-e-fragrancias-guia-de-aromas', 'moda-gestante-conforto-e-estilo', 'praias-do-brasil-destinos-e-looks-de-verao',
+      'historia-da-moda-origens-e-evolucao-do-estilo', 'moda-por-estado-estilo-e-cultura-do-brasil'] },
+    { id: 'moda-feminina', parents: ['moda-feminina'], slugs: [
+      'roupas-femininas-tendencias-looks', 'vestido-moda-feminina-elegancia-estilo', 'blusas-moda-feminina-tendencias-estilo',
+      'saias-moda-feminina-estilo-tendencias', 'plus-size-moda-estilo-beleza-e-curvas', 'casacos-e-jaqueta-moda-inverno-estilo',
+      'maios-moda-praia-elegancia-conforto-verao', 'biquinis-moda-praia-verao-estilos', 'calcas-moda-tendencias-estilo-e-conforto',
+      'shorts-moda-verao-conforto-estilo', 'macacao-tendencias-estilo-feminino'] },
+    { id: 'cuidados-femininos', parents: ['cuidados-femininos'], slugs: [
+      'beleza-cuidados-essencia-natural', 'pele-perfeita-skincare-bem-estar', 'maquiagem-perfeita-tendencias-dicas',
+      'cabelo-deslumbrante-cuidados-tendencias', 'unhas-impecaveis-cuidados-cores'] },
+    { id: 'datas-festivas', parents: ['datas-festivas'], slugs: [
+      'natal-ideias-de-looks-para-a-ceia-e-a-festa', 'ano-novo-looks-e-tendencias-para-a-virada'] }
+  ],
+  /* Nomes de exibição diferentes do nome da categoria no WordPress (slug → texto) */
+  LABELS: {
+    'cabelo-deslumbrante-cuidados-tendencias': 'Cabelos',
+    'casacos-e-jaqueta-moda-inverno-estilo': 'Casacos e Jaquetas'
+  }
+};
+/* =====================================================================
+   UTILITÁRIOS
+   ===================================================================== */
+function decode(s) { var t = doc.createElement('textarea'); t.innerHTML = s == null ? '' : String(s); return t.value; }
+function safeUrl(u, base) { try { var x = new URL(u, base || location.href); return /^https?:$/.test(x.protocol) ? x.href : ''; } catch (e) { return ''; } }
+function plural(n, one, many) { return n + ' ' + (n === 1 ? one : many); }
+function restUrl(path, params) {
+  var q = Object.keys(params || {}).map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]); }).join('&');
+  var root = HUB.SITE + HUB.REST_ROOT + path;
+  return root + (q ? (root.indexOf('?') > -1 ? '&' : '?') + q : '');
+}
+/* Cache em sessionStorage (chave = URL). Guarda { d: dados, tp: total de páginas }. */
+function cget(k) { if (!HUB.CACHE_MINUTES) { return null; } try { var o = JSON.parse(sessionStorage.getItem('kvz1:' + k)); return o && Date.now() - o.t < HUB.CACHE_MINUTES * 6e4 ? o.v : null; } catch (e) { return null; } }
+function cset(k, v) { if (!HUB.CACHE_MINUTES) { return; } try { sessionStorage.setItem('kvz1:' + k, JSON.stringify({ t: Date.now(), v: v })); } catch (e) {} }
+function getJSON(url) {
+  var c = cget(url); if (c) { return Promise.resolve(c); }
+  return fetch(url, { headers: { Accept: 'application/json' }, credentials: 'same-origin' }).then(function (r) {
+    if (!r.ok) { throw new Error('HTTP ' + r.status); }
+    var tp = parseInt(r.headers.get('X-WP-TotalPages'), 10) || 1;
+    return r.json().then(function (d) { var v = { d: d, tp: tp }; cset(url, v); return v; });
+  });
+}
+/* Lê todas as páginas de uma listagem REST (a 1ª define o total; as demais vão em paralelo) */
+function getAll(url, maxPages) {
+  return getJSON(url + '&page=1').then(function (first) {
+    var rest = [], n = Math.min(first.tp, maxPages || 20);
+    for (var p = 2; p <= n; p++) { rest.push(getJSON(url + '&page=' + p)); }
+    return Promise.all(rest).then(function (more) { return more.reduce(function (acc, m) { return acc.concat(m.d); }, first.d.slice()); });
+  });
+}
+function getHTML(url) {
+  return fetch(url, { credentials: 'same-origin' }).then(function (r) { if (!r.ok) { throw new Error('HTTP ' + r.status); } return r.text(); })
+    .then(function (t) { return new DOMParser().parseFromString(t, 'text/html'); });
+}
+function chunk(a, n) { var o = []; for (var i = 0; i < a.length; i += n) { o.push(a.slice(i, i + n)); } return o; }
+/* Monta { src, srcset, w, h } a partir de um item da REST de mídia */
+function pickImage(m) {
+  var md = m.media_details || {}, s = md.sizes || {}, list = [];
+  ['medium', 'ashe-grid-thumbnail', 'medium_large', 'large'].forEach(function (k) { if (s[k] && s[k].source_url) { list.push(s[k]); } });
+  var main = s['ashe-grid-thumbnail'] || s.medium_large || s.large || s.medium || { source_url: m.source_url, width: md.width, height: md.height };
+  var seen = {}, set = list.filter(function (x) { return !seen[x.width] && (seen[x.width] = 1); }).sort(function (a, b) { return a.width - b.width; })
+    .map(function (x) { return safeUrl(x.source_url) + ' ' + x.width + 'w'; }).join(', ');
+  var src = safeUrl(main.source_url); if (!src) { return null; }
+  return { src: src, srcset: set, w: main.width || 500, h: main.height || 330, alt: decode(m.alt_text || '') };
+}
+function makeImg(cls, im, alt, sizes) {
+  var i = new Image(); i.className = cls; i.alt = alt; i.width = im.w; i.height = im.h; i.loading = 'lazy'; i.decoding = 'async';
+  if (im.srcset) { i.srcset = im.srcset; i.sizes = sizes; }
+  i.src = im.src; return i;
+}
+/* =====================================================================
+   INÍCIO
+   ===================================================================== */
+var hub = doc.getElementById('kvz-hub');
+if (hub) {
+  var jsonItems = [], jsonDone = { cats: false, stories: false, gloss: false };
+  hub.classList.add('kvz-js');
+  /* ---------- Menu: fixo ao rolar, rolagem suave e scrollspy ---------- */
+  var navWrap = hub.querySelector('.kvz-navwrap'), nav = hub.querySelector('.kvz-nav'), strip = hub.querySelector('.kvz-nav__list');
+  var NAV_H = 64, sections = Array.prototype.slice.call(hub.querySelectorAll('section[id]')), activeId = null, ticking = false, lastMt = '';
+  var links = Array.prototype.slice.call(hub.querySelectorAll('.kvz-nav__link'));
+  /* Área do topo coberta por barras fixas do tema (admin bar + menu do Ashe) */
+  function headerOffset(assumeFixed) {
+    var h = 0;
+    HUB.FIXED_HEADER_SELECTORS.forEach(function (s) {
+      var n = doc.querySelector(s); if (!n) { return; }
+      var cs = getComputedStyle(n), r = n.getBoundingClientRect();
+      if (cs.position === 'fixed' || cs.position === 'sticky') { if (r.height > 0 && r.top < 120 && r.bottom > h) { h = r.bottom; } }
+      else if (assumeFixed && n.getAttribute('data-fixed') === '1' && r.height > h) { h = Math.max(h, r.height); } /* Ashe fixa o menu ao rolar */
+    });
+    return Math.round(h);
+  }
+  function setActive(id) {
+    if (id === activeId) { return; } activeId = id;
+    links.forEach(function (a) {
+      var on = a.getAttribute('data-spy') === id;
+      if (on) { a.setAttribute('aria-current', 'location'); } else { a.removeAttribute('aria-current'); }
+      if (on && strip && strip.scrollWidth > strip.clientWidth) { /* centraliza o item ativo na faixa rolável do celular */
+        strip.scrollTo({ left: a.parentNode.offsetLeft - (strip.clientWidth - a.offsetWidth) / 2, behavior: reduced() ? 'auto' : 'smooth' });
+      }
+    });
+  }
+  function update() {
+    ticking = false;
+    var off = headerOffset(false), wr = navWrap.getBoundingClientRect(), hr = hub.getBoundingClientRect();
+    var stuck = wr.top <= off && hr.bottom > off + NAV_H + 16;
+    nav.classList.toggle('is-stuck', stuck);
+    if (stuck) {
+      nav.style.top = off + 'px'; nav.style.left = wr.left + 'px'; nav.style.width = wr.width + 'px';
+      /* Autoverificação: se um ancestral (transform/contain) quebrar o position:fixed, cai para sticky */
+      if (!hub.classList.contains('kvz-nofixed') && !hub.classList.contains('kvz-nofixed-checked')) {
+        hub.classList.add('kvz-nofixed-checked');
+        if (Math.abs(nav.getBoundingClientRect().top - off) > 3) { hub.classList.add('kvz-nofixed'); nav.style.top = off + 'px'; }
+      }
+    } else { nav.style.top = nav.style.left = nav.style.width = ''; }
+    var line = off + NAV_H + 28, cur = null;
+    sections.forEach(function (s) { if (!s.hidden && s.getBoundingClientRect().top <= line) { cur = s.id; } });
+    var ok = links.some(function (a) { return a.getAttribute('data-spy') === cur; });
+    setActive(ok && hr.top < line ? cur : null);
+    var mt = (headerOffset(true) + NAV_H + 14) + 'px'; if (mt !== lastMt) { lastMt = mt; hub.style.setProperty('--kvz-mt', mt); }
+  }
+  function queue() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+  function goTo(t, push) {
+    var y = t.getBoundingClientRect().top + window.pageYOffset - (headerOffset(true) + NAV_H + 14);
+    window.scrollTo({ top: Math.max(0, y), behavior: reduced() ? 'auto' : 'smooth' });
+    if (push && history.replaceState) { try { history.replaceState(null, '', '#' + t.id); } catch (e) {} }
+    var h = t.querySelector('h2'); if (h) { h.setAttribute('tabindex', '-1'); try { h.focus({ preventScroll: true }); } catch (e) {} }
+  }
+  nav.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[href^="#"]') : null; if (!a) { return; }
+    var t = doc.getElementById(a.getAttribute('href').slice(1)); if (!t || !hub.contains(t)) { return; }
+    e.preventDefault(); goTo(t, true);
+  });
+  window.addEventListener('scroll', queue, { passive: true });
+  window.addEventListener('resize', queue);
+  function goHash() { if (location.hash.length > 1) { var t = doc.getElementById(decodeURIComponent(location.hash.slice(1))); if (t && hub.contains(t)) { goTo(t, false); } } }
+  update();
+  /* ---------- Carrossel acessível (swipe nativo, setas no desktop, teclado) ---------- */
+  var ICON = { prev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>', next: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>' };
+  function carousel(root, slides, label, kind) {
+    root.textContent = ''; root.removeAttribute('aria-busy'); root.classList.remove('kvz-skelrow');
+    var car = el('div', 'kvz-car kvz-car--' + kind); car.setAttribute('role', 'region'); car.setAttribute('aria-roledescription', 'carrossel'); car.setAttribute('aria-label', label);
+    var track = el('div', 'kvz-car__track');
+    slides.forEach(function (s, i) {
+      var li = el('div', 'kvz-car__slide'); li.setAttribute('role', 'group'); li.setAttribute('aria-roledescription', 'slide'); li.setAttribute('aria-label', (i + 1) + ' de ' + slides.length);
+      li.appendChild(s); track.appendChild(li);
+    });
+    function btn(dir) {
+      var b = el('button', 'kvz-car__btn kvz-car__btn--' + dir); b.type = 'button'; b.setAttribute('aria-label', dir === 'prev' ? 'Ver itens anteriores' : 'Ver próximos itens'); b.innerHTML = ICON[dir];
+      b.addEventListener('click', function () { track.scrollBy({ left: (dir === 'prev' ? -1 : 1) * track.clientWidth * 0.85, behavior: reduced() ? 'auto' : 'smooth' }); }); return b;
+    }
+    var prev = btn('prev'), next = btn('next');
+    function sync() {
+      var max = track.scrollWidth - track.clientWidth;
+      car.classList.toggle('is-fit', max <= 4); prev.disabled = track.scrollLeft <= 2; next.disabled = track.scrollLeft >= max - 2;
+    }
+    var t2 = null; track.addEventListener('scroll', function () { clearTimeout(t2); t2 = setTimeout(sync, 60); }, { passive: true });
+    window.addEventListener('resize', sync);
+    car.addEventListener('keydown', function (e) { /* setas do teclado quando o foco está num slide */
+      var k = e.key; if (k !== 'ArrowRight' && k !== 'ArrowLeft') { return; }
+      var slide = e.target.closest ? e.target.closest('.kvz-car__slide') : null; if (!slide) { return; }
+      var to = k === 'ArrowRight' ? slide.nextElementSibling : slide.previousElementSibling;
+      if (to) { var a = to.querySelector('a'); if (a) { e.preventDefault(); a.focus(); } }
+    });
+    car.appendChild(prev); car.appendChild(track); car.appendChild(next); root.appendChild(car);
+    requestAnimationFrame(sync);
+  }
+  function showMsg(root, text, retry) {
+    root.textContent = ''; root.removeAttribute('aria-busy'); root.classList.remove('kvz-skelrow');
+    var m = el(root.tagName === 'UL' ? 'li' : 'div', 'kvz-msg'); m.setAttribute('role', 'alert'); m.appendChild(el('span', '', text));
+    if (retry) { var b = el('button', '', 'Tentar novamente'); b.type = 'button'; b.addEventListener('click', function () { root.setAttribute('aria-busy', 'true'); fillSkeleton(root); retry(); }); m.appendChild(b); }
+    root.appendChild(m);
+  }
+  function fillSkeleton(root, n) { root.textContent = ''; root.setAttribute('aria-busy', 'true'); if (root.tagName !== 'UL') { root.classList.add('kvz-skelrow'); } for (var i = 0; i < (n || 4); i++) { var c = el(root.tagName === 'UL' ? 'li' : 'div', 'kvz-skel'); c.setAttribute('aria-hidden', 'true'); root.appendChild(c); } }
+  /* ---------- Categorias (REST) ---------- */
+  var SIZES = '(min-width:1024px) 25vw, (min-width:768px) 33vw, 50vw';
+  function cardFor(cat) {
+    var li = el('li'), a = el('a', 'kvz-card'); a.href = cat.link;
+    var m = el('div', 'kvz-card__media'); a.appendChild(m);
+    var b = el('div', 'kvz-card__body'); b.appendChild(el('h3', 'kvz-card__title', cat.label)); b.appendChild(el('span', 'kvz-card__count', plural(cat.count, 'artigo', 'artigos'))); a.appendChild(b);
+    li.appendChild(a); cat.media = m; return li;
+  }
+  function initCategories() {
+    var grids = {}; HUB.SECTIONS.forEach(function (s) { grids[s.id] = hub.querySelector('[data-kvz-cats="' + s.id + '"]'); if (grids[s.id]) { fillSkeleton(grids[s.id]); } });
+    var catsP = getAll(restUrl('categories', { per_page: 100, hide_empty: true, _fields: 'id,name,slug,parent,count,link' }), 5);
+    var postsP = getAll(restUrl('posts', { per_page: 100, orderby: 'date', order: 'desc', _fields: 'id,date,title,categories,featured_media' }), HUB.MAX_POST_PAGES).catch(function () { return []; });
+    return catsP.then(function (cats) {
+      var byId = {}, placed = {}, bySlug = {};
+      cats.forEach(function (c) { byId[c.id] = c; bySlug[c.slug] = c; });
+      var groupIds = {}; /* categorias-pai de agrupamento: não viram card */
+      HUB.SECTIONS.forEach(function (s) { s.parents.forEach(function (p) { if (bySlug[p]) { groupIds[bySlug[p].id] = s.id; } }); });
+      var result = HUB.SECTIONS.map(function (s) {
+        var list = [];
+        cats.forEach(function (c) {
+          if (placed[c.id] || groupIds[c.id] || !c.count || HUB.EXCLUDE_SLUGS.indexOf(c.slug) > -1) { return; } /* sem repetir, sem vazias */
+          var idx = s.slugs.indexOf(c.slug), inherit = false, p = byId[c.parent], guard = 0;
+          while (idx < 0 && p && guard++ < 8) { if (groupIds[p.id] === s.id) { inherit = true; break; } p = byId[p.parent]; }
+          if (idx < 0 && !inherit) { return; }
+          placed[c.id] = true; list.push({ id: c.id, slug: c.slug, link: safeUrl(c.link), count: c.count, order: idx < 0 ? 1e6 : idx, label: HUB.LABELS[c.slug] || decode(c.name), name: decode(c.name) });
+        });
+        list.sort(function (a, b) { return a.order - b.order || a.label.localeCompare(b.label, 'pt-BR'); });
+        return { id: s.id, cats: list.filter(function (c) { return c.link; }) };
+      });
+      result.forEach(function (r) { /* desenha as seções */
+        var g = grids[r.id], sec = g && g.closest('section'); if (!g) { return; }
+        g.textContent = ''; g.removeAttribute('aria-busy');
+        if (!r.cats.length) { sec.hidden = true; var l = hub.querySelector('[data-spy="' + r.id + '"]'); if (l) { l.parentNode.hidden = true; } return; }
+        r.cats.forEach(function (c) { g.appendChild(cardFor(c)); jsonItems.push({ n: c.label, u: c.link }); });
+      });
+      jsonDone.cats = true; writeJsonLd(); queue();
+      return postsP.then(function (posts) { return attachImages(result, posts); });
+    }).catch(function () {
+      HUB.SECTIONS.forEach(function (s) { if (grids[s.id]) { showMsg(grids[s.id], 'Não conseguimos carregar as categorias agora. Atualize a página ou tente novamente em instantes.', initCategories); } });
+    });
+  }
+  /* Imagem de cada card = destaque do artigo mais recente da categoria, sem repetir artigo em dois cards */
+  function attachImages(result, posts) {
+    var used = {}, wanted = [];
+    result.forEach(function (r) {
+      r.cats.forEach(function (c) {
+        for (var i = 0; i < posts.length; i++) {
+          var p = posts[i];
+          if (p.featured_media && !used[p.id] && p.categories && p.categories.indexOf(c.id) > -1) { used[p.id] = 1; c.post = p; wanted.push(p.featured_media); break; }
+        }
+      });
+    });
+    if (!wanted.length) { return; }
+    return Promise.all(chunk(wanted.filter(function (v, i, a) { return a.indexOf(v) === i; }), 100).map(function (ids) {
+      return getJSON(restUrl('media', { include: ids.join(','), per_page: 100, _fields: 'id,alt_text,source_url,media_details' })).then(function (r) { return r.d; });
+    })).then(function (groups) {
+      var media = {}; groups.forEach(function (g) { g.forEach(function (m) { media[m.id] = m; }); });
+      result.forEach(function (r) {
+        r.cats.forEach(function (c) {
+          var m = c.post && media[c.post.featured_media], im = m && pickImage(m); if (!im || !c.media) { return; }
+          c.media.appendChild(makeImg('kvz-card__img', im, im.alt || decode(c.post.title && c.post.title.rendered) || ('Artigo recente sobre ' + c.label), SIZES));
+        });
+      });
+    }).catch(function () { /* sem imagens: os cards continuam com o fundo em degradê */ });
+  }
+  /* ---------- Web Stories (REST se exposta; senão lê o HTML do arquivo) ---------- */
+  function parseStories(doc2, base) {
+    var out = [];
+    Array.prototype.forEach.call(doc2.querySelectorAll('a.fws-card, .fws-grid a[href*="/fws-story/"]'), function (a) {
+      var href = safeUrl(a.getAttribute('href'), base); if (!href) { return; }
+      var img = a.querySelector('img'), src = img && (img.getAttribute('data-src') || img.getAttribute('src')) || '';
+      if (/^data:/.test(src)) { src = img.getAttribute('data-src') || ''; }
+      var t = a.getAttribute('aria-label') || (a.querySelector('h2,h3,.fws-card__title') || {}).textContent || (img && img.getAttribute('alt')) || '';
+      out.push({ href: href, title: decode(t).trim(), src: safeUrl(src, base), srcset: (img && img.getAttribute('data-srcset')) || '', w: parseInt(img && img.getAttribute('width'), 10) || 473, h: parseInt(img && img.getAttribute('height'), 10) || 710 });
+    });
+    var pages = [];
+    Array.prototype.forEach.call(doc2.querySelectorAll('.fws-nav a.page-numbers[href]'), function (a) { var u = safeUrl(a.getAttribute('href'), base); if (u && pages.indexOf(u) < 0) { pages.push(u); } });
+    return { items: out, pages: pages };
+  }
+  function storiesFromHtml() {
+    var key = 'stories:' + HUB.STORIES_ARCHIVE, c = cget(key); if (c) { return Promise.resolve(c); }
+    var start = safeUrl(HUB.STORIES_ARCHIVE, HUB.SITE + '/'), seen = {}, all = [];
+    function step(url, left) {
+      seen[url] = 1;
+      return getHTML(url).then(function (d) {
+        var r = parseStories(d, url); all = all.concat(r.items);
+        var nextUrl = r.pages.filter(function (u) { return !seen[u]; })[0];
+        return nextUrl && left > 1 ? step(nextUrl, left - 1) : all;
+      });
+    }
+    return step(start, HUB.STORIES_MAX_PAGES).then(function (list) {
+      var uniq = {}; list = list.filter(function (s) { return !uniq[s.href] && (uniq[s.href] = 1); }); cset(key, list); return list;
+    });
+  }
+  function storiesFromRest() {
+    return getAll(restUrl(HUB.STORIES_REST_BASE, { per_page: 100, _embed: 'wp:featuredmedia', _fields: 'id,link,title,_embedded' }), 3).then(function (rows) {
+      return rows.map(function (p) {
+        var m = p._embedded && p._embedded['wp:featuredmedia'] && p._embedded['wp:featuredmedia'][0], im = m && pickImage(m);
+        return { href: safeUrl(p.link), title: decode(p.title && p.title.rendered), src: im ? im.src : '', srcset: im ? im.srcset : '', w: im ? im.w : 473, h: im ? im.h : 710 };
+      });
+    });
+  }
+  function initStories() {
+    var root = hub.querySelector('[data-kvz-stories]'); if (!root) { return; }
+    fillSkeleton(root, 4);
+    var p = HUB.STORIES_REST_BASE ? storiesFromRest().catch(storiesFromHtml) : storiesFromHtml();
+    return p.then(function (list) {
+      list = list.filter(function (s) { return s.href && s.title; });
+      if (!list.length) { showMsg(root, 'Nossas Web Stories estão a caminho. Volte em breve!', null); return; }
+      var slides = list.map(function (s) {
+        var a = el('a', 'kvz-story'); a.href = s.href;
+        if (s.src) { var im = new Image(); im.className = 'kvz-story__img'; im.alt = 'Capa da Web Story: ' + s.title; im.width = s.w; im.height = s.h; im.loading = 'lazy'; im.decoding = 'async'; if (s.srcset) { im.srcset = s.srcset; im.sizes = '(min-width:1024px) 20vw, (min-width:640px) 30vw, 44vw'; } im.src = s.src; a.appendChild(im); }
+        a.appendChild(el('span', 'kvz-story__shade')); a.lastChild.setAttribute('aria-hidden', 'true');
+        a.appendChild(el('span', 'kvz-story__tag', 'Web Story')); a.appendChild(el('h3', 'kvz-story__title', s.title));
+        jsonItems.push({ n: s.title, u: s.href }); return a;
+      });
+      carousel(root, slides, 'Web Stories da Klyvorenza', 'stories');
+      jsonDone.stories = true; writeJsonLd(); queue();
+    }).catch(function () { showMsg(root, 'Não conseguimos carregar as Web Stories agora. Você pode ver todas em Web Stories.', initStories); });
+  }
+  /* ---------- Glossário: um slide por letra ---------- */
+  function letterSlide(L) {
+    var a = el('a', 'kvz-letter' + (L.im ? '' : ' is-plain')); a.href = L.href; a.setAttribute('data-letter', L.char);
+    if (L.im) { a.appendChild(makeImg('kvz-letter__img', L.im, 'Termos do glossário de moda com a letra ' + L.char, '(min-width:1024px) 15vw, (min-width:640px) 22vw, 40vw')); }
+    var sh = el('span', 'kvz-letter__shade'); sh.setAttribute('aria-hidden', 'true'); a.appendChild(sh);
+    a.appendChild(el('span', 'kvz-letter__char', L.char));
+    if (L.count) { a.appendChild(el('span', 'kvz-letter__count', plural(L.count, 'termo', 'termos'))); }
+    return a;
+  }
+  function ogImageLazy(slides) { /* fallback: lê a og:image da página da letra só quando o slide aparece */
+    if (!('IntersectionObserver' in window)) { return; }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) { return; } io.unobserve(e.target);
+        var a = e.target, key = 'og:' + a.href, c = cget(key);
+        (c ? Promise.resolve(c) : getHTML(a.href).then(function (d) { var m = d.querySelector('meta[property="og:image"]'); var u = m ? safeUrl(m.getAttribute('content')) : ''; cset(key, u); return u; }))
+          .then(function (u) { if (u && !a.querySelector('img')) { a.classList.remove('is-plain'); a.insertBefore(makeImg('kvz-letter__img', { src: u, w: 600, h: 600 }, 'Termos do glossário de moda com a letra ' + a.getAttribute('data-letter'), '20vw'), a.firstChild); } }).catch(function () {});
+      });
+    }, { rootMargin: '200px' });
+    slides.forEach(function (s) { io.observe(s); });
+  }
+  function initGlossary() {
+    var root = hub.querySelector('[data-kvz-gloss]'); if (!root) { return; }
+    fillSkeleton(root, 6);
+    return getAll(restUrl(HUB.GLOSSARY_TAX, { per_page: 100, _fields: 'id,name,slug,count,link' }), 2).then(function (terms) {
+      terms = terms.filter(function (t) { return t.count > 0 && safeUrl(t.link); }).sort(function (a, b) { return a.slug.localeCompare(b.slug, 'pt-BR'); });
+      if (!terms.length) { throw new Error('vazio'); }
+      /* um termo recente (com imagem de destaque) por letra */
+      return Promise.all(terms.map(function (t) {
+        var q = { per_page: 5, _fields: 'id,featured_media' }; q[HUB.GLOSSARY_TAX] = t.id;
+        return getJSON(restUrl(HUB.GLOSSARY_REST_BASE, q)).then(function (r) { var p = r.d.filter(function (x) { return x.featured_media; })[0]; return p ? p.featured_media : 0; }).catch(function () { return 0; });
+      })).then(function (mids) {
+        var want = mids.filter(function (v, i, a) { return v && a.indexOf(v) === i; });
+        return Promise.all(chunk(want, 100).map(function (ids) { return getJSON(restUrl('media', { include: ids.join(','), per_page: 100, _fields: 'id,alt_text,source_url,media_details' })).then(function (r) { return r.d; }).catch(function () { return []; }); }))
+          .then(function (groups) {
+            var media = {}; groups.forEach(function (g) { g.forEach(function (m) { media[m.id] = m; }); });
+            var slides = terms.map(function (t, i) { var m = media[mids[i]]; return letterSlide({ char: decode(t.name).toUpperCase(), href: safeUrl(t.link), count: t.count, im: m ? pickImage(m) : null }); });
+            slides.forEach(function (s, i) { jsonItems.push({ n: 'Glossário de moda: letra ' + terms[i].name.toUpperCase(), u: safeUrl(terms[i].link) }); });
+            carousel(root, slides, 'Glossário de moda de A a Z', 'letters');
+            if (!terms.some(function (t, i) { return mids[i]; })) { ogImageLazy(root.querySelectorAll('.kvz-letter')); }
+            jsonDone.gloss = true; writeJsonLd(); queue();
+          });
+      });
+    }).catch(function () {
+      /* Fallback: taxonomia fora da REST → letras A–Z montadas pelo endereço das páginas (imagem lida do HTML ao aparecer) */
+      var slides = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(function (ch) { return letterSlide({ char: ch, href: safeUrl(HUB.GLOSSARY_PAGE + ch.toLowerCase() + '/', HUB.SITE + '/'), count: 0, im: null }); });
+      carousel(root, slides, 'Glossário de moda de A a Z', 'letters'); ogImageLazy(root.querySelectorAll('.kvz-letter'));
+      slides.forEach(function (s) { jsonItems.push({ n: 'Glossário de moda: letra ' + s.getAttribute('data-letter'), u: s.href }); }); jsonDone.gloss = true; writeJsonLd(); queue();
+    });
+  }
+  /* ---------- JSON-LD (CollectionPage + ItemList) com o que foi carregado ---------- */
+  function writeJsonLd() {
+    if (!jsonDone.cats) { return; }
+    var old = doc.getElementById('kvz-jsonld'), s = old || doc.createElement('script'), page = location.href.split('#')[0], seen = {};
+    var items = jsonItems.filter(function (x) { return x.u && !seen[x.u] && (seen[x.u] = 1); }).map(function (x, i) { return { '@type': 'ListItem', position: i + 1, name: x.n, url: x.u }; });
+    s.type = 'application/ld+json'; s.id = 'kvz-jsonld';
+    s.text = JSON.stringify({ '@context': 'https://schema.org', '@type': 'CollectionPage', '@id': page + '#kvz-hub', url: page, name: 'Moda e beleza feminina: categorias, Web Stories e glossário da Klyvorenza', inLanguage: 'pt-BR', isPartOf: { '@type': 'WebSite', name: 'Klyvorenza', url: HUB.SITE + '/' }, mainEntity: { '@type': 'ItemList', numberOfItems: items.length, itemListElement: items } });
+    if (!old) { doc.head.appendChild(s); }
+  }
+  /* ---------- Newsletter do fim da página ---------- */
+  function initNewsletter() {
+    var box = hub.querySelector('[data-kvz-news]'); if (!box) { return; }
+    box.innerHTML = newsletterMarkup('kvz-hub-f', false);
+    wireForm(box.querySelector('form'), null);
+  }
+  /* ---------- Partida ---------- */
+  watchTheme(); initNewsletter();
+  Promise.all([initCategories(), initStories(), initGlossary()]).then(function () { queue(); setTimeout(goHash, 60); });
+}
+initPopup(); /* pop-up: também roda aqui, mas só uma vez por página (trava window.__kvzPopupInit) */
+})();
+</script>
