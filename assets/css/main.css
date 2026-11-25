@@ -111,6 +111,8 @@ body.klyv-lock{overflow:hidden}
 .klyv-sec__h{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;margin-bottom:1.25rem;padding-bottom:.6rem;border-bottom:1px solid var(--k-bd);position:relative}
 .klyv-sec__h::after{content:"";position:absolute;left:0;bottom:-1px;width:64px;height:3px;background:var(--k-grad);border-radius:3px}
 .klyv-sec__h h2{margin:0;font-size:var(--wp--preset--font-size--grande)}
+.klyv-sec__intro{margin:-.4rem 0 1.25rem;color:var(--k-mu);max-width:60ch}
+.klyv-home__h1{margin:.5rem 0 .75rem}
 .klyv-more{font-size:.9rem;font-weight:600;white-space:nowrap}
 .klyv-grid,.klyv-qgrid .wp-block-post-template{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr));gap:1.5rem;list-style:none;margin:0;padding:0}
 .klyv-card{display:flex;flex-direction:column;height:100%;background:var(--k-sf);border:1px solid var(--k-bd);border-radius:var(--k-r);overflow:hidden;box-shadow:var(--k-sh);transition:transform .2s,box-shadow .2s}

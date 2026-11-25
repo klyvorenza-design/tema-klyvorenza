@@ -106,6 +106,52 @@ function klyv_take_unshown( $candidates, $n ) {
 	return $free;
 }
 
+/**
+ * Frases curtas de SEO para cada seção da página inicial.
+ * Categorias usam a descrição do painel quando existe; senão, uma frase curada
+ * (por slug) ou uma frase genérica com o nome da categoria.
+ *
+ * @param string       $key  Chave fixa (ultimos, glossario, stories) ou slug da categoria.
+ * @param WP_Term|null $term Categoria, quando houver.
+ * @return string Parágrafo HTML (vazio se não houver texto).
+ */
+function klyv_section_intro( $key, $term = null ) {
+	$curated = array(
+		'ultimos'    => __( 'Confira os artigos mais recentes sobre moda feminina, beleza e estilo de vida, com dicas práticas para o seu dia a dia.', 'klyvorenza' ),
+		'glossario'  => __( 'Entenda os termos de moda e beleza em explicações curtas, claras e fáceis de consultar.', 'klyvorenza' ),
+		'stories'    => __( 'Veja inspirações de looks, beleza e tendências em Web Stories rápidas, feitas para o celular.', 'klyvorenza' ),
+		'especiais'  => __( 'Descubra as últimas tendências de moda feminina e renove seu guarda-roupa com peças exclusivas.', 'klyvorenza' ),
+		'moda'       => __( 'Aprenda a montar looks versáteis, escolher peças certeiras e acompanhar as tendências de moda feminina.', 'klyvorenza' ),
+		'beleza'     => __( 'Dicas de maquiagem, cabelo e cuidados com a pele para realçar a sua beleza natural.', 'klyvorenza' ),
+		'cabelo'     => __( 'Cortes, penteados e cuidados com os fios para manter o cabelo bonito e saudável.', 'klyvorenza' ),
+		'unhas'      => __( 'Ideias de nail art, cores em alta e cuidados para unhas bonitas e fortes.', 'klyvorenza' ),
+		'maquiagem'  => __( 'Passo a passo, produtos e truques de maquiagem para todas as ocasiões.', 'klyvorenza' ),
+		'acessorios' => __( 'Bolsas, joias e acessórios para dar personalidade a qualquer look.', 'klyvorenza' ),
+		'natal'      => __( 'Ideias de looks, decoração e presentes para viver um Natal cheio de estilo.', 'klyvorenza' ),
+		'ano-novo'   => __( 'Looks, cores e inspirações para receber o Ano Novo com elegância.', 'klyvorenza' ),
+		'datas-festivas'      => __( 'Inspirações de looks e ideias para celebrar cada data comemorativa com estilo.', 'klyvorenza' ),
+		'datas-comemorativas' => __( 'Inspirações de looks e ideias para celebrar cada data comemorativa com estilo.', 'klyvorenza' ),
+	);
+	$text = '';
+	if ( $term instanceof WP_Term ) {
+		$text = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( (string) $term->description ) ) );
+		if ( mb_strlen( $text ) > 170 ) {
+			$text = preg_replace( '/\s+\S*$/u', '', mb_substr( $text, 0, 169 ) ) . '…';
+		}
+		if ( ! $text && isset( $curated[ $term->slug ] ) ) {
+			$text = $curated[ $term->slug ];
+		}
+		if ( ! $text ) {
+			/* translators: %s: nome da categoria. */
+			$text = sprintf( __( 'Descubra dicas, tendências e ideias de %s para renovar o seu estilo no dia a dia.', 'klyvorenza' ), $term->name );
+		}
+	} elseif ( isset( $curated[ $key ] ) ) {
+		$text = $curated[ $key ];
+	}
+	$text = apply_filters( 'klyvorenza_section_intro', $text, $key, $term );
+	return $text ? '<p class="klyv-sec__intro">' . esc_html( $text ) . '</p>' : '';
+}
+
 /** Últimos artigos. */
 function klyv_render_latest() {
 	$ids = klyv_cached(
@@ -119,7 +165,7 @@ function klyv_render_latest() {
 	if ( ! $ids ) {
 		return '';
 	}
-	$h = '<section class="klyv-sec" aria-labelledby="klyv-s-ult"><header class="klyv-sec__h"><h2 id="klyv-s-ult">' . esc_html__( 'Últimos artigos', 'klyvorenza' ) . '</h2></header><div class="klyv-grid">';
+	$h = '<section class="klyv-sec" aria-labelledby="klyv-s-ult"><header class="klyv-sec__h"><h2 id="klyv-s-ult">' . esc_html__( 'Últimos artigos', 'klyvorenza' ) . '</h2></header>' . klyv_section_intro( 'ultimos' ) . '<div class="klyv-grid">';
 	foreach ( $ids as $id ) {
 		$h .= klyv_card( $id );
 	}
@@ -136,7 +182,7 @@ function klyv_render_home_sections() {
 			continue;
 		}
 		$sid   = 'klyv-s-' . $t->term_id;
-		$html .= '<section class="klyv-sec" aria-labelledby="' . esc_attr( $sid ) . '"><header class="klyv-sec__h"><h2 id="' . esc_attr( $sid ) . '">' . esc_html( $t->name ) . '</h2><a class="klyv-more" href="' . esc_url( get_term_link( $t ) ) . '">' . esc_html__( 'Ver tudo', 'klyvorenza' ) . '</a></header><div class="klyv-grid">';
+		$html .= '<section class="klyv-sec" aria-labelledby="' . esc_attr( $sid ) . '"><header class="klyv-sec__h"><h2 id="' . esc_attr( $sid ) . '">' . esc_html( $t->name ) . '</h2><a class="klyv-more" href="' . esc_url( get_term_link( $t ) ) . '">' . esc_html__( 'Ver tudo', 'klyvorenza' ) . '</a></header>' . klyv_section_intro( $t->slug, $t ) . '<div class="klyv-grid">';
 		foreach ( $ids as $id ) {
 			$html .= klyv_card( $id );
 		}
@@ -155,14 +201,14 @@ function klyv_render_home_sections() {
 			}
 		);
 		if ( $gids ) {
-			$html .= '<section class="klyv-sec" aria-labelledby="klyv-s-gl"><header class="klyv-sec__h"><h2 id="klyv-s-gl">' . esc_html__( 'Glossário', 'klyvorenza' ) . '</h2>' . ( $gp ? '<a class="klyv-more" href="' . esc_url( get_permalink( $gp ) ) . '">' . esc_html__( 'Índice A a Z', 'klyvorenza' ) . '</a>' : '' ) . '</header><ul class="klyv-terms" role="list">';
+			$html .= '<section class="klyv-sec" aria-labelledby="klyv-s-gl"><header class="klyv-sec__h"><h2 id="klyv-s-gl">' . esc_html__( 'Glossário', 'klyvorenza' ) . '</h2>' . ( $gp ? '<a class="klyv-more" href="' . esc_url( get_permalink( $gp ) ) . '">' . esc_html__( 'Índice A a Z', 'klyvorenza' ) . '</a>' : '' ) . '</header>' . klyv_section_intro( 'glossario' ) . '<ul class="klyv-terms" role="list">';
 			foreach ( $gids as $gid ) {
 				$html .= '<li><a href="' . esc_url( get_permalink( $gid ) ) . '"><strong>' . esc_html( get_the_title( $gid ) ) . '</strong><span>' . esc_html( wp_trim_words( get_the_excerpt( $gid ), 14, '…' ) ) . '</span></a></li>';
 			}
 			$html .= '</ul></section>';
 		}
 	} elseif ( $gp ) {
-		$html .= '<section class="klyv-sec" aria-labelledby="klyv-s-gl"><header class="klyv-sec__h"><h2 id="klyv-s-gl">' . esc_html__( 'Glossário', 'klyvorenza' ) . '</h2><a class="klyv-more" href="' . esc_url( get_permalink( $gp ) ) . '">' . esc_html__( 'Abrir glossário', 'klyvorenza' ) . '</a></header><p>' . esc_html__( 'Termos de moda e beleza explicados de forma curta e clara.', 'klyvorenza' ) . '</p></section>';
+		$html .= '<section class="klyv-sec" aria-labelledby="klyv-s-gl"><header class="klyv-sec__h"><h2 id="klyv-s-gl">' . esc_html__( 'Glossário', 'klyvorenza' ) . '</h2><a class="klyv-more" href="' . esc_url( get_permalink( $gp ) ) . '">' . esc_html__( 'Abrir glossário', 'klyvorenza' ) . '</a></header>' . klyv_section_intro( 'glossario' ) . '</section>';
 	}
 
 	// Web Stories.
@@ -170,7 +216,7 @@ function klyv_render_home_sections() {
 	if ( $stories ) {
 		$types = klyv_story_types();
 		$link  = get_post_type_archive_link( $types[0] );
-		$html .= '<section class="klyv-sec" aria-labelledby="klyv-s-st"><header class="klyv-sec__h"><h2 id="klyv-s-st">' . esc_html__( 'Web Stories', 'klyvorenza' ) . '</h2>' . ( $link ? '<a class="klyv-more" href="' . esc_url( $link ) . '">' . esc_html__( 'Ver todos', 'klyvorenza' ) . '</a>' : '' ) . '</header>' . $stories . '</section>';
+		$html .= '<section class="klyv-sec" aria-labelledby="klyv-s-st"><header class="klyv-sec__h"><h2 id="klyv-s-st">' . esc_html__( 'Web Stories', 'klyvorenza' ) . '</h2>' . ( $link ? '<a class="klyv-more" href="' . esc_url( $link ) . '">' . esc_html__( 'Ver todos', 'klyvorenza' ) . '</a>' : '' ) . '</header>' . klyv_section_intro( 'stories' ) . $stories . '</section>';
 	}
 	return $html;
 }
