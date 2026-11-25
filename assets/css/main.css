@@ -257,3 +257,8 @@ mark{background:rgba(184,248,136,.55);color:inherit;padding:0 .15em;border-radiu
 .klyv-404{padding:3rem 0;text-align:center}.klyv-404 .klyv-chips{justify-content:center}
 .klyv-toast{position:fixed;left:50%;bottom:max(24px,env(safe-area-inset-bottom));translate:-50% 0;z-index:120;padding:.7rem 1.1rem;border-radius:999px;background:#10241A;color:#fff;font-size:.9rem}
 @media print{.klyv-head,.klyv-topbar,.klyv-foot,.klyv-share,.klyv-ad,.klyv-pop,.klyv-side{display:none!important}}
+
+/* Introdução da página inicial (H1 e texto). */
+.klyv-home-intro{margin:0 auto 1.5rem;max-width:60rem;text-align:center}
+.klyv-home-h1{font-size:clamp(1.6rem,3.5vw,2.4rem);line-height:1.2;margin:0 0 .5rem}
+.klyv-home-intro p{margin:0 auto;max-width:48rem}

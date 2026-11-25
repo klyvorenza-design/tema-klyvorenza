@@ -230,3 +230,15 @@ add_action(
 	},
 	6
 );
+
+/** Favicon de reserva: usa o símbolo do tema quando não há Ícone do site definido. */
+add_action(
+	'wp_head',
+	function () {
+		if ( has_site_icon() || klyv_is_story() ) {
+			return;
+		}
+		echo '<link rel="icon" type="image/png" href="' . esc_url( KLYV_URI . '/assets/logo/simbolo.png' ) . '">' . "\n";
+	},
+	4
+);
