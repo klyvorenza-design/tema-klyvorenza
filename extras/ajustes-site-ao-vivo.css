@@ -1,0 +1,20 @@
+/* Klyvorenza: ajustes do site ao vivo (Ashe Pro + hub kvz). Colar em Aparência > Personalizar > CSS adicional.
+   "html body" aumenta a força do seletor para vencer o CSS do hub, que usa #kvz-hub. */
+
+/* 1) Títulos, cartões e stories cortados na esquerda: margem interna do hub e do título */
+html body #kvz-hub{padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+@media (max-width:600px){html body #kvz-hub{padding:12px 18px 40px}}
+html body #kvz-hub .kvz-sec__head{padding-left:4px;padding-right:4px}
+html body #kvz-hub .kvz-sec__title{padding:0 6px 2px 4px;max-width:100%;overflow-wrap:anywhere}
+html body #kvz-hub .kvz-sec__bar{margin-left:4px}
+html body #kvz-hub .kvz-grid,html body #kvz-hub .kvz-car{padding-left:2px;padding-right:2px}
+html body #kvz-hub .kvz-card__title,html body #kvz-hub .kvz-card__count{overflow-wrap:anywhere}
+
+/* 2) Sem rolagem lateral na página */
+html{overflow-x:clip}
+
+/* 3) Logo do topo no celular menor, para não cobrir as fotos do banner.
+   O tema aplica "width:30vw!important; max-width:150px!important" com #page-header; este seletor é mais forte. */
+@media (max-width:768px){
+	html body #page-header .entry-header.background-image a > img{width:22vw!important;max-width:96px!important;height:auto!important}
+}
