@@ -1,0 +1,27 @@
+/**
+ * SEO: cole no FINAL do functions.php do tema filho ashe-pro-child.
+ * (Aparência > Editor de arquivos do tema, ou gerenciador de arquivos da Hostinger.)
+ */
+
+// 1. Viewport sem bloqueio de zoom.
+add_action( 'template_redirect', function () {
+	ob_start( function ( $html ) {
+		return preg_replace(
+			'/<meta\s+name=["\']viewport["\'][^>]*>/i',
+			'<meta name="viewport" content="width=device-width, initial-scale=1">',
+			$html,
+			1
+		);
+	} );
+}, 0 );
+
+// 2. "Menu" e "Postagens recentes" deixam de ser H2 (viram <p>), só no HTML final.
+add_action( 'template_redirect', function () {
+	ob_start( function ( $html ) {
+		return preg_replace(
+			'#<h2>\s*(Menu|Postagens recentes)\s*</h2>#u',
+			'<p class="kvz-fake-h"><strong>$1</strong></p>',
+			$html
+		);
+	} );
+}, 1 );
