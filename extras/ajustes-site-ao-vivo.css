@@ -1,13 +1,14 @@
 /* Klyvorenza: ajustes do site ao vivo (Ashe Pro + hub kvz). Colar em Aparência > Personalizar > CSS adicional.
    "html body" aumenta a força do seletor para vencer o CSS do hub, que usa #kvz-hub. */
 
-/* 1) Títulos, cartões e stories cortados na esquerda: margem interna do hub e do título */
-html body #kvz-hub{padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
-@media (max-width:600px){html body #kvz-hub{padding:12px 18px 40px}}
-html body #kvz-hub .kvz-sec__head{padding-left:4px;padding-right:4px}
-html body #kvz-hub .kvz-sec__title{padding:0 6px 2px 4px;max-width:100%;overflow-wrap:anywhere}
-html body #kvz-hub .kvz-sec__bar{margin-left:4px}
-html body #kvz-hub .kvz-grid,html body #kvz-hub .kvz-car{padding-left:2px;padding-right:2px}
+/* 1) Títulos, cartões e stories cortados na esquerda: margem interna maior no hub e no título */
+html body #kvz-hub{padding-left:max(26px,env(safe-area-inset-left));padding-right:max(26px,env(safe-area-inset-right))}
+@media (max-width:600px){html body #kvz-hub{padding:12px 26px 40px}}
+html body #kvz-hub .kvz-sec__head{padding-left:0;padding-right:0}
+html body #kvz-hub .kvz-sec__title{padding:0 10px 2px 12px;max-width:100%;overflow-wrap:anywhere}
+html body #kvz-hub .kvz-sec__bar{margin-left:12px}
+html body #kvz-hub .kvz-more{padding-left:12px}
+html body #kvz-hub .kvz-grid,html body #kvz-hub .kvz-car{padding-left:6px;padding-right:6px}
 html body #kvz-hub .kvz-card__title,html body #kvz-hub .kvz-card__count{overflow-wrap:anywhere}
 
 /* 2) Sem rolagem lateral na página */
