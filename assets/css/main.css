@@ -93,7 +93,7 @@ body.klyv-lock{overflow:hidden}
 .klyv-btn:hover{filter:saturate(1.15) brightness(1.04)}
 
 /* Conteúdo principal */
-.klyv-main{max-width:1240px;margin-inline:auto;padding:1.5rem var(--wp--preset--spacing--30) 3.5rem}
+.klyv-main{max-width:1240px;margin-inline:auto;padding:1.5rem var(--wp--preset--spacing--30) .5rem}
 .klyv-main>*{margin-block:0;max-width:1240px!important;margin-inline:auto!important}
 .klyv-main.klyv-single>*{max-width:none!important}
 .klyv-single__head,.klyv-after{max-width:1240px!important}
@@ -244,7 +244,9 @@ mark{background:rgba(184,248,136,.55);color:inherit;padding:0 .15em;border-radiu
 .klyv-social a:hover{background:var(--k-grad);color:#10241A;border-color:transparent}
 
 /* Rodapé */
-.klyv-tp-footer{display:block;margin-top:2rem}
+.klyv-tp-footer{display:block;margin-top:0}
+.klyv-main>:last-child,.klyv-after>:last-child,.klyv-after .klyv-news,.klyv-main>.klyv-follow{margin-bottom:0}
+.klyv-main+.klyv-tp-footer,.klyv-tp-footer>.klyv-foot{margin-top:0}
 .klyv-foot{position:relative;background:var(--k-soft),var(--k-sf);background-color:var(--k-sf);border-top:1px solid var(--k-bd);padding:3rem max(16px,env(safe-area-inset-right)) max(1.5rem,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
 .klyv-foot::before{content:"";position:absolute;inset:0 0 auto;height:3px;background:var(--k-grad)}
 .klyv-foot__in{max-width:1240px;margin:0 auto;display:grid;gap:2rem;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr))}
