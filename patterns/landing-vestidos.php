@@ -38,7 +38,7 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:shortcode -->
-[content-egg module=TROQUE_PELO_MODULO template=grid limit=6]
+[content-egg module=Shopee template=grid limit=6]
 <!-- /wp:shortcode -->
 
 <!-- wp:heading {"anchor":"vestido-midi"} -->
@@ -50,7 +50,7 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:shortcode -->
-[content-egg module=TROQUE_PELO_MODULO template=grid limit=6]
+[content-egg module=Shopee template=grid limit=6]
 <!-- /wp:shortcode -->
 
 <!-- wp:heading {"anchor":"vestido-curto"} -->
@@ -62,7 +62,7 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:shortcode -->
-[content-egg module=TROQUE_PELO_MODULO template=grid limit=6]
+[content-egg module=Shopee template=grid limit=6]
 <!-- /wp:shortcode -->
 
 <!-- wp:heading {"anchor":"vestido-festa"} -->
@@ -74,7 +74,7 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:shortcode -->
-[content-egg module=TROQUE_PELO_MODULO template=grid limit=6]
+[content-egg module=Shopee template=grid limit=6]
 <!-- /wp:shortcode -->
 
 <!-- wp:heading {"anchor":"vestido-casual"} -->
@@ -86,5 +86,5 @@
 <!-- /wp:paragraph -->
 
 <!-- wp:shortcode -->
-[content-egg module=TROQUE_PELO_MODULO template=grid limit=6]
+[content-egg module=Shopee template=grid limit=6]
 <!-- /wp:shortcode -->
